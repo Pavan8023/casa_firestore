@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CASA - Where Curiosity Meets Code</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0D1117',
+                        accent: '#00BFFF',
+                        highlight: '#FEE440',
+                        secondary: '#222831',
+                        text: '#E0E0E0',
+                    },
+                    fontFamily: {
+                        'headline': ['Poppins', 'Montserrat', 'sans-serif'],
+                        'body': ['Inter', 'Nunito', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <!-- Enhanced Particles CSS -->
+    <style type="text/tailwindcss">
+        .nav-link {
+            position: relative;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            color: #E0E0E0;
+            transition: color 0.3s;
+        }
+        
+        .nav-link:hover {
+            color: #00BFFF;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: #00BFFF;
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover::after {
+            left: 0;
+            width: 100%;
+        }
+        
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100%;
+            width: 280px;
+            background-color: #222831;
+            z-index: 100;
+            transform: translateX(100%);
+            transition: transform 0.5s ease;
+        }
+        
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 99;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+        
+        .menu-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .hamburger-line {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background-color: #E0E0E0;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+        
+        .hamburger-icon.open .hamburger-line:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        
+        .hamburger-icon.open .hamburger-line:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger-icon.open .hamburger-line:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+    
+
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            background-color: #0D1117;
+        }
+        
+        .content-container {
+            position: relative;
+            z-index: 1;
+            background-color: rgba(13, 17, 23, 0.85);
+        }
+        
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Brighter particles glow effect */
+        .particles-js-canvas-el {
+            filter: brightness(1.2) drop-shadow(0 0 2px rgba(0, 191, 255, 0.5));
+        }
+    </style>
+
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Nunito:wght@400;500;600&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body class="text-text font-body">
+    <!-- Particles Background -->
+    <div id="particles-js"></div>
+
+    <!-- Content Container -->
+    <div class="content-container">
+        <!-- Navigation Bar -->
+        <nav class="fixed top-0 w-full bg-secondary/80 backdrop-blur-md z-50 shadow-lg">
+            <div class="container mx-auto px-4">
+                <div class="flex items-center justify-between h-20">
+                    <!-- Logo -->
+                    <div class="flex items-center space-x-3">
+                        <div
+                            class="w-10 h-10 rounded-full bg-accent flex items-center justify-center animate-pulse-slow">
+                            <i class="fas fa-code text-primary text-xl"></i>
+                        </div>
+                        <a href="#" class="text-2xl font-bold text-accent flex items-center">
+                            CASA
+                            <span
+                                class="ml-1 text-xs bg-highlight text-primary px-2 py-1 rounded-full animate-bounce-slow">AI</span>
+                        </a>
+                    </div>
+
+                    <!-- Desktop Navigation -->
+                    <div class="hidden md:flex space-x-1">
+                        <a href="index.html" class="nav-link">Home</a>
+                        <a href="about.html" class="nav-link">About</a>
+                        <a href="events.html" class="nav-link">Events</a>
+                        <a href="projects.html" class="nav-link text-accent">Projects</a>
+                        <a href="contact.html" class="nav-link">Contact</a>
+                    </div>
+
+                    <!-- Mobile menu button -->
+                    <div class="md:hidden">
+                        <button id="mobile-menu-button" class="p-2 rounded-lg hover:bg-primary/20 transition-colors">
+                            <div id="hamburger-icon" class="space-y-1.5">
+                                <span class="hamburger-line"></span>
+                                <span class="hamburger-line"></span>
+                                <span class="hamburger-line"></span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu">
+            <div class="h-full flex flex-col">
+                <div class="p-6 border-b border-gray-700 flex justify-between items-center">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center">
+                            <i class="fas fa-code text-primary text-xl"></i>
+                        </div>
+                        <span class="text-xl font-bold text-accent">CASA</span>
+                    </div>
+                    <button id="close-menu" class="p-2 rounded-lg hover:bg-primary/20">
+                        <i class="fas fa-times text-lg"></i>
+                    </button>
+                </div>
+
+                <div class="flex-1 p-6 flex flex-col space-y-4">
+                    <a href="index.html" class="nav-link py-3 border-b border-gray-700">Home</a>
+                    <a href="about.html" class="nav-link py-3 border-b border-gray-700">About</a>
+                    <a href="events.html" class="nav-link py-3 border-b border-gray-700">Events</a>
+                    <a href="projects.html" class="nav-link py-3 border-b border-gray-700 text-accent">Projects</a>
+                    <a href="contact.html" class="nav-link py-3">Contact</a>
+                </div>
+
+                <div class="p-6 border-t border-gray-700">
+                    <div class="flex space-x-4 justify-center">
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                            <i class="fab fa-discord"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overlay for mobile menu -->
+        <div id="overlay" class="menu-overlay"></div>
+
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="container mx-auto px-4 text-center">
+                <h1 class="text-5xl md:text-7xl font-headline font-bold mb-6">
+                    CASA – Where Curiosity Meets Code
+                </h1>
+                <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
+                    Legacy Begins Here
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <button onclick="window.location.href='member-login.html'"
+                        class="bg-accent text-primary px-8 py-3 rounded-lg font-medium hover:bg-accent/90 transition-colors">
+                        Join CASA
+                    </button>
+                    <button onclick="window.location.href='projects.html'"
+                        class="bg-transparent border-2 border-accent text-accent px-8 py-3 rounded-lg font-medium hover:bg-accent/10 transition-colors">
+                        View Projects
+                    </button>
+                    <button onclick="window.location.href='events.html'"
+                        class="bg-highlight text-primary px-8 py-3 rounded-lg font-medium hover:bg-highlight/90 transition-colors">
+                        Upcoming Hackathon
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <main class="container mx-auto px-4 py-16">
+            <!-- About Section -->
+            <section id="about" class="py-16">
+                <h2 class="text-4xl font-headline font-bold mb-8">About CASA</h2>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-2xl font-headline font-semibold mb-4">Our Mission</h3>
+                        <p class="text-lg mb-6">
+                            CASA is dedicated to fostering innovation and technical excellence among students through
+                            collaborative projects, research, and community engagement.
+                        </p>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-headline font-semibold mb-4">Our Vision</h3>
+                        <p class="text-lg">
+                            To create a vibrant community of tech enthusiasts who push the boundaries of what's possible
+                            in computer applications and technology.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pillars Section -->
+            <section id="pillars" class="py-16">
+                <h2 class="text-4xl font-headline font-bold mb-8">Pillars of CASA</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Pillar cards will be added here -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-secondary py-8">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="mb-4 md:mb-0">
+                        <p class="text-accent font-headline text-xl">CASA</p>
+                        <p class="text-sm">© 2024 Computer and AI/ML Student Association</p>
+                    </div>
+                    <div class="flex space-x-4">
+                        <a href="#" class="hover:text-accent transition-colors">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="#" class="hover:text-accent transition-colors">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="#" class="hover:text-accent transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Enhanced Particles Script -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            particlesJS('particles-js', {
+                particles: {
+                    number: {
+                        value: 100,  // Increased number of particles
+                        density: {
+                            enable: true,
+                            value_area: 800
+                        }
+                    },
+                    color: {
+                        value: '#F5F7FC'
+                    },
+                    shape: {
+                        type: 'circle',
+                        stroke: {
+                            width: 0,
+                            color: '#F5F7FC'
+                        }
+                    },
+                    opacity: {
+                        value: 1.5,  // Increased opacity
+                        random: true,
+                        anim: {
+                            enable: true,
+                            speed: 1,
+                            opacity_min: 2,
+                            sync: false
+                        }
+                    },
+                    size: {
+                        value: 4,  // Increased size
+                        random: true,
+                        anim: {
+                            enable: true,
+                            speed: 2,
+                            size_min: 1,
+                            sync: false
+                        }
+                    },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: '#FFFFFF',
+                        opacity: 0.6,  // Increased line opacity
+                        width: 1.5  // Increased line width
+                    },
+                    move: {
+                        enable: true,
+                        speed: 3,  // Increased speed
+                        direction: 'none',
+                        random: true,
+                        straight: false,
+                        out_mode: 'out',
+                        bounce: false,
+                        attract: {
+                            enable: true,
+                            rotateX: 600,
+                            rotateY: 1200
+                        }
+                    }
+                },
+                interactivity: {
+                    detect_on: 'window',
+                    events: {
+                        onhover: {
+                            enable: true,
+                            mode: 'grab',
+                            parallax: {
+                                enable: true,
+                                force: 60,
+                                smooth: 10
+                            }
+                        },
+                        onclick: {
+                            enable: true,
+                            mode: 'push',
+                            particles_nb: 6  // More particles on click
+                        },
+                        resize: true
+                    },
+                    modes: {
+                        grab: {
+                            distance: 180,  // Increased grab distance
+                            line_linked: {
+                                opacity: 1  // Full opacity when hovered
+                            }
+                        },
+                        push: {
+                            particles_nb: 6
+                        },
+                        remove: {
+                            particles_nb: 2
+                        }
+                    }
+                },
+                retina_detect: true
+            });
+
+            // Force redraw on resize for better responsiveness
+            window.addEventListener('resize', function () {
+                if (typeof pJSDom !== 'undefined' && pJSDom.length > 0) {
+                    pJSDom[0].pJS.fn.vendors.destroypJS();
+                    pJSDom[0].pJS.fn.vendors.start();
+                }
+            });
+        });
+
+
+
+        // Mobile menu functionality
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const closeMenuButton = document.getElementById('close-menu');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const overlay = document.getElementById('overlay');
+        const hamburgerIcon = document.getElementById('hamburger-icon');
+
+        function openMobileMenu() {
+            mobileMenu.classList.add('open');
+            overlay.classList.add('active');
+            hamburgerIcon.classList.add('open');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('open');
+            overlay.classList.remove('active');
+            hamburgerIcon.classList.remove('open');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        mobileMenuButton.addEventListener('click', openMobileMenu);
+        closeMenuButton.addEventListener('click', closeMobileMenu);
+        overlay.addEventListener('click', closeMobileMenu);
+
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('#mobile-menu .nav-link').forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+
+        // Theme toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            const isDark = html.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateThemeIcon();
+        });
+
+        function updateThemeIcon() {
+            const isDark = html.classList.contains('dark');
+            const moonIcon = themeToggle.querySelector('.fa-moon');
+            const sunIcon = themeToggle.querySelector('.fa-sun');
+
+            if (isDark) {
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+            } else {
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+            }
+        }
+
+        // Check saved theme
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            html.classList.add('dark');
+        } else {
+            html.classList.remove('dark');
+        }
+        updateThemeIcon();
+
+        // Add animation to page elements
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.animate-fadeInDown');
+            elements.forEach((el, index) => {
+                el.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+    </script>
+</body>
+
+</html>

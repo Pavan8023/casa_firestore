@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CASA Admin Panel</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0D1117',
+                        accent: '#00BFFF',
+                        highlight: '#FEE440',
+                        secondary: '#222831',
+                        text: '#E0E0E0',
+                    },
+                    fontFamily: {
+                        'headline': ['Poppins', 'Montserrat', 'sans-serif'],
+                        'body': ['Inter', 'Nunito', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <!-- Styles -->
+    <style>
+        .admin-panel {
+            min-height: 100vh;
+        }
+        
+        .tab-button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .tab-button.active {
+            background-color: rgba(0, 191, 255, 0.2);
+            color: #00BFFF;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .login-form-container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: rgba(34, 40, 49, 0.9);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+        
+        .form-input {
+            background: rgba(13, 17, 23, 0.6);
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            color: #E0E0E0;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+        
+        .form-input:focus {
+            border-color: #00BFFF;
+            box-shadow: 0 0 0 2px rgba(0, 191, 255, 0.3);
+            outline: none;
+        }
+        
+        .btn-primary {
+            background: #00BFFF;
+            color: #0D1117;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary:hover {
+            background: #0099CC;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 191, 255, 0.4);
+        }
+        
+        .error-message {
+            color: #FF6B6B;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+        
+        .success-message {
+            color: #4CAF50;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+    </style>
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Nunito:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body class="bg-primary text-text font-body">
+    <!-- Admin Login -->
+    <section id="admin-login" class="py-16 pt-32">
+        <div class="container mx-auto px-4">
+            <div class="login-form-container">
+                <div class="text-center mb-8">
+                    <div class="w-20 h-20 rounded-full bg-accent flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-lock text-primary text-3xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-headline font-bold text-accent mb-2">
+                        Admin Portal
+                    </h2>
+                    <p class="text-text/80">
+                        Computer and AI/ML Student Association
+                    </p>
+                </div>
+
+                <form id="admin-login-form">
+                    <div class="mb-5">
+                        <label class="block mb-2">Username</label>
+                        <input type="text" name="username" class="w-full form-input" required>
+                    </div>
+
+                    <div class="mb-5">
+                        <label class="block mb-2">Password</label>
+                        <input type="password" name="password" class="w-full form-input" required>
+                    </div>
+
+                    <button type="submit" class="w-full btn-primary mb-4">Login</button>
+
+                    <div id="admin-login-message" class="mt-4"></div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Panel (Initially Hidden) -->
+    <section id="admin-panel" class="admin-panel py-16 pt-32 hidden">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center mb-8">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 rounded-full bg-accent flex items-center justify-center mr-4">
+                        <i class="fas fa-user-shield text-primary text-xl"></i>
+                    </div>
+                    <h1 class="text-3xl font-headline font-bold text-accent">Admin Dashboard</h1>
+                </div>
+                <div>
+                    <button id="logout-btn"
+                        class="bg-secondary text-text px-4 py-2 rounded-lg font-medium hover:bg-secondary/80 transition-colors mr-2">
+                        Logout
+                    </button>
+                </div>
+            </div>
+
+            <!-- Admin Tabs -->
+            <div class="flex space-x-4 mb-8 border-b border-gray-700 pb-4">
+                <button class="tab-button active" data-tab="users">User Management</button>
+                <button class="tab-button" data-tab="g_users">Google Users Management</button>
+                <button class="tab-button" data-tab="events">Event Management</button>
+            </div>
+
+            <!-- Users Tab -->
+            <div id="users-tab" class="tab-content">
+                <h2 class="text-2xl font-headline font-semibold mb-6">Registered Users</h2>
+
+                <div class="bg-secondary/50 rounded-xl overflow-hidden mb-8">
+                    <table class="min-w-full">
+                        <thead class="bg-secondary">
+                            <tr>
+                                <th class="py-3 px-4 text-left">ID</th>
+                                <th class="py-3 px-4 text-left">Name</th>
+                                <th class="py-3 px-4 text-left">Email</th>
+                                <th class="py-3 px-4 text-left">Membership</th>
+                                <th class="py-3 px-4 text-left">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table">
+                            <!-- Users will be loaded dynamically -->
+                            <tr>
+                                <td colspan="5" class="py-8 text-center">
+                                    <i class="fas fa-spinner fa-spin text-accent text-2xl mb-3"></i>
+                                    <p>Loading users...</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Google Users Tab -->
+            <div id="g_users-tab" class="tab-content hidden">
+                <h2 class="text-2xl font-headline font-semibold mb-6">Registered Google Users</h2>
+                <div class="bg-secondary/50 rounded-xl overflow-hidden mb-8">
+                    <table class="min-w-full">
+                        <thead class="bg-secondary">
+                            <tr>
+                                <th class="py-3 px-4 text-left">ID</th>
+                                <th class="py-3 px-4 text-left">User ID</th>
+                                <th class="py-3 px-4 text-left">Google ID</th>
+                                <th class="py-3 px-4 text-left">Name</th>
+                                <th class="py-3 px-4 text-left">Email</th>
+                                <th class="py-3 px-4 text-left">Created At</th>
+                                <th class="py-3 px-4 text-left">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="g_users-table">
+                            <!-- Google users will be loaded dynamically -->
+                            <tr>
+                                <td colspan="7" class="py-8 text-center">
+                                    <i class="fas fa-spinner fa-spin text-accent text-2xl mb-3"></i>
+                                    <p>Loading Google users...</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Events Tab -->
+            <div id="events-tab" class="tab-content hidden">
+                <h2 class="text-2xl font-headline font-semibold mb-6">Manage Events</h2>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Create Event Form -->
+                    <div class="bg-secondary/50 rounded-xl p-6">
+                        <h3 class="text-xl font-headline font-semibold mb-4">Create New Event</h3>
+                        <form id="create-event-form">
+                            <div class="mb-5">
+                                <label class="block mb-2">Event Title</label>
+                                <input type="text" name="title" class="w-full form-input" required>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+                                <div>
+                                    <label class="block mb-2">Date</label>
+                                    <input type="date" name="date" class="w-full form-input" required>
+                                </div>
+                                <div>
+                                    <label class="block mb-2">Time</label>
+                                    <input type="time" name="time" class="w-full form-input" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-5">
+                                <label class="block mb-2">Location</label>
+                                <input type="text" name="location" class="w-full form-input" required>
+                            </div>
+
+                            <div class="mb-5">
+                                <label class="block mb-2">Description</label>
+                                <textarea name="description" rows="4" class="w-full form-input" required></textarea>
+                            </div>
+
+                            <div class="mb-5">
+                                <label class="block mb-2">Image URL</label>
+                                <input type="text" name="image" class="w-full form-input"
+                                    placeholder="https://example.com/image.jpg" required>
+                            </div>
+
+                            <div class="mb-5">
+                                <label class="block mb-2">Registration Link</label>
+                                <input type="url" name="register_link" class="w-full form-input"
+                                    placeholder="https://forms.google.com/..." required>
+                            </div>
+
+                            <button type="submit"
+                                class="bg-accent text-primary px-6 py-3 rounded-lg font-medium hover:bg-accent/90 transition-colors w-full">
+                                Create Event
+                            </button>
+
+                            <div id="event-form-message" class="mt-4"></div>
+                        </form>
+                    </div>
+
+                    <!-- Existing Events -->
+                    <div>
+                        <h3 class="text-xl font-headline font-semibold mb-4">Existing Events</h3>
+                        <div class="space-y-6" id="admin-events-container">
+                            <!-- Events will be loaded here -->
+                            <div class="text-center py-8">
+                                <i class="fas fa-spinner fa-spin text-accent text-2xl mb-3"></i>
+                                <p>Loading events...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Admin login form submission
+            document.getElementById('admin-login-form').addEventListener('submit', function (e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const username = formData.get('username');
+                const password = formData.get('password');
+                const messageDiv = document.getElementById('admin-login-message');
+
+                if (username === 'admin123' && password === 'admin@123') {
+                    messageDiv.innerHTML = '<p class="text-green-500 mb-4">Login successful! Redirecting...</p>';
+                    setTimeout(() => {
+                        document.getElementById('admin-login').classList.add('hidden');
+                        document.getElementById('admin-panel').classList.remove('hidden');
+                        loadUsers();
+                        loadGoogleUsers();
+                        loadAdminEvents();
+                    }, 1500);
+                } else {
+                    messageDiv.innerHTML = '<p class="text-red-500">Invalid credentials. Please try again.</p>';
+                }
+            });
+
+            // Logout functionality
+            document.getElementById('logout-btn').addEventListener('click', function () {
+                document.getElementById('admin-panel').classList.add('hidden');
+                document.getElementById('admin-login').classList.remove('hidden');
+                document.getElementById('admin-login-form').reset();
+                document.getElementById('admin-login-message').innerHTML = '';
+            });
+
+            // Tab switching
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', function () {
+                    // Update active button
+                    document.querySelectorAll('.tab-button').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    this.classList.add('active');
+
+                    // Show selected tab
+                    const tabName = this.getAttribute('data-tab');
+                    document.querySelectorAll('.tab-content').forEach(tab => {
+                        tab.classList.add('hidden');
+                    });
+                    document.getElementById(`${tabName}-tab`).classList.remove('hidden');
+                    
+                    // Load data if needed
+                    if (tabName === 'g_users') {
+                        loadGoogleUsers();
+                    }
+                });
+            });
+
+            // Event form submission
+            document.getElementById('create-event-form').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const form = e.target;
+                const formData = new FormData(form);
+                const messageDiv = document.getElementById('event-form-message');
+                messageDiv.innerHTML = '<p class="text-accent">Creating event...</p>';
+
+                try {
+                    // Send data to create-event.php
+                    const response = await fetch('database/create-event.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+
+                    if (result.status === 'success') {
+                        messageDiv.innerHTML = '<p class="success-message">Event created successfully!</p>';
+                        form.reset();
+
+                        // Refresh events list after a delay
+                        setTimeout(() => {
+                            messageDiv.innerHTML = '';
+                            loadAdminEvents();
+                        }, 2000);
+                    } else {
+                        messageDiv.innerHTML = `<p class="error-message">${result.message}</p>`;
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    messageDiv.innerHTML = `<p class="error-message">Error: ${error.message}</p>`;
+                }
+            });
+        });
+
+        // Load users for admin panel
+        function loadUsers() {
+            fetch('database/get-users.php')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(users => {
+                    const table = document.getElementById('users-table');
+                    table.innerHTML = '';
+
+                    if (users.length === 0) {
+                        table.innerHTML = `
+                            <tr>
+                                <td colspan="5" class="py-8 text-center">
+                                    <i class="fas fa-user-slash text-accent text-2xl mb-3"></i>
+                                    <p>No users found</p>
+                                </td>
+                            </tr>
+                        `;
+                        return;
+                    }
+
+                    users.forEach(user => {
+                        const row = document.createElement('tr');
+                        row.className = 'border-b border-gray-700 hover:bg-secondary/30';
+                        row.innerHTML = `
+                            <td class="py-3 px-4">${user.id}</td>
+                            <td class="py-3 px-4">${user.name}</td>
+                            <td class="py-3 px-4">${user.email}</td>
+                            <td class="py-3 px-4 capitalize">${user.membership_type}</td>
+                            <td class="py-3 px-4">
+                                <button class="text-accent hover:text-accent/80 mr-2 edit-user" data-id="${user.id}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="text-red-500 hover:text-red-700 delete-user" data-id="${user.id}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        `;
+                        table.appendChild(row);
+                    });
+
+                    // Add event listeners to buttons
+                    document.querySelectorAll('.edit-user').forEach(btn => {
+                        btn.addEventListener('click', function () {
+                            const userId = this.getAttribute('data-id');
+                            editUser(userId);
+                        });
+                    });
+
+                    document.querySelectorAll('.delete-user').forEach(btn => {
+                        btn.addEventListener('click', function () {
+                            const userId = this.getAttribute('data-id');
+                            deleteUser(userId);
+                        });
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading users:', error);
+                    document.getElementById('users-table').innerHTML = `
+                        <tr>
+                            <td colspan="5" class="py-8 text-center">
+                                <i class="fas fa-exclamation-triangle text-red-500 text-2xl mb-3"></i>
+                                <p>Error: ${error.message}</p>
+                            </td>
+                        </tr>
+                    `;
+                });
+        }
+
+        // Load Google users for admin panel
+        function loadGoogleUsers() {
+            fetch('database/get-google_users.php')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(users => {
+                    const table = document.getElementById('g_users-table');
+                    table.innerHTML = '';
+
+                    if (users.length === 0) {
+                        table.innerHTML = `
+                            <tr>
+                                <td colspan="7" class="py-8 text-center">
+                                    <i class="fas fa-user-slash text-accent text-2xl mb-3"></i>
+                                    <p>No Google users found</p>
+                                </td>
+                            </tr>
+                        `;
+                        return;
+                    }
+
+                    users.forEach(user => {
+                        const row = document.createElement('tr');
+                        row.className = 'border-b border-gray-700 hover:bg-secondary/30';
+                        row.innerHTML = `
+                            <td class="py-3 px-4">${user.id}</td>
+                            <td class="py-3 px-4">${user.user_id}</td>
+                            <td class="py-3 px-4">${user.google_id.substring(0, 12)}...</td>
+                            <td class="py-3 px-4">${user.name}</td>
+                            <td class="py-3 px-4">${user.email}</td>
+                            <td class="py-3 px-4">${user.created_at}</td>
+                            <td class="py-3 px-4">
+                                <button class="text-accent hover:text-accent/80 mr-2 edit-g-user" data-id="${user.id}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="text-red-500 hover:text-red-700 delete-g-user" data-id="${user.id}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        `;
+                        table.appendChild(row);
+                    });
+
+                    // Add event listeners to buttons
+                    document.querySelectorAll('.edit-g-user').forEach(btn => {
+                        btn.addEventListener('click', function () {
+                            const userId = this.getAttribute('data-id');
+                            editGoogleUser(userId);
+                        });
+                    });
+
+                    document.querySelectorAll('.delete-g-user').forEach(btn => {
+                        btn.addEventListener('click', function () {
+                            const userId = this.getAttribute('data-id');
+                            deleteGoogleUser(userId);
+                        });
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading Google users:', error);
+                    document.getElementById('g_users-table').innerHTML = `
+                        <tr>
+                            <td colspan="7" class="py-8 text-center">
+                                <i class="fas fa-exclamation-triangle text-red-500 text-2xl mb-3"></i>
+                                <p>Error: ${error.message}</p>
+                            </td>
+                        </tr>
+                    `;
+                });
+        }
+
+        // Load events for admin panel
+        function loadAdminEvents() {
+            fetch('database/get-events.php')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(events => {
+                    const container = document.getElementById('admin-events-container');
+                    container.innerHTML = '';
+
+                    if (events.length === 0) {
+                        container.innerHTML = `
+                            <div class="text-center py-8">
+                                <i class="fas fa-calendar-times text-accent text-2xl mb-3"></i>
+                                <p>No events found</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    events.forEach(event => {
+                        // Format date properly
+                        const eventDate = new Date(event.event_date);
+                        const formattedDate = eventDate.toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric'
+                        });
+
+                        // Format time properly
+                        const timeString = event.event_time;
+                        const timeParts = timeString.split(':');
+                        let hours = parseInt(timeParts[0]);
+                        const minutes = timeParts[1];
+                        const ampm = hours >= 12 ? 'PM' : 'AM';
+                        hours = hours % 12 || 12;
+                        const formattedTime = `${hours}:${minutes} ${ampm}`;
+
+                        const eventHTML = `
+                            <div class="bg-secondary/50 rounded-xl p-4 fade-in">
+                                <div class="flex justify-between items-start">
+                                    <h4 class="font-headline font-semibold text-lg">${event.title}</h4>
+                                    <div class="flex space-x-2">
+                                        <button class="text-accent hover:text-accent/80 edit-event" data-id="${event.id}">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-500 hover:text-red-700 delete-event" data-id="${event.id}">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="mt-3 text-text/80">
+                                    <div class="flex items-center">
+                                        <i class="far fa-calendar-alt mr-2"></i>
+                                        <span>${formattedDate} at ${formattedTime}</span>
+                                    </div>
+                                    <div class="flex items-center mt-1">
+                                        <i class="fas fa-map-marker-alt mr-2"></i>
+                                        <span>${event.location}</span>
+                                    </div>
+                                    <div class="mt-2">
+                                        <a href="${event.register_link}" target="_blank" class="text-accent hover:underline">
+                                            Registration Link
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        container.innerHTML += eventHTML;
+                    });
+
+                    // Add event listeners to buttons
+                    document.querySelectorAll('.edit-event').forEach(btn => {
+                        btn.addEventListener('click', function () {
+                            const eventId = this.getAttribute('data-id');
+                            editEvent(eventId);
+                        });
+                    });
+
+                    document.querySelectorAll('.delete-event').forEach(btn => {
+                        btn.addEventListener('click', function () {
+                            const eventId = this.getAttribute('data-id');
+                            deleteEvent(eventId);
+                        });
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading admin events:', error);
+                    document.getElementById('admin-events-container').innerHTML = `
+                        <div class="text-center py-8">
+                            <i class="fas fa-exclamation-triangle text-red-500 text-2xl mb-3"></i>
+                            <p>Error: ${error.message}</p>
+                        </div>
+                    `;
+                });
+        }
+
+        // Edit user
+        function editUser(userId) {
+            location.href = `database/edit-users.php?id=${userId}`;
+            
+        }
+
+        // Delete user
+        function deleteUser(userId) {
+            if (confirm('Are you sure you want to delete this user?')) {
+                fetch(`database/delete-user.php?id=${userId}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(result => {
+                        if (result.status === 'success') {
+                            alert('User deleted successfully');
+                            loadUsers();
+                        } else {
+                            alert('Error deleting user: ' + result.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while deleting the user');
+                    });
+            }
+        }
+
+        // Edit Google user
+        function editGoogleUser(userId) {
+            location.href = `database/edit-g_users.php?id=${userId}`;
+        }
+
+        // Delete Google user
+        function deleteGoogleUser(userId) {
+            if (confirm('Are you sure you want to delete this Google user?')) {
+                fetch(`database/delete-google_user.php?id=${userId}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(result => {
+                        if (result.status === 'success') {
+                            alert('Google user deleted successfully');
+                            loadGoogleUsers();
+                        } else {
+                            alert('Error deleting Google user: ' + result.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while deleting the Google user');
+                    });
+            }
+        }
+
+        // Edit event
+        function editEvent(eventId) {
+            alert(`Editing event with ID: ${eventId}`);
+            // In a real app, this would open an edit form/modal
+        }
+
+        // Delete event
+        function deleteEvent(eventId) {
+            if (confirm('Are you sure you want to delete this event?')) {
+                fetch(`database/delete-event.php?id=${eventId}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(result => {
+                        if (result.status === 'success') {
+                            alert('Event deleted successfully');
+                            loadAdminEvents();
+                        } else {
+                            alert('Error deleting event: ' + result.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while deleting the event');
+                    });
+            }
+        }
+    </script>
+</body>
+</html>

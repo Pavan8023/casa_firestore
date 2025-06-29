@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects & Research - CASA</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0D1117',
+                        accent: '#00BFFF',
+                        highlight: '#FEE440',
+                        secondary: '#222831',
+                        text: '#E0E0E0',
+                    },
+                    fontFamily: {
+                        'headline': ['Poppins', 'Montserrat', 'sans-serif'],
+                        'body': ['Inter', 'Nunito', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'bounce-slow': 'bounce 3s infinite'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .nav-link {
+            position: relative;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            color: #E0E0E0;
+            transition: color 0.3s;
+        }
+        
+        .nav-link:hover {
+            color: #00BFFF;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: #00BFFF;
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover::after {
+            left: 0;
+            width: 100%;
+        }
+        
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100%;
+            width: 280px;
+            background-color: #222831;
+            z-index: 100;
+            transform: translateX(100%);
+            transition: transform 0.5s ease;
+        }
+        
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 99;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+        
+        .menu-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .hamburger-line {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background-color: #E0E0E0;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+        
+        .hamburger-icon.open .hamburger-line:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        
+        .hamburger-icon.open .hamburger-line:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger-icon.open .hamburger-line:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+        
+        .project-card {
+            background-color: #222831;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .filter-btn {
+            background-color: #222831;
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+        
+        .filter-btn:hover {
+            background-color: rgba(0, 191, 255, 0.1);
+        }
+        
+        .filter-btn.active {
+            background-color: #00BFFF;
+            color: #0D1117;
+        }
+    </style>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Nunito:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body class="bg-primary text-text font-body">
+    <!-- Navigation Bar -->
+    <nav class="fixed top-0 w-full bg-secondary/80 backdrop-blur-md z-50 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center animate-pulse-slow">
+                        <i class="fas fa-code text-primary text-xl"></i>
+                    </div>
+                    <a href="#" class="text-2xl font-bold text-accent flex items-center">
+                        CASA
+                        <span class="ml-1 text-xs bg-highlight text-primary px-2 py-1 rounded-full animate-bounce-slow">AI</span>
+                    </a>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex space-x-1">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="events.html" class="nav-link">Events</a>
+                    <a href="projects.html" class="nav-link text-accent">Projects</a>
+                    <a href="contact.html" class="nav-link">Contact</a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="p-2 rounded-lg hover:bg-primary/20 transition-colors">
+                        <div id="hamburger-icon" class="space-y-1.5">
+                            <span class="hamburger-line"></span>
+                            <span class="hamburger-line"></span>
+                            <span class="hamburger-line"></span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu">
+        <div class="h-full flex flex-col">
+            <div class="p-6 border-b border-gray-700 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center">
+                        <i class="fas fa-code text-primary text-xl"></i>
+                    </div>
+                    <span class="text-xl font-bold text-accent">CASA</span>
+                </div>
+                <button id="close-menu" class="p-2 rounded-lg hover:bg-primary/20">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
+
+            <div class="flex-1 p-6 flex flex-col space-y-4">
+                <a href="index.html" class="nav-link py-3 border-b border-gray-700">Home</a>
+                <a href="about.html" class="nav-link py-3 border-b border-gray-700">About</a>
+                <a href="events.html" class="nav-link py-3 border-b border-gray-700">Events</a>
+                <a href="projects.html" class="nav-link py-3 border-b border-gray-700 text-accent">Projects</a>
+                <a href="contact.html" class="nav-link py-3">Contact</a>
+            </div>
+
+            <div class="p-6 border-t border-gray-700">
+                <div class="flex space-x-4 justify-center">
+                    <a href="#"
+                        class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="#"
+                        class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#"
+                        class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#"
+                        class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                        <i class="fab fa-discord"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Overlay for mobile menu -->
+    <div id="overlay" class="menu-overlay"></div>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-24">
+        <section class="py-16">
+            <h1 class="text-4xl md:text-5xl font-headline font-bold mb-8 text-center">Projects & Research Vault</h1>
+            <p class="text-lg md:text-xl text-center mb-12 max-w-3xl mx-auto">
+                Here you will find some of the exciting, innovative projects that CASA members are currently working on.
+                Feel free to collaborate, contribute, and get involved in our open-source journey.
+            </p>
+
+            <!-- Filters -->
+            <div class="flex flex-wrap gap-3 mb-12 justify-center">
+                <button class="filter-btn active" data-filter="all">
+                    All Projects
+                </button>
+                <button class="filter-btn" data-filter="ai">
+                    AI/ML
+                </button>
+                <button class="filter-btn" data-filter="web">
+                    Web Development
+                </button>
+                <button class="filter-btn" data-filter="app">
+                    App Development
+                </button>
+                <button class="filter-btn" data-filter="blockchain">
+                    Blockchain
+                </button>
+                <button class="filter-btn" data-filter="research">
+                    Research
+                </button>
+            </div>
+
+            <!-- Projects Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="projects-container">
+                <!-- Project 1 -->
+                <div class="project-card">
+                    <div class="h-48 bg-gradient-to-r from-accent to-highlight flex items-center justify-center">
+                        <i class="fas fa-robot text-6xl text-primary"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">AI/ML</span>
+                            <span class="text-gray-400 text-sm">In Progress</span>
+                        </div>
+                        <h3 class="text-xl font-headline font-semibold mb-2">Intelligent Tutor System</h3>
+                        <p class="text-gray-400 mb-4">
+                            An AI-powered system that adapts to student learning patterns to provide personalized educational content.
+                        </p>
+                        <div class="flex justify-between">
+                            <div class="flex space-x-2">
+                                <span class="px-2 py-1 rounded bg-primary text-xs">Python</span>
+                                <span class="px-2 py-1 rounded bg-primary text-xs">TensorFlow</span>
+                            </div>
+                            <a href="#" class="text-accent hover:text-highlight">
+                                <i class="fab fa-github"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 2 -->
+                <div class="project-card">
+                    <div class="h-48 bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
+                        <i class="fas fa-wallet text-6xl text-white"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">Blockchain</span>
+                            <span class="text-gray-400 text-sm">Completed</span>
+                        </div>
+                        <h3 class="text-xl font-headline font-semibold mb-2">Campus Crypto Wallet</h3>
+                        <p class="text-gray-400 mb-4">
+                            A secure cryptocurrency wallet designed specifically for university students with built-in campus payment features.
+                        </p>
+                        <div class="flex justify-between">
+                            <div class="flex space-x-2">
+                                <span class="px-2 py-1 rounded bg-primary text-xs">Solidity</span>
+                                <span class="px-2 py-1 rounded bg-primary text-xs">React</span>
+                            </div>
+                            <a href="#" class="text-accent hover:text-highlight">
+                                <i class="fab fa-github"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 3 -->
+                <div class="project-card">
+                    <div class="h-48 bg-gradient-to-r from-green-500 to-teal-500 flex items-center justify-center">
+                        <i class="fas fa-mobile-alt text-6xl text-white"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">App</span>
+                            <span class="text-gray-400 text-sm">In Progress</span>
+                        </div>
+                        <h3 class="text-xl font-headline font-semibold mb-2">Campus Navigator</h3>
+                        <p class="text-gray-400 mb-4">
+                            An indoor navigation app with AR features to help students find classrooms and campus facilities.
+                        </p>
+                        <div class="flex justify-between">
+                            <div class="flex space-x-2">
+                                <span class="px-2 py-1 rounded bg-primary text-xs">Flutter</span>
+                                <span class="px-2 py-1 rounded bg-primary text-xs">ARCore</span>
+                            </div>
+                            <a href="#" class="text-accent hover:text-highlight">
+                                <i class="fab fa-github"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 4 -->
+                <div class="project-card">
+                    <div class="h-48 bg-gradient-to-r from-yellow-500 to-orange-500 flex items-center justify-center">
+                        <i class="fas fa-globe text-6xl text-white"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">Web</span>
+                            <span class="text-gray-400 text-sm">Completed</span>
+                        </div>
+                        <h3 class="text-xl font-headline font-semibold mb-2">Eco Marketplace</h3>
+                        <p class="text-gray-400 mb-4">
+                            A sustainable marketplace connecting eco-conscious consumers with local green businesses.
+                        </p>
+                        <div class="flex justify-between">
+                            <div class="flex space-x-2">
+                                <span class="px-2 py-1 rounded bg-primary text-xs">Vue.js</span>
+                                <span class="px-2 py-1 rounded bg-primary text-xs">Node.js</span>
+                            </div>
+                            <a href="#" class="text-accent hover:text-highlight">
+                                <i class="fab fa-github"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 5 -->
+                <div class="project-card">
+                    <div class="h-48 bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
+                        <i class="fas fa-brain text-6xl text-white"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">AI/ML</span>
+                            <span class="text-gray-400 text-sm">In Progress</span>
+                        </div>
+                        <h3 class="text-xl font-headline font-semibold mb-2">Mental Health Assistant</h3>
+                        <p class="text-gray-400 mb-4">
+                            An AI chatbot that provides mental health support and resources for college students.
+                        </p>
+                        <div class="flex justify-between">
+                            <div class="flex space-x-2">
+                                <span class="px-2 py-1 rounded bg-primary text-xs">Python</span>
+                                <span class="px-2 py-1 rounded bg-primary text-xs">NLP</span>
+                            </div>
+                            <a href="#" class="text-accent hover:text-highlight">
+                                <i class="fab fa-github"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 6 -->
+                <div class="project-card">
+                    <div class="h-48 bg-gradient-to-r from-red-500 to-orange-500 flex items-center justify-center">
+                        <i class="fas fa-vr-cardboard text-6xl text-white"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">Research</span>
+                            <span class="text-gray-400 text-sm">Prototype</span>
+                        </div>
+                        <h3 class="text-xl font-headline font-semibold mb-2">VR Learning Environments</h3>
+                        <p class="text-gray-400 mb-4">
+                            Research on the effectiveness of VR technology in creating immersive learning experiences.
+                        </p>
+                        <div class="flex justify-between">
+                            <div class="flex space-x-2">
+                                <span class="px-2 py-1 rounded bg-primary text-xs">Unity</span>
+                                <span class="px-2 py-1 rounded bg-primary text-xs">VR</span>
+                            </div>
+                            <a href="#" class="text-accent hover:text-highlight">
+                                <i class="fas fa-book"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Research Papers Section -->
+            <div class="mt-16">
+                <h2 class="text-3xl font-headline font-bold mb-8">Research Papers</h2>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Research Paper 1 -->
+                    <div class="project-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">AI/ML</span>
+                            <span class="text-gray-400 text-sm">2024</span>
+                        </div>
+                        <h3 class="text-xl font-headline font-semibold mb-2">Deep Learning in Computer Vision</h3>
+                        <p class="text-gray-400 mb-4">
+                            A comprehensive study on the applications of deep learning in computer vision and its impact
+                            on modern technology.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-400">By: John Doe</span>
+                            <a href="#" class="text-accent hover:text-highlight transition-colors">
+                                Read Paper <i class="fas fa-arrow-right ml-1"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Research Paper 2 -->
+                    <div class="project-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">Blockchain</span>
+                            <span class="text-gray-400 text-sm">2024</span>
+                        </div>
+                        <h3 class="text-xl font-headline font-semibold mb-2">Smart Contracts Security</h3>
+                        <p class="text-gray-400 mb-4">
+                            An analysis of security vulnerabilities in smart contracts and best practices for secure
+                            development.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-400">By: Jane Smith</span>
+                            <a href="#" class="text-accent hover:text-highlight transition-colors">
+                                Read Paper <i class="fas fa-arrow-right ml-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-secondary py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <p class="text-accent font-headline text-xl">CASA</p>
+                    <p class="text-sm">© 2024 Computer and AI/ML Student Association</p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="#" class="hover:text-accent transition-colors">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="#" class="hover:text-accent transition-colors">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="#" class="hover:text-accent transition-colors">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Mobile menu functionality
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const closeMenuButton = document.getElementById('close-menu');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const overlay = document.getElementById('overlay');
+        const hamburgerIcon = document.getElementById('hamburger-icon');
+
+        function openMobileMenu() {
+            mobileMenu.classList.add('open');
+            overlay.classList.add('active');
+            hamburgerIcon.classList.add('open');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('open');
+            overlay.classList.remove('active');
+            hamburgerIcon.classList.remove('open');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        mobileMenuButton.addEventListener('click', openMobileMenu);
+        closeMenuButton.addEventListener('click', closeMobileMenu);
+        overlay.addEventListener('click', closeMobileMenu);
+
+        // Filter Projects
+        document.querySelectorAll('.filter-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // Add active class to clicked button
+                button.classList.add('active');
+            });
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('#mobile-menu .nav-link').forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+    </script>
+</body>
+
+</html>
