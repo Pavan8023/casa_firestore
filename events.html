@@ -62,6 +62,61 @@
             width: 100%;
         }
         
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100%;
+            width: 280px;
+            background-color: #222831;
+            z-index: 100;
+            transform: translateX(100%);
+            transition: transform 0.5s ease;
+        }
+        
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 99;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+        
+        .menu-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .hamburger-line {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background-color: #E0E0E0;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+        
+        .hamburger-icon.open .hamburger-line:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        
+        .hamburger-icon.open .hamburger-line:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger-icon.open .hamburger-line:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+        
         /* Flip card styles */
         .flip-card {
             background-color: transparent;
@@ -198,12 +253,14 @@
                 <div class="flex items-center justify-between h-20">
                     <!-- Logo -->
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center animate-pulse-slow">
+                        <div
+                            class="w-10 h-10 rounded-full bg-accent flex items-center justify-center animate-pulse-slow">
                             <i class="fas fa-code text-primary text-xl"></i>
                         </div>
                         <a href="#" class="text-2xl font-bold text-accent flex items-center">
                             CASA
-                            <span class="ml-1 text-xs bg-highlight text-primary px-2 py-1 rounded-full animate-bounce-slow">AI</span>
+                            <span
+                                class="ml-1 text-xs bg-highlight text-primary px-2 py-1 rounded-full animate-bounce-slow">AI</span>
                         </a>
                     </div>
 
@@ -211,13 +268,73 @@
                     <div class="hidden md:flex space-x-1">
                         <a href="index.html" class="nav-link">Home</a>
                         <a href="about.html" class="nav-link">About</a>
-                        <a href="events.html" class="nav-link text-accent">Events</a>
-                        <a href="projects.html" class="nav-link">Projects</a>
+                        <a href="events.html" class="nav-link">Events</a>
+                        <a href="projects.html" class="nav-link text-accent">Projects</a>
                         <a href="contact.html" class="nav-link">Contact</a>
+                    </div>
+
+                    <!-- Mobile menu button -->
+                    <div class="md:hidden">
+                        <button id="mobile-menu-button" class="p-2 rounded-lg hover:bg-primary/20 transition-colors">
+                            <div id="hamburger-icon" class="space-y-1.5">
+                                <span class="hamburger-line"></span>
+                                <span class="hamburger-line"></span>
+                                <span class="hamburger-line"></span>
+                            </div>
+                        </button>
                     </div>
                 </div>
             </div>
         </nav>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu">
+            <div class="h-full flex flex-col">
+                <div class="p-6 border-b border-gray-700 flex justify-between items-center">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center">
+                            <i class="fas fa-code text-primary text-xl"></i>
+                        </div>
+                        <span class="text-xl font-bold text-accent">CASA</span>
+                    </div>
+                    <button id="close-menu" class="p-2 rounded-lg hover:bg-primary/20">
+                        <i class="fas fa-times text-lg"></i>
+                    </button>
+                </div>
+
+                <div class="flex-1 p-6 flex flex-col space-y-4">
+                    <a href="index.html" class="nav-link py-3 border-b border-gray-700">Home</a>
+                    <a href="about.html" class="nav-link py-3 border-b border-gray-700">About</a>
+                    <a href="events.html" class="nav-link py-3 border-b border-gray-700">Events</a>
+                    <a href="projects.html" class="nav-link py-3 border-b border-gray-700 text-accent">Projects</a>
+                    <a href="contact.html" class="nav-link py-3">Contact</a>
+                </div>
+
+                <div class="p-6 border-t border-gray-700">
+                    <div class="flex space-x-4 justify-center">
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                            <i class="fab fa-discord"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overlay for mobile menu -->
+        <div id="overlay" class="menu-overlay"></div>
 
         <!-- Events Page -->
         <section class="py-16 pt-32">
@@ -568,6 +685,37 @@
                 }
             });
         }
+
+        // Mobile menu functionality
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const closeMenuButton = document.getElementById('close-menu');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const overlay = document.getElementById('overlay');
+        const hamburgerIcon = document.getElementById('hamburger-icon');
+
+        function openMobileMenu() {
+            mobileMenu.classList.add('open');
+            overlay.classList.add('active');
+            hamburgerIcon.classList.add('open');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('open');
+            overlay.classList.remove('active');
+            hamburgerIcon.classList.remove('open');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        mobileMenuButton.addEventListener('click', openMobileMenu);
+        closeMenuButton.addEventListener('click', closeMobileMenu);
+        overlay.addEventListener('click', closeMobileMenu);
+
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('#mobile-menu .nav-link').forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
     </script>
 </body>
 </html>
