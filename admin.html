@@ -42,6 +42,7 @@
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s;
+            white-space: nowrap;
         }
         
         .tab-button.active {
@@ -112,6 +113,90 @@
             margin-top: 5px;
             font-size: 14px;
         }
+        
+        /* Mobile table card styles */
+        .mobile-table-card {
+            background: rgba(34, 40, 49, 0.5);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(0, 191, 255, 0.2);
+        }
+        
+        .mobile-table-card .card-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .mobile-table-card .card-row:last-child {
+            border-bottom: none;
+        }
+        
+        .mobile-table-card .card-label {
+            font-weight: 600;
+            color: #00BFFF;
+            min-width: 120px;
+        }
+        
+        .mobile-table-card .card-value {
+            text-align: right;
+            flex-grow: 1;
+            padding-left: 15px;
+        }
+        
+        .mobile-table-card .card-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .login-form-container {
+                padding: 30px 20px;
+            }
+            
+            .admin-panel .container {
+                padding: 0 15px;
+            }
+            
+            .tabs-container {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            
+            .tab-button {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            
+            .desktop-table {
+                display: none;
+            }
+            
+            .mobile-table {
+                display: block;
+            }
+            
+            #create-event-form .grid-cols-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .desktop-table {
+                display: table;
+            }
+            
+            .mobile-table {
+                display: none;
+            }
+        }
     </style>
 
     <!-- Fonts & Icons -->
@@ -121,7 +206,7 @@
 
 <body class="bg-primary text-text font-body">
     <!-- Admin Login -->
-    <section id="admin-login" class="py-16 pt-32">
+    <section id="admin-login" class="py-16 pt-16 md:pt-32">
         <div class="container mx-auto px-4">
             <div class="login-form-container">
                 <div class="text-center mb-8">
@@ -156,35 +241,36 @@
     </section>
 
     <!-- Admin Panel (Initially Hidden) -->
-    <section id="admin-panel" class="admin-panel py-16 pt-32 hidden">
+    <section id="admin-panel" class="admin-panel py-10 md:py-16 pt-16 md:pt-32 hidden">
         <div class="container mx-auto px-4">
-            <div class="flex justify-between items-center mb-8">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
                 <div class="flex items-center">
-                    <div class="w-12 h-12 rounded-full bg-accent flex items-center justify-center mr-4">
-                        <i class="fas fa-user-shield text-primary text-xl"></i>
+                    <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-accent flex items-center justify-center mr-3 md:mr-4">
+                        <i class="fas fa-user-shield text-primary text-lg md:text-xl"></i>
                     </div>
-                    <h1 class="text-3xl font-headline font-bold text-accent">Admin Dashboard</h1>
+                    <h1 class="text-2xl md:text-3xl font-headline font-bold text-accent">Admin Dashboard</h1>
                 </div>
                 <div>
                     <button id="logout-btn"
-                        class="bg-secondary text-text px-4 py-2 rounded-lg font-medium hover:bg-secondary/80 transition-colors mr-2">
+                        class="bg-secondary text-text px-4 py-2 rounded-lg font-medium hover:bg-secondary/80 transition-colors">
                         Logout
                     </button>
                 </div>
             </div>
 
             <!-- Admin Tabs -->
-            <div class="flex space-x-4 mb-8 border-b border-gray-700 pb-4">
+            <div class="flex tabs-container space-x-0 md:space-x-4 mb-6 md:mb-8 border-b border-gray-700 pb-4 overflow-x-auto">
                 <button class="tab-button active" data-tab="users">User Management</button>
-                <button class="tab-button" data-tab="g_users">Google Users Management</button>
+                <button class="tab-button" data-tab="g_users">Google Users</button>
                 <button class="tab-button" data-tab="events">Event Management</button>
             </div>
 
             <!-- Users Tab -->
             <div id="users-tab" class="tab-content">
-                <h2 class="text-2xl font-headline font-semibold mb-6">Registered Users</h2>
+                <h2 class="text-xl md:text-2xl font-headline font-semibold mb-6">Registered Users</h2>
 
-                <div class="bg-secondary/50 rounded-xl overflow-hidden mb-8">
+                <!-- Desktop Table -->
+                <div class="desktop-table bg-secondary/50 rounded-xl overflow-hidden mb-8">
                     <table class="min-w-full">
                         <thead class="bg-secondary">
                             <tr>
@@ -206,12 +292,23 @@
                         </tbody>
                     </table>
                 </div>
+
+                <!-- Mobile Table -->
+                <div id="users-mobile-table" class="mobile-table">
+                    <!-- Users will be loaded dynamically -->
+                    <div class="py-8 text-center">
+                        <i class="fas fa-spinner fa-spin text-accent text-2xl mb-3"></i>
+                        <p>Loading users...</p>
+                    </div>
+                </div>
             </div>
 
             <!-- Google Users Tab -->
             <div id="g_users-tab" class="tab-content hidden">
-                <h2 class="text-2xl font-headline font-semibold mb-6">Registered Google Users</h2>
-                <div class="bg-secondary/50 rounded-xl overflow-hidden mb-8">
+                <h2 class="text-xl md:text-2xl font-headline font-semibold mb-6">Registered Google Users</h2>
+                
+                <!-- Desktop Table -->
+                <div class="desktop-table bg-secondary/50 rounded-xl overflow-hidden mb-8">
                     <table class="min-w-full">
                         <thead class="bg-secondary">
                             <tr>
@@ -235,16 +332,25 @@
                         </tbody>
                     </table>
                 </div>
+                
+                <!-- Mobile Table -->
+                <div id="g_users-mobile-table" class="mobile-table">
+                    <!-- Google users will be loaded dynamically -->
+                    <div class="py-8 text-center">
+                        <i class="fas fa-spinner fa-spin text-accent text-2xl mb-3"></i>
+                        <p>Loading Google users...</p>
+                    </div>
+                </div>
             </div>
 
             <!-- Events Tab -->
             <div id="events-tab" class="tab-content hidden">
-                <h2 class="text-2xl font-headline font-semibold mb-6">Manage Events</h2>
+                <h2 class="text-xl md:text-2xl font-headline font-semibold mb-6">Manage Events</h2>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <!-- Create Event Form -->
-                    <div class="bg-secondary/50 rounded-xl p-6">
-                        <h3 class="text-xl font-headline font-semibold mb-4">Create New Event</h3>
+                    <div class="bg-secondary/50 rounded-xl p-4 md:p-6">
+                        <h3 class="text-lg md:text-xl font-headline font-semibold mb-4">Create New Event</h3>
                         <form id="create-event-form">
                             <div class="mb-5">
                                 <label class="block mb-2">Event Title</label>
@@ -295,7 +401,7 @@
 
                     <!-- Existing Events -->
                     <div>
-                        <h3 class="text-xl font-headline font-semibold mb-4">Existing Events</h3>
+                        <h3 class="text-lg md:text-xl font-headline font-semibold mb-4">Existing Events</h3>
                         <div class="space-y-6" id="admin-events-container">
                             <!-- Events will be loaded here -->
                             <div class="text-center py-8">
@@ -416,7 +522,9 @@
                 })
                 .then(users => {
                     const table = document.getElementById('users-table');
+                    const mobileTable = document.getElementById('users-mobile-table');
                     table.innerHTML = '';
+                    mobileTable.innerHTML = '';
 
                     if (users.length === 0) {
                         table.innerHTML = `
@@ -427,9 +535,16 @@
                                 </td>
                             </tr>
                         `;
+                        mobileTable.innerHTML = `
+                            <div class="py-8 text-center">
+                                <i class="fas fa-user-slash text-accent text-2xl mb-3"></i>
+                                <p>No users found</p>
+                            </div>
+                        `;
                         return;
                     }
 
+                    // Desktop table
                     users.forEach(user => {
                         const row = document.createElement('tr');
                         row.className = 'border-b border-gray-700 hover:bg-secondary/30';
@@ -448,6 +563,39 @@
                             </td>
                         `;
                         table.appendChild(row);
+                    });
+
+                    // Mobile cards
+                    users.forEach(user => {
+                        const card = document.createElement('div');
+                        card.className = 'mobile-table-card fade-in';
+                        card.innerHTML = `
+                            <div class="card-row">
+                                <div class="card-label">ID:</div>
+                                <div class="card-value">${user.id}</div>
+                            </div>
+                            <div class="card-row">
+                                <div class="card-label">Name:</div>
+                                <div class="card-value">${user.name}</div>
+                            </div>
+                            <div class="card-row">
+                                <div class="card-label">Email:</div>
+                                <div class="card-value">${user.email}</div>
+                            </div>
+                            <div class="card-row">
+                                <div class="card-label">Membership:</div>
+                                <div class="card-value capitalize">${user.membership_type}</div>
+                            </div>
+                            <div class="card-actions">
+                                <button class="text-accent hover:text-accent/80 edit-user" data-id="${user.id}">
+                                    <i class="fas fa-edit mr-1"></i> Edit
+                                </button>
+                                <button class="text-red-500 hover:text-red-700 delete-user" data-id="${user.id}">
+                                    <i class="fas fa-trash mr-1"></i> Delete
+                                </button>
+                            </div>
+                        `;
+                        mobileTable.appendChild(card);
                     });
 
                     // Add event listeners to buttons
@@ -475,6 +623,12 @@
                             </td>
                         </tr>
                     `;
+                    document.getElementById('users-mobile-table').innerHTML = `
+                        <div class="py-8 text-center">
+                            <i class="fas fa-exclamation-triangle text-red-500 text-2xl mb-3"></i>
+                            <p>Error: ${error.message}</p>
+                        </div>
+                    `;
                 });
         }
 
@@ -489,7 +643,9 @@
                 })
                 .then(users => {
                     const table = document.getElementById('g_users-table');
+                    const mobileTable = document.getElementById('g_users-mobile-table');
                     table.innerHTML = '';
+                    mobileTable.innerHTML = '';
 
                     if (users.length === 0) {
                         table.innerHTML = `
@@ -500,9 +656,16 @@
                                 </td>
                             </tr>
                         `;
+                        mobileTable.innerHTML = `
+                            <div class="py-8 text-center">
+                                <i class="fas fa-user-slash text-accent text-2xl mb-3"></i>
+                                <p>No Google users found</p>
+                            </div>
+                        `;
                         return;
                     }
 
+                    // Desktop table
                     users.forEach(user => {
                         const row = document.createElement('tr');
                         row.className = 'border-b border-gray-700 hover:bg-secondary/30';
@@ -523,6 +686,47 @@
                             </td>
                         `;
                         table.appendChild(row);
+                    });
+
+                    // Mobile cards
+                    users.forEach(user => {
+                        const card = document.createElement('div');
+                        card.className = 'mobile-table-card fade-in';
+                        card.innerHTML = `
+                            <div class="card-row">
+                                <div class="card-label">ID:</div>
+                                <div class="card-value">${user.id}</div>
+                            </div>
+                            <div class="card-row">
+                                <div class="card-label">User ID:</div>
+                                <div class="card-value">${user.user_id}</div>
+                            </div>
+                            <div class="card-row">
+                                <div class="card-label">Google ID:</div>
+                                <div class="card-value">${user.google_id.substring(0, 12)}...</div>
+                            </div>
+                            <div class="card-row">
+                                <div class="card-label">Name:</div>
+                                <div class="card-value">${user.name}</div>
+                            </div>
+                            <div class="card-row">
+                                <div class="card-label">Email:</div>
+                                <div class="card-value">${user.email}</div>
+                            </div>
+                            <div class="card-row">
+                                <div class="card-label">Created At:</div>
+                                <div class="card-value">${user.created_at}</div>
+                            </div>
+                            <div class="card-actions">
+                                <button class="text-accent hover:text-accent/80 edit-g-user" data-id="${user.id}">
+                                    <i class="fas fa-edit mr-1"></i> Edit
+                                </button>
+                                <button class="text-red-500 hover:text-red-700 delete-g-user" data-id="${user.id}">
+                                    <i class="fas fa-trash mr-1"></i> Delete
+                                </button>
+                            </div>
+                        `;
+                        mobileTable.appendChild(card);
                     });
 
                     // Add event listeners to buttons
@@ -549,6 +753,12 @@
                                 <p>Error: ${error.message}</p>
                             </td>
                         </tr>
+                    `;
+                    document.getElementById('g_users-mobile-table').innerHTML = `
+                        <div class="py-8 text-center">
+                            <i class="fas fa-exclamation-triangle text-red-500 text-2xl mb-3"></i>
+                            <p>Error: ${error.message}</p>
+                        </div>
                     `;
                 });
         }
@@ -656,7 +866,6 @@
         // Edit user
         function editUser(userId) {
             location.href = `database/edit-users.php?id=${userId}`;
-            
         }
 
         // Delete user

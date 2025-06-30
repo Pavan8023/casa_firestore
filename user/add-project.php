@@ -1,6 +1,6 @@
 <?php
 session_start();
-require '../database/db.php';
+require 'db.php';
 
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['status' => 'error', 'message' => 'Not authenticated']);

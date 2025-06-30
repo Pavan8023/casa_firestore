@@ -1,5 +1,6 @@
 <?php
 session_start();
+require 'db.php';
 
 // Check if user is logged in
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
@@ -13,10 +14,15 @@ $userEmail = $_SESSION['user_email'] ?? '';
 $profilePic = $_SESSION['profile_pic'] ?? 'https://via.placeholder.com/40';
 $membershipType = $_SESSION['membership'] ?? 'student';
 $loginMethod = $_SESSION['login_method'] ?? 'email';
+$userId = $_SESSION['user_id'] ?? 0;
+
+// Initialize theme settings
+$theme = $_SESSION['theme'] ?? 'dark';
+$layout = $_SESSION['layout'] ?? 'grid';
 ?>
 
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="<?= $theme ?>">
 
 <head>
     <meta charset="UTF-8">
@@ -122,8 +128,18 @@ $loginMethod = $_SESSION['login_method'] ?? 'email';
             border: 2px solid #0D1117;
         }
         
-        .hidden-section {
+        .view-section {
             display: none;
+        }
+        
+        .view-section.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .form-input {
@@ -132,7 +148,7 @@ $loginMethod = $_SESSION['login_method'] ?? 'email';
             color: #E0E0E0;
             padding: 12px 15px;
             border-radius: 8px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             transition: all 0.3s;
             width: 100%;
         }
@@ -175,133 +191,19 @@ $loginMethod = $_SESSION['login_method'] ?? 'email';
             background: rgba(0, 191, 255, 0.1);
         }
         
-        .view-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(0, 191, 255, 0.2);
-        }
-        
-        .close-view-btn {
-            background: transparent;
-            border: none;
-            color: #00BFFF;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-        
-        .tab-button {
-            padding: 10px 20px;
-            background: rgba(13, 17, 23, 0.5);
-            border: none;
-            border-bottom: 2px solid transparent;
-            color: #E0E0E0;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .tab-button.active {
-            border-bottom: 2px solid #00BFFF;
-            color: #00BFFF;
-        }
-        
-        .tab-content {
-            display: none;
-            padding: 20px;
-            background: rgba(13, 17, 23, 0.3);
-            border-radius: 8px;
-            margin-top: 15px;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        .theme-option {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            margin: 10px 0;
-            background: rgba(34, 40, 49, 0.7);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 1px solid transparent;
-        }
-        
-        .theme-option:hover, .theme-option.selected {
-            border: 1px solid #00BFFF;
-            background: rgba(0, 191, 255, 0.1);
-        }
-        
-        .theme-preview {
-            width: 40px;
-            height: 40px;
-            border-radius: 6px;
-            margin-right: 15px;
-        }
-        
-        .theme-blue { background: linear-gradient(135deg, #0D1117 50%, #00BFFF 50%); }
-        .theme-green { background: linear-gradient(135deg, #0D1117 50%, #2ecc71 50%); }
-        .theme-purple { background: linear-gradient(135deg, #0D1117 50%, #9b59b6 50%); }
-        .theme-red { background: linear-gradient(135deg, #0D1117 50%, #e74c3c 50%); }
-        
-        .notification-item {
-            padding: 15px;
-            background: rgba(34, 40, 49, 0.7);
-            border-radius: 8px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .notification-icon {
-            width: 40px;
-            height: 40px;
-            background: rgba(0, 191, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 15px;
-            font-size: 18px;
-            color: #00BFFF;
-        }
-        
-        .project-grid {
+        .layout-grid .card-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
-            margin-top: 20px;
         }
         
-        .project-card {
-            background: rgba(34, 40, 49, 0.7);
-            border-radius: 10px;
-            padding: 20px;
-            transition: all 0.3s;
-            border-left: 4px solid #00BFFF;
+        .layout-list .card-container {
+            display: block;
         }
         
-        .project-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        .layout-list .card-item {
+            margin-bottom: 15px;
         }
-        
-        .status-badge {
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            display: inline-block;
-            margin-top: 10px;
-        }
-        
-        .status-in-progress { background: rgba(254, 228, 64, 0.2); color: #FEE440; }
-        .status-completed { background: rgba(46, 204, 113, 0.2); color: #2ecc71; }
-        .status-planned { background: rgba(52, 152, 219, 0.2); color: #3498db; }
     </style>
 
     <!-- Fonts -->
@@ -361,16 +263,16 @@ $loginMethod = $_SESSION['login_method'] ?? 'email';
                                 </span>
                                 <?php endif; ?>
                             </div>
-                            <a href="#" class="dropdown-item" onclick="showView('profileView')">
+                            <a href="#" class="dropdown-item" data-view="profile">
                                 <i class="fas fa-user mr-3"></i> My Profile
                             </a>
-                            <a href="#" class="dropdown-item" onclick="showView('projectsView')">
+                            <a href="#" class="dropdown-item" data-view="projects">
                                 <i class="fas fa-project-diagram mr-3"></i> My Projects
                             </a>
-                            <a href="#" class="dropdown-item" onclick="showView('researchView')">
+                            <a href="#" class="dropdown-item" data-view="research">
                                 <i class="fas fa-file-alt mr-3"></i> Research Papers
                             </a>
-                            <a href="#" class="dropdown-item" onclick="showView('settingsView')">
+                            <a href="#" class="dropdown-item" data-view="settings">
                                 <i class="fas fa-cog mr-3"></i> Settings
                             </a>
                             <a href="logout.php" class="dropdown-item">
@@ -384,53 +286,43 @@ $loginMethod = $_SESSION['login_method'] ?? 'email';
 
         <!-- Main Content -->
         <main class="container mx-auto px-4 py-24">
-            <!-- Dashboard View (Default) -->
-            <div id="dashboardView">
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <!-- User Profile Card -->
-                    <div class="lg:col-span-1">
-                        <div class="dashboard-card user-profile">
-                            <div class="text-center mb-6">
-                                <div class="relative inline-block">
-                                    <img src="<?= htmlspecialchars($profilePic) ?>" alt="Profile" class="w-32 h-32 rounded-full mx-auto border-4 border-accent">
-                                    <?php if ($loginMethod === 'google'): ?>
-                                    <div class="login-badge" style="width: 32px; height: 32px; font-size: 14px; bottom: -12px; right: -12px;" title="Signed in with Google">
-                                        <i class="fab fa-google"></i>
-                                    </div>
-                                    <?php endif; ?>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- User Profile Card -->
+                <div class="lg:col-span-1">
+                    <div class="dashboard-card user-profile">
+                        <div class="text-center mb-6">
+                            <div class="relative inline-block">
+                                <img src="<?= htmlspecialchars($profilePic) ?>" alt="Profile" class="w-32 h-32 rounded-full mx-auto border-4 border-accent">
+                                <?php if ($loginMethod === 'google'): ?>
+                                <div class="login-badge" style="width: 32px; height: 32px; font-size: 14px; bottom: -12px; right: -12px;" title="Signed in with Google">
+                                    <i class="fab fa-google"></i>
                                 </div>
-                                <h2 class="text-2xl font-bold mt-4"><?= htmlspecialchars($userName) ?></h2>
-                                <p class="text-text/80"><?= htmlspecialchars($userEmail) ?></p>
-                                <p class="mt-2 px-3 py-1 bg-primary/50 rounded-full inline-block">
-                                    <i class="fas fa-user-graduate mr-2"></i>
-                                    <?= ucfirst($membershipType) ?> Member
-                                </p>
+                                <?php endif; ?>
                             </div>
-                            
-                            <div class="mt-6">
-                                <h3 class="text-lg font-bold mb-3">Quick Actions</h3>
-                                <button id="addProjectBtn" class="w-full mb-3 py-2 bg-accent text-primary font-bold rounded-lg hover:bg-[#0099CC] transition-colors">
-                                    <i class="fas fa-plus mr-2"></i>Add Project
-                                </button>
-                                <button id="addResearchBtn" class="w-full py-2 bg-secondary text-accent border border-accent font-bold rounded-lg hover:bg-primary/20 transition-colors">
-                                    <i class="fas fa-file-alt mr-2"></i>Add Research
-                                </button>
-                            </div>
+                            <h2 class="text-2xl font-bold mt-4"><?= htmlspecialchars($userName) ?></h2>
+                            <p class="text-text/80"><?= htmlspecialchars($userEmail) ?></p>
+                            <p class="mt-2 px-3 py-1 bg-primary/50 rounded-full inline-block">
+                                <i class="fas fa-user-graduate mr-2"></i>
+                                <?= ucfirst($membershipType) ?> Member
+                            </p>
                         </div>
                         
-                        <!-- My Projects Section -->
-                        <div class="dashboard-card mt-8">
-                            <h3 class="text-xl font-bold mb-4 flex items-center">
-                                <i class="fas fa-project-diagram mr-2"></i> My Projects
-                            </h3>
-                            <div id="projectsList" class="space-y-3">
-                                <!-- Projects will be loaded here via AJAX -->
-                            </div>
+                        <div class="mt-6">
+                            <h3 class="text-lg font-bold mb-3">Quick Actions</h3>
+                            <button data-view="projects" class="w-full mb-3 py-2 bg-accent text-primary font-bold rounded-lg hover:bg-[#0099CC] transition-colors">
+                                <i class="fas fa-plus mr-2"></i>Add Project
+                            </button>
+                            <button data-view="research" class="w-full py-2 bg-secondary text-accent border border-accent font-bold rounded-lg hover:bg-primary/20 transition-colors">
+                                <i class="fas fa-file-alt mr-2"></i>Add Research
+                            </button>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Dashboard Content -->
-                    <div class="lg:col-span-2">
+                <!-- Dashboard Content -->
+                <div class="lg:col-span-2">
+                    <!-- Dashboard View -->
+                    <div id="dashboardView" class="view-section active">
                         <div class="dashboard-card">
                             <h1 class="text-3xl font-bold mb-6 text-accent">
                                 <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
@@ -450,50 +342,6 @@ $loginMethod = $_SESSION['login_method'] ?? 'email';
                                     <p class="text-2xl font-bold" id="tasksCount">0</p>
                                     <p class="text-text/80">Pending Tasks</p>
                                 </div>
-                            </div>
-                            
-                            <!-- Add Project Form (Initially Hidden) -->
-                            <div id="projectForm" class="hidden mb-8">
-                                <h2 class="text-2xl font-bold mb-4 text-highlight">
-                                    <i class="fas fa-plus-circle mr-2"></i>Add New Project
-                                </h2>
-                                <form id="addProjectForm">
-                                    <div class="mb-4">
-                                        <label class="block mb-2">Project Title</label>
-                                        <input type="text" name="title" class="form-input" required>
-                                    </div>
-                                    
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                        <div>
-                                            <label class="block mb-2">Project Type</label>
-                                            <select name="type" class="form-input">
-                                                <option value="web">Web Application</option>
-                                                <option value="mobile">Mobile App</option>
-                                                <option value="ai">AI/ML Project</option>
-                                                <option value="iot">IoT Project</option>
-                                                <option value="other">Other</option>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label class="block mb-2">Status</label>
-                                            <select name="status" class="form-input">
-                                                <option value="planned">Planned</option>
-                                                <option value="in_progress">In Progress</option>
-                                                <option value="completed">Completed</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="mb-4">
-                                        <label class="block mb-2">Description</label>
-                                        <textarea name="description" rows="3" class="form-input" required></textarea>
-                                    </div>
-                                    
-                                    <div class="flex justify-end space-x-3">
-                                        <button type="button" id="cancelProjectBtn" class="btn-secondary px-4 py-2">Cancel</button>
-                                        <button type="submit" class="btn-primary px-4 py-2">Add Project</button>
-                                    </div>
-                                </form>
                             </div>
                             
                             <!-- Recent Activity -->
@@ -518,457 +366,244 @@ $loginMethod = $_SESSION['login_method'] ?? 'email';
                                 </div>
                             </div>
                         </div>
-                        
-                        <!-- Research Papers Section -->
-                        <div class="dashboard-card mt-8">
-                            <h2 class="text-2xl font-bold mb-4">
-                                <i class="fas fa-file-alt mr-2"></i>Research Papers
-                            </h2>
-                            <div id="researchList" class="space-y-4">
-                                <!-- Research papers will be loaded here via AJAX -->
-                            </div>
-                            
-                            <button id="addResearchBtn2" class="mt-6 w-full py-3 bg-secondary text-accent border-2 border-dashed border-accent rounded-lg font-bold hover:bg-primary/20 transition-colors">
-                                <i class="fas fa-plus mr-2"></i>Add Research Paper
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Profile View (Hidden by default) -->
-            <div id="profileView" class="hidden-section">
-                <div class="dashboard-card">
-                    <div class="view-header">
-                        <h2 class="text-2xl font-bold text-accent">
-                            <i class="fas fa-user mr-2"></i>My Profile
-                        </h2>
-                        <button class="close-view-btn" onclick="showView('dashboardView')">
-                            <i class="fas fa-times"></i>
-                        </button>
                     </div>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <!-- Profile Info -->
-                        <div class="md:col-span-1">
-                            <div class="text-center">
-                                <div class="relative inline-block">
-                                    <img src="<?= htmlspecialchars($profilePic) ?>" alt="Profile" class="w-40 h-40 rounded-full mx-auto border-4 border-accent">
-                                    <?php if ($loginMethod === 'google'): ?>
-                                    <div class="login-badge" style="width: 36px; height: 36px; font-size: 16px; bottom: -15px; right: -15px;" title="Signed in with Google">
-                                        <i class="fab fa-google"></i>
-                                    </div>
-                                    <?php endif; ?>
-                                </div>
-                                <h2 class="text-2xl font-bold mt-6"><?= htmlspecialchars($userName) ?></h2>
-                                <p class="text-text/80 mt-2"><?= htmlspecialchars($userEmail) ?></p>
-                                
-                                <div class="mt-6">
-                                    <button class="btn-secondary w-full py-2">
-                                        <i class="fas fa-sync mr-2"></i>Update Profile
-                                    </button>
-                                </div>
+                    <!-- Profile View -->
+                    <div id="profileView" class="view-section dashboard-card">
+                        <h1 class="text-3xl font-bold mb-6 text-accent">
+                            <i class="fas fa-user mr-2"></i>My Profile
+                        </h1>
+                        
+                        <form id="profileForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="md:col-span-2">
+                                <label class="block mb-2">Full Name</label>
+                                <input type="text" name="name" class="form-input" value="<?= htmlspecialchars($userName) ?>" required>
                             </div>
+                            
+                            <div class="md:col-span-2">
+                                <label class="block mb-2">Email Address</label>
+                                <input type="email" name="email" class="form-input" value="<?= htmlspecialchars($userEmail) ?>" readonly>
+                            </div>
+                            
+                            <div>
+                                <label class="block mb-2">Membership Type</label>
+                                <select name="membership" class="form-input">
+                                    <option value="student" <?= $membershipType === 'student' ? 'selected' : '' ?>>Student Member</option>
+                                    <option value="alumni" <?= $membershipType === 'alumni' ? 'selected' : '' ?>>Alumni Member</option>
+                                    <option value="faculty" <?= $membershipType === 'faculty' ? 'selected' : '' ?>>Faculty Member</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block mb-2">Login Method</label>
+                                <input type="text" class="form-input" value="<?= ucfirst($loginMethod) ?>" readonly>
+                            </div>
+                            
+                            <div class="md:col-span-2">
+                                <h3 class="text-xl font-bold mb-4 border-b border-gray-700 pb-2">Change Password</h3>
+                            </div>
+                            
+                            <div>
+                                <label class="block mb-2">Current Password</label>
+                                <input type="password" name="current_password" class="form-input">
+                            </div>
+                            
+                            <div>
+                                <label class="block mb-2">New Password</label>
+                                <input type="password" name="new_password" class="form-input">
+                            </div>
+                            
+                            <div class="md:col-span-2 flex justify-end space-x-3 mt-4">
+                                <button type="button" class="btn-secondary" data-view="dashboard">Cancel</button>
+                                <button type="submit" class="btn-primary">Update Profile</button>
+                            </div>
+                            
+                            <div id="profileMessage" class="md:col-span-2 mt-4"></div>
+                        </form>
+                    </div>
+                    
+                    <!-- Projects View -->
+                    <div id="projectsView" class="view-section dashboard-card">
+                        <div class="flex justify-between items-center mb-6">
+                            <h1 class="text-3xl font-bold text-accent">
+                                <i class="fas fa-project-diagram mr-2"></i>My Projects
+                            </h1>
+                            <button id="addProjectBtn" class="btn-primary">
+                                <i class="fas fa-plus mr-2"></i>Add Project
+                            </button>
                         </div>
                         
-                        <!-- Profile Details -->
-                        <div class="md:col-span-2">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <h3 class="text-lg font-bold mb-4">Personal Information</h3>
-                                    <div class="mb-4">
-                                        <label class="block mb-2">Full Name</label>
-                                        <input type="text" class="form-input" value="<?= htmlspecialchars($userName) ?>">
+                        <!-- Projects List -->
+                        <div id="projectsList" class="space-y-4">
+                            <!-- Projects will be loaded here via AJAX -->
+                        </div>
+                        
+                        <!-- Add/Edit Project Form -->
+                        <div id="projectForm" class="mt-8 hidden">
+                            <h2 class="text-2xl font-bold mb-4 text-highlight" id="projectFormTitle">
+                                Add New Project
+                            </h2>
+                            <form id="addProjectForm">
+                                <input type="hidden" name="project_id" id="projectId">
+                                
+                                <div class="mb-4">
+                                    <label class="block mb-2">Project Title</label>
+                                    <input type="text" name="title" class="form-input" required>
+                                </div>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <label class="block mb-2">Project Type</label>
+                                        <select name="type" class="form-input">
+                                            <option value="web">Web Application</option>
+                                            <option value="mobile">Mobile App</option>
+                                            <option value="ai">AI/ML Project</option>
+                                            <option value="iot">IoT Project</option>
+                                            <option value="other">Other</option>
+                                        </select>
                                     </div>
-                                    
-                                    <div class="mb-4">
-                                        <label class="block mb-2">Email Address</label>
-                                        <input type="email" class="form-input" value="<?= htmlspecialchars($userEmail) ?>">
-                                    </div>
-                                    
-                                    <div class="mb-4">
-                                        <label class="block mb-2">Membership Type</label>
-                                        <select class="form-input">
-                                            <option value="student" <?= $membershipType === 'student' ? 'selected' : '' ?>>Student Member</option>
-                                            <option value="alumni" <?= $membershipType === 'alumni' ? 'selected' : '' ?>>Alumni Member</option>
-                                            <option value="faculty" <?= $membershipType === 'faculty' ? 'selected' : '' ?>>Faculty Member</option>
+                                    <div>
+                                        <label class="block mb-2">Status</label>
+                                        <select name="status" class="form-input">
+                                            <option value="planned">Planned</option>
+                                            <option value="in_progress">In Progress</option>
+                                            <option value="completed">Completed</option>
                                         </select>
                                     </div>
                                 </div>
                                 
-                                <div>
-                                    <h3 class="text-lg font-bold mb-4">Account Security</h3>
-                                    <div class="mb-4">
-                                        <label class="block mb-2">Current Password</label>
-                                        <input type="password" class="form-input">
-                                    </div>
-                                    
-                                    <div class="mb-4">
-                                        <label class="block mb-2">New Password</label>
-                                        <input type="password" class="form-input">
-                                    </div>
-                                    
-                                    <div class="mb-4">
-                                        <label class="block mb-2">Confirm New Password</label>
-                                        <input type="password" class="form-input">
-                                    </div>
-                                    
-                                    <button class="btn-primary w-full py-2">
-                                        <i class="fas fa-lock mr-2"></i>Update Password
-                                    </button>
+                                <div class="mb-4">
+                                    <label class="block mb-2">Description</label>
+                                    <textarea name="description" rows="3" class="form-input" required></textarea>
                                 </div>
-                            </div>
-                            
-                            <div class="mt-8">
-                                <h3 class="text-lg font-bold mb-4">Social Profiles</h3>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div class="flex items-center">
-                                        <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center mr-3">
-                                            <i class="fab fa-linkedin-in text-white"></i>
-                                        </div>
-                                        <input type="text" class="form-input" placeholder="LinkedIn Profile">
-                                    </div>
-                                    
-                                    <div class="flex items-center">
-                                        <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center mr-3">
-                                            <i class="fab fa-github text-white"></i>
-                                        </div>
-                                        <input type="text" class="form-input" placeholder="GitHub Profile">
-                                    </div>
-                                    
-                                    <div class="flex items-center">
-                                        <div class="w-10 h-10 rounded-full bg-blue-400 flex items-center justify-center mr-3">
-                                            <i class="fab fa-twitter text-white"></i>
-                                        </div>
-                                        <input type="text" class="form-input" placeholder="Twitter Profile">
-                                    </div>
-                                    
-                                    <div class="flex items-center">
-                                        <div class="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center mr-3">
-                                            <i class="fab fa-discord text-white"></i>
-                                        </div>
-                                        <input type="text" class="form-input" placeholder="Discord Username">
-                                    </div>
+                                
+                                <div class="flex justify-end space-x-3">
+                                    <button type="button" id="cancelProjectBtn" class="btn-secondary">Cancel</button>
+                                    <button type="submit" class="btn-primary">Save Project</button>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
-                </div>
-            </div>
-            
-            <!-- Projects View (Hidden by default) -->
-            <div id="projectsView" class="hidden-section">
-                <div class="dashboard-card">
-                    <div class="view-header">
-                        <h2 class="text-2xl font-bold text-accent">
-                            <i class="fas fa-project-diagram mr-2"></i>My Projects
-                        </h2>
-                        <button class="close-view-btn" onclick="showView('dashboardView')">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
                     
-                    <div class="flex justify-between items-center mb-6">
-                        <div class="flex space-x-2">
-                            <button class="tab-button active" data-tab="all-projects">All Projects</button>
-                            <button class="tab-button" data-tab="active-projects">Active</button>
-                            <button class="tab-button" data-tab="completed-projects">Completed</button>
+                    <!-- Research Papers View -->
+                    <div id="researchView" class="view-section dashboard-card">
+                        <div class="flex justify-between items-center mb-6">
+                            <h1 class="text-3xl font-bold text-accent">
+                                <i class="fas fa-file-alt mr-2"></i>Research Papers
+                            </h1>
+                            <button id="addResearchBtn" class="btn-primary">
+                                <i class="fas fa-plus mr-2"></i>Add Research
+                            </button>
                         </div>
                         
-                        <button id="addProjectBtn2" class="btn-primary">
-                            <i class="fas fa-plus mr-2"></i>Add Project
-                        </button>
-                    </div>
-                    
-                    <div id="projectsFullList" class="project-grid">
-                        <!-- Projects will be loaded here via AJAX -->
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Research Papers View (Hidden by default) -->
-            <div id="researchView" class="hidden-section">
-                <div class="dashboard-card">
-                    <div class="view-header">
-                        <h2 class="text-2xl font-bold text-accent">
-                            <i class="fas fa-file-alt mr-2"></i>Research Papers
-                        </h2>
-                        <button class="close-view-btn" onclick="showView('dashboardView')">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    
-                    <div class="flex justify-between items-center mb-6">
-                        <div class="flex space-x-2">
-                            <button class="tab-button active" data-tab="all-research">All Research</button>
-                            <button class="tab-button" data-tab="published-research">Published</button>
-                            <button class="tab-button" data-tab="draft-research">Drafts</button>
+                        <!-- Research Papers List -->
+                        <div id="researchList" class="space-y-4">
+                            <!-- Research papers will be loaded here via AJAX -->
                         </div>
                         
-                        <button id="addResearchBtn3" class="btn-primary">
-                            <i class="fas fa-plus mr-2"></i>Add Research
-                        </button>
+                        <!-- Add/Edit Research Form -->
+                        <div id="researchForm" class="mt-8 hidden">
+                            <h2 class="text-2xl font-bold mb-4 text-highlight" id="researchFormTitle">
+                                Add New Research Paper
+                            </h2>
+                            <form id="addResearchForm">
+                                <input type="hidden" name="research_id" id="researchId">
+                                
+                                <div class="mb-4">
+                                    <label class="block mb-2">Title</label>
+                                    <input type="text" name="title" class="form-input" required>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="block mb-2">Authors</label>
+                                    <input type="text" name="authors" class="form-input" required>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="block mb-2">Abstract</label>
+                                    <textarea name="abstract" rows="3" class="form-input" required></textarea>
+                                </div>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <label class="block mb-2">Published Date</label>
+                                        <input type="date" name="published_date" class="form-input">
+                                    </div>
+                                    <div>
+                                        <label class="block mb-2">Conference/Journal</label>
+                                        <input type="text" name="conference" class="form-input">
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="block mb-2">Paper Link</label>
+                                    <input type="url" name="paper_link" class="form-input">
+                                </div>
+                                
+                                <div class="flex justify-end space-x-3">
+                                    <button type="button" id="cancelResearchBtn" class="btn-secondary">Cancel</button>
+                                    <button type="submit" class="btn-primary">Save Research</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                     
-                    <div id="researchFullList">
-                        <!-- Research papers will be loaded here via AJAX -->
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Settings View (Hidden by default) -->
-            <div id="settingsView" class="hidden-section">
-                <div class="dashboard-card">
-                    <div class="view-header">
-                        <h2 class="text-2xl font-bold text-accent">
+                    <!-- Settings View -->
+                    <div id="settingsView" class="view-section dashboard-card">
+                        <h1 class="text-3xl font-bold mb-6 text-accent">
                             <i class="fas fa-cog mr-2"></i>Settings
-                        </h2>
-                        <button class="close-view-btn" onclick="showView('dashboardView')">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                        <!-- Navigation -->
-                        <div class="md:col-span-1">
-                            <div class="space-y-2">
-                                <button class="tab-button active w-full text-left" data-tab="appearance">
-                                    <i class="fas fa-palette mr-2"></i>Appearance
-                                </button>
-                                <button class="tab-button w-full text-left" data-tab="notifications">
-                                    <i class="fas fa-bell mr-2"></i>Notifications
-                                </button>
-                                <button class="tab-button w-full text-left" data-tab="privacy">
-                                    <i class="fas fa-shield-alt mr-2"></i>Privacy
-                                </button>
-                                <button class="tab-button w-full text-left" data-tab="account">
-                                    <i class="fas fa-user-cog mr-2"></i>Account
-                                </button>
-                            </div>
-                        </div>
+                        </h1>
                         
-                        <!-- Content -->
-                        <div class="md:col-span-3">
-                            <!-- Appearance Settings -->
-                            <div id="appearance" class="tab-content active">
-                                <h3 class="text-xl font-bold mb-4">Theme Settings</h3>
+                        <form id="settingsForm">
+                            <div class="mb-6">
+                                <h2 class="text-xl font-bold mb-4">Theme Settings</h2>
                                 
-                                <div class="mb-6">
-                                    <h4 class="font-bold mb-3">Color Theme</h4>
-                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                        <div class="theme-option selected">
-                                            <div class="theme-preview theme-blue"></div>
-                                            <span>Blue Theme</span>
-                                        </div>
-                                        <div class="theme-option">
-                                            <div class="theme-preview theme-green"></div>
-                                            <span>Green Theme</span>
-                                        </div>
-                                        <div class="theme-option">
-                                            <div class="theme-preview theme-purple"></div>
-                                            <span>Purple Theme</span>
-                                        </div>
-                                        <div class="theme-option">
-                                            <div class="theme-preview theme-red"></div>
-                                            <span>Red Theme</span>
-                                        </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block mb-2">Color Theme</label>
+                                        <select name="theme" class="form-input">
+                                            <option value="dark" <?= $theme === 'dark' ? 'selected' : '' ?>>Dark Mode</option>
+                                            <option value="light" <?= $theme === 'light' ? 'selected' : '' ?>>Light Mode</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block mb-2">Layout Preference</label>
+                                        <select name="layout" class="form-input">
+                                            <option value="grid" <?= $layout === 'grid' ? 'selected' : '' ?>>Grid Layout</option>
+                                            <option value="list" <?= $layout === 'list' ? 'selected' : '' ?>>List Layout</option>
+                                        </select>
                                     </div>
                                 </div>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <h2 class="text-xl font-bold mb-4">Notification Preferences</h2>
                                 
-                                <div class="mb-6">
-                                    <h4 class="font-bold mb-3">Dark Mode</h4>
+                                <div class="space-y-3">
                                     <div class="flex items-center">
-                                        <label class="switch mr-3">
-                                            <input type="checkbox" checked>
-                                            <span class="slider round"></span>
-                                        </label>
-                                        <span>Enable Dark Mode</span>
+                                        <input type="checkbox" id="emailNotifications" name="email_notifications" class="mr-2" checked>
+                                        <label for="emailNotifications">Email Notifications</label>
                                     </div>
-                                </div>
-                                
-                                <div>
-                                    <h4 class="font-bold mb-3">Layout</h4>
-                                    <select class="form-input">
-                                        <option>Default Layout</option>
-                                        <option>Compact Layout</option>
-                                        <option>Detailed Layout</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <!-- Notification Settings -->
-                            <div id="notifications" class="tab-content">
-                                <h3 class="text-xl font-bold mb-4">Notification Preferences</h3>
-                                
-                                <div class="mb-6">
-                                    <h4 class="font-bold mb-3">Email Notifications</h4>
-                                    <div class="space-y-3">
-                                        <div class="flex items-center justify-between">
-                                            <span>Project updates</span>
-                                            <label class="switch">
-                                                <input type="checkbox" checked>
-                                                <span class="slider round"></span>
-                                            </label>
-                                        </div>
-                                        <div class="flex items-center justify-between">
-                                            <span>Research paper feedback</span>
-                                            <label class="switch">
-                                                <input type="checkbox" checked>
-                                                <span class="slider round"></span>
-                                            </label>
-                                        </div>
-                                        <div class="flex items-center justify-between">
-                                            <span>Event reminders</span>
-                                            <label class="switch">
-                                                <input type="checkbox">
-                                                <span class="slider round"></span>
-                                            </label>
-                                        </div>
-                                        <div class="flex items-center justify-between">
-                                            <span>New messages</span>
-                                            <label class="switch">
-                                                <input type="checkbox" checked>
-                                                <span class="slider round"></span>
-                                            </label>
-                                        </div>
+                                    
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="projectUpdates" name="project_updates" class="mr-2" checked>
+                                        <label for="projectUpdates">Project Updates</label>
                                     </div>
-                                </div>
-                                
-                                <div>
-                                    <h4 class="font-bold mb-3">Push Notifications</h4>
-                                    <div class="space-y-3">
-                                        <div class="flex items-center justify-between">
-                                            <span>Important announcements</span>
-                                            <label class="switch">
-                                                <input type="checkbox" checked>
-                                                <span class="slider round"></span>
-                                            </label>
-                                        </div>
-                                        <div class="flex items-center justify-between">
-                                            <span>Deadline reminders</span>
-                                            <label class="switch">
-                                                <input type="checkbox">
-                                                <span class="slider round"></span>
-                                            </label>
-                                        </div>
-                                        <div class="flex items-center justify-between">
-                                            <span>New comments</span>
-                                            <label class="switch">
-                                                <input type="checkbox" checked>
-                                                <span class="slider round"></span>
-                                            </label>
-                                        </div>
+                                    
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="researchUpdates" name="research_updates" class="mr-2" checked>
+                                        <label for="researchUpdates">Research Updates</label>
                                     </div>
                                 </div>
                             </div>
                             
-                            <!-- Privacy Settings -->
-                            <div id="privacy" class="tab-content">
-                                <h3 class="text-xl font-bold mb-4">Privacy Settings</h3>
-                                
-                                <div class="mb-6">
-                                    <h4 class="font-bold mb-3">Profile Visibility</h4>
-                                    <select class="form-input">
-                                        <option>Public - Anyone can see my profile</option>
-                                        <option>Members Only - Only CASA members can see my profile</option>
-                                        <option selected>Private - Only I can see my profile</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="mb-6">
-                                    <h4 class="font-bold mb-3">Activity Sharing</h4>
-                                    <div class="space-y-3">
-                                        <div class="flex items-center justify-between">
-                                            <span>Show my projects on public profile</span>
-                                            <label class="switch">
-                                                <input type="checkbox">
-                                                <span class="slider round"></span>
-                                            </label>
-                                        </div>
-                                        <div class="flex items-center justify-between">
-                                            <span>Show my research papers</span>
-                                            <label class="switch">
-                                                <input type="checkbox" checked>
-                                                <span class="slider round"></span>
-                                            </label>
-                                        </div>
-                                        <div class="flex items-center justify-between">
-                                            <span>Show my activity status</span>
-                                            <label class="switch">
-                                                <input type="checkbox" checked>
-                                                <span class="slider round"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div>
-                                    <h4 class="font-bold mb-3">Data Sharing</h4>
-                                    <div class="space-y-3">
-                                        <div class="flex items-center justify-between">
-                                            <span>Allow data for research purposes</span>
-                                            <label class="switch">
-                                                <input type="checkbox" checked>
-                                                <span class="slider round"></span>
-                                            </label>
-                                        </div>
-                                        <div class="flex items-center justify-between">
-                                            <span>Share analytics with CASA</span>
-                                            <label class="switch">
-                                                <input type="checkbox">
-                                                <span class="slider round"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="flex justify-end">
+                                <button type="submit" class="btn-primary">Save Settings</button>
                             </div>
                             
-                            <!-- Account Settings -->
-                            <div id="account" class="tab-content">
-                                <h3 class="text-xl font-bold mb-4">Account Settings</h3>
-                                
-                                <div class="mb-6">
-                                    <h4 class="font-bold mb-3">Account Information</h4>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label class="block mb-2">Username</label>
-                                            <input type="text" class="form-input" value="<?= htmlspecialchars($userName) ?>">
-                                        </div>
-                                        <div>
-                                            <label class="block mb-2">Email</label>
-                                            <input type="email" class="form-input" value="<?= htmlspecialchars($userEmail) ?>">
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="mb-6">
-                                    <h4 class="font-bold mb-3">Danger Zone</h4>
-                                    <div class="bg-red-900/20 p-4 rounded-lg border border-red-700">
-                                        <div class="mb-4">
-                                            <h5 class="font-bold text-red-400 mb-2">Deactivate Account</h5>
-                                            <p class="text-sm">Temporarily deactivate your account. Your data will be preserved.</p>
-                                            <button class="btn-secondary mt-2 bg-transparent border-red-500 text-red-400 hover:bg-red-900/30">
-                                                Deactivate Account
-                                            </button>
-                                        </div>
-                                        
-                                        <div>
-                                            <h5 class="font-bold text-red-400 mb-2">Delete Account</h5>
-                                            <p class="text-sm">Permanently delete your account and all associated data.</p>
-                                            <button class="btn-secondary mt-2 bg-transparent border-red-700 text-red-500 hover:bg-red-900/30">
-                                                Delete Account
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div>
-                                    <button class="btn-primary w-full py-3">
-                                        <i class="fas fa-save mr-2"></i>Save All Changes
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                            <div id="settingsMessage" class="mt-4"></div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -1041,159 +676,242 @@ $loginMethod = $_SESSION['login_method'] ?? 'email';
                 }
             });
             
-            // Load initial data
-            loadProjects();
-            loadResearchPapers();
+            // View switching
+            function showView(viewId) {
+                $('.view-section').removeClass('active');
+                $('#' + viewId + 'View').addClass('active');
+                sessionStorage.setItem('currentView', viewId);
+                
+                // Load data when specific views are opened
+                if(viewId === 'projects') {
+                    loadProjects();
+                }
+                else if(viewId === 'research') {
+                    loadResearchPapers();
+                }
+            }
             
-            // Add project button functionality
-            document.getElementById('addProjectBtn').addEventListener('click', function() {
-                document.getElementById('projectForm').classList.remove('hidden');
+            // Restore last view if available
+            const currentView = sessionStorage.getItem('currentView') || 'dashboard';
+            showView(currentView);
+            
+            // Menu item click handlers
+            $('.dropdown-item[data-view]').on('click', function(e) {
+                e.preventDefault();
+                const view = $(this).data('view');
+                showView(view);
             });
             
-            document.getElementById('addProjectBtn2').addEventListener('click', function() {
-                document.getElementById('projectForm').classList.remove('hidden');
-                showView('dashboardView');
+            // Quick action buttons
+            $('button[data-view]').on('click', function() {
+                const view = $(this).data('view');
+                showView(view);
             });
             
-            document.getElementById('addResearchBtn').addEventListener('click', showResearchForm);
-            document.getElementById('addResearchBtn2').addEventListener('click', showResearchForm);
-            document.getElementById('addResearchBtn3').addEventListener('click', showResearchForm);
+            // Load projects and research papers
+            function loadProjects() {
+                $.ajax({
+                    url: 'get-projects.php',
+                    method: 'GET',
+                    success: function(data) {
+                        $('#projectsList').html(data);
+                        updateStats();
+                    }
+                });
+            }
             
-            document.getElementById('cancelProjectBtn').addEventListener('click', function() {
-                document.getElementById('projectForm').classList.add('hidden');
+            function loadResearchPapers() {
+                $.ajax({
+                    url: 'get-research.php',
+                    method: 'GET',
+                    success: function(data) {
+                        $('#researchList').html(data);
+                        updateStats();
+                    }
+                });
+            }
+            
+            function updateStats() {
+                const projectCount = $('#projectsList .project-item').length;
+                const researchCount = $('#researchList .research-item').length;
+                
+                $('#projectsCount').text(projectCount);
+                $('#researchCount').text(researchCount);
+                $('#tasksCount').text(projectCount > 0 ? projectCount * 3 : 0);
+            }
+            
+            // Project form functionality
+            $('#addProjectBtn').on('click', function() {
+                $('#projectForm').removeClass('hidden');
+                $('#projectFormTitle').text('Add New Project');
+                $('#projectId').val('');
+                $('#addProjectForm')[0].reset();
+            });
+            
+            $('#cancelProjectBtn').on('click', function() {
+                $('#projectForm').addClass('hidden');
             });
             
             // Project form submission
-            document.getElementById('addProjectForm').addEventListener('submit', function(e) {
+            $('#addProjectForm').on('submit', function(e) {
                 e.preventDefault();
-                const formData = new FormData(this);
+                const formData = $(this).serialize();
                 
-                fetch('add-project.php', {
+                $.ajax({
+                    url: 'save-project.php',
                     method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        loadProjects();
-                        document.getElementById('projectForm').classList.add('hidden');
-                        this.reset();
-                        updateStats();
-                    } else {
-                        alert('Error: ' + data.message);
+                    data: formData,
+                    success: function(response) {
+                        if(response.status === 'success') {
+                            loadProjects();
+                            $('#projectForm').addClass('hidden');
+                        } else {
+                            alert('Error: ' + response.message);
+                        }
                     }
                 });
             });
             
-            // Tab functionality
-            document.querySelectorAll('.tab-button').forEach(button => {
-                button.addEventListener('click', function() {
-                    // Remove active class from all buttons in the same container
-                    const container = this.closest('.dashboard-card');
-                    container.querySelectorAll('.tab-button').forEach(btn => {
-                        btn.classList.remove('active');
-                    });
-                    
-                    // Add active class to clicked button
-                    this.classList.add('active');
-                    
-                    // Show corresponding tab content
-                    const tabId = this.getAttribute('data-tab');
-                    const tabContent = container.querySelector(`#${tabId}`);
-                    
-                    if (tabContent) {
-                        container.querySelectorAll('.tab-content').forEach(content => {
-                            content.classList.remove('active');
-                        });
-                        tabContent.classList.add('active');
+            // Edit project handler
+            $(document).on('click', '.edit-project', function() {
+                const projectId = $(this).data('id');
+                
+                $.ajax({
+                    url: 'get-project.php?id=' + projectId,
+                    method: 'GET',
+                    success: function(project) {
+                        $('#projectForm').removeClass('hidden');
+                        $('#projectFormTitle').text('Edit Project');
+                        $('#projectId').val(project.id);
+                        $('input[name="title"]').val(project.title);
+                        $('select[name="type"]').val(project.type);
+                        $('select[name="status"]').val(project.status);
+                        $('textarea[name="description"]').val(project.description);
                     }
                 });
             });
             
-            // Theme selection
-            document.querySelectorAll('.theme-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    document.querySelectorAll('.theme-option').forEach(opt => {
-                        opt.classList.remove('selected');
-                    });
-                    this.classList.add('selected');
+            // Research form functionality
+            $('#addResearchBtn').on('click', function() {
+                $('#researchForm').removeClass('hidden');
+                $('#researchFormTitle').text('Add New Research Paper');
+                $('#researchId').val('');
+                $('#addResearchForm')[0].reset();
+            });
+            
+            $('#cancelResearchBtn').on('click', function() {
+                $('#researchForm').addClass('hidden');
+            });
+            
+            // Research form submission
+            $('#addResearchForm').on('submit', function(e) {
+                e.preventDefault();
+                const formData = $(this).serialize();
+                
+                $.ajax({
+                    url: 'save-research.php',
+                    method: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        if(response.status === 'success') {
+                            loadResearchPapers();
+                            $('#researchForm').addClass('hidden');
+                        } else {
+                            alert('Error: ' + response.message);
+                        }
+                    }
                 });
             });
+            
+            // Edit research handler
+            $(document).on('click', '.edit-research', function() {
+                const researchId = $(this).data('id');
+                
+                $.ajax({
+                    url: 'get-research.php?id=' + researchId,
+                    method: 'GET',
+                    success: function(research) {
+                        $('#researchForm').removeClass('hidden');
+                        $('#researchFormTitle').text('Edit Research Paper');
+                        $('#researchId').val(research.id);
+                        $('input[name="title"]').val(research.title);
+                        $('input[name="authors"]').val(research.authors);
+                        $('textarea[name="abstract"]').val(research.abstract);
+                        $('input[name="published_date"]').val(research.published_date);
+                        $('input[name="conference"]').val(research.conference);
+                        $('input[name="paper_link"]').val(research.paper_link);
+                    }
+                });
+            });
+            
+            // Profile form submission
+            $('#profileForm').on('submit', function(e) {
+                e.preventDefault();
+                const formData = $(this).serialize();
+                
+                $.ajax({
+                    url: 'update-profile.php',
+                    method: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        if(response.status === 'success') {
+                            $('#profileMessage').html(
+                                '<div class="success-message p-3 bg-green-900/30 rounded-lg">' +
+                                response.message + '</div>'
+                            );
+                            
+                            // Update session data if needed
+                            if(response.newName) {
+                                $('.user-name').text(response.newName);
+                            }
+                        } else {
+                            $('#profileMessage').html(
+                                '<div class="error-message p-3 bg-red-900/30 rounded-lg">' +
+                                response.message + '</div>'
+                            );
+                        }
+                    }
+                });
+            });
+            
+            // Settings form submission
+            $('#settingsForm').on('submit', function(e) {
+                e.preventDefault();
+                const formData = $(this).serialize();
+                
+                $.ajax({
+                    url: 'save-settings.php',
+                    method: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        if(response.status === 'success') {
+                            $('#settingsMessage').html(
+                                '<div class="success-message p-3 bg-green-900/30 rounded-lg">' +
+                                'Settings saved successfully!</div>'
+                            );
+                            
+                            // Update theme immediately
+                            if(response.theme) {
+                                $('html').removeClass('dark light').addClass(response.theme);
+                            }
+                            
+                            // Update layout
+                            if(response.layout) {
+                                $('body').removeClass('layout-grid layout-list').addClass('layout-' + response.layout);
+                            }
+                        } else {
+                            $('#settingsMessage').html(
+                                '<div class="error-message p-3 bg-red-900/30 rounded-lg">' +
+                                response.message + '</div>'
+                            );
+                        }
+                    }
+                });
+            });
+            
+            // Apply current layout
+            $('body').addClass('layout-<?= $layout ?>');
         });
-        
-        function showResearchForm() {
-            alert('Research form will open in a modal. Implementation similar to project form.');
-            // Similar implementation to project form
-        }
-        
-        function showView(viewId) {
-            // Hide all views
-            document.querySelectorAll('main > div').forEach(view => {
-                view.classList.add('hidden-section');
-            });
-            
-            // Show the requested view
-            document.getElementById(viewId).classList.remove('hidden-section');
-            
-            // Load data if needed
-            if (viewId === 'projectsView') {
-                loadFullProjects();
-            }
-            else if (viewId === 'researchView') {
-                loadFullResearch();
-            }
-        }
-        
-        function loadProjects() {
-            $.ajax({
-                url: 'get-projects.php',
-                method: 'GET',
-                success: function(data) {
-                    $('#projectsList').html(data);
-                    updateStats();
-                }
-            });
-        }
-        
-        function loadFullProjects() {
-            $.ajax({
-                url: 'get-projects.php?full=1',
-                method: 'GET',
-                success: function(data) {
-                    $('#projectsFullList').html(data);
-                }
-            });
-        }
-        
-        function loadResearchPapers() {
-            $.ajax({
-                url: 'get-research.php',
-                method: 'GET',
-                success: function(data) {
-                    $('#researchList').html(data);
-                    updateStats();
-                }
-            });
-        }
-        
-        function loadFullResearch() {
-            $.ajax({
-                url: 'get-research.php?full=1',
-                method: 'GET',
-                success: function(data) {
-                    $('#researchFullList').html(data);
-                }
-            });
-        }
-        
-        function updateStats() {
-            const projectCount = $('#projectsList .project-item').length;
-            const researchCount = $('#researchList .research-item').length;
-            
-            $('#projectsCount').text(projectCount);
-            $('#researchCount').text(researchCount);
-            $('#tasksCount').text(projectCount > 0 ? projectCount * 3 : 0);
-        }
     </script>
 </body>
 </html>
