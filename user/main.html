@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - CASA</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
+
+    <!-- Custom Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0D1117',
+                        accent: '#00BFFF',
+                        highlight: '#FEE440',
+                        secondary: '#222831',
+                        text: '#E0E0E0',
+                    },
+                    fontFamily: {
+                        'headline': ['Poppins', 'Montserrat', 'sans-serif'],
+                        'body': ['Inter', 'Nunito', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            background-color: #0D1117;
+        }
+
+        .dashboard-card {
+            background: rgba(34, 40, 49, 0.9);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 191, 255, 0.3);
+        }
+
+        .user-profile {
+            transition: all 0.3s;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            min-width: 200px;
+            background: rgba(34, 40, 49, 0.95);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            border-radius: 8px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            transform: translateY(10px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .dropdown-item {
+            padding: 12px 16px;
+            display: block;
+            color: #E0E0E0;
+            transition: all 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(0, 191, 255, 0.1);
+            color: #00BFFF;
+        }
+        
+        .login-badge {
+            position: absolute;
+            bottom: -8px;
+            right: -8px;
+            background: #FEE440;
+            color: #0D1117;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            border: 2px solid #0D1117;
+        }
+        
+        .form-input {
+            background: rgba(13, 17, 23, 0.6);
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            color: #E0E0E0;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .form-input:focus {
+            border-color: #00BFFF;
+            box-shadow: 0 0 0 2px rgba(0, 191, 255, 0.3);
+            outline: none;
+        }
+
+        .btn-primary {
+            background: #00BFFF;
+            color: #0D1117;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: #0099CC;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 191, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #00BFFF;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: 2px solid #00BFFF;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 191, 255, 0.1);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: rgba(34, 40, 49, 0.95);
+            border-radius: 16px;
+            padding: 25px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .project-item, .research-item {
+            background: rgba(13, 17, 23, 0.5);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #00BFFF;
+            transition: all 0.3s;
+        }
+        
+        .project-item:hover, .research-item:hover {
+            transform: translateX(5px);
+        }
+        
+        .project-actions, .research-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .action-btn {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        
+        .edit-btn {
+            background: rgba(0, 191, 255, 0.2);
+            color: #00BFFF;
+            border: 1px solid #00BFFF;
+        }
+        
+        .delete-btn {
+            background: rgba(255, 107, 107, 0.2);
+            color: #FF6B6B;
+            border: 1px solid #FF6B6B;
+        }
+        
+        .hidden-section {
+            display: none;
+        }
+        
+        .active-section {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .theme-option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .theme-option:hover {
+            background: rgba(0, 191, 255, 0.1);
+        }
+        
+        .theme-preview {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        
+        .dark-preview {
+            background: linear-gradient(135deg, #0D1117 50%, #222831 50%);
+        }
+        
+        .light-preview {
+            background: linear-gradient(135deg, #f0f0f0 50%, #ffffff 50%);
+        }
+        
+        .blue-preview {
+            background: linear-gradient(135deg, #0D1117 50%, #0047AB 50%);
+        }
+        
+        .loading-indicator {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 191, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #00BFFF;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body class="text-text font-body">
+    <!-- Particles Background -->
+    <div id="particles-js"></div>
+    
+    <!-- Modals -->
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+            <h2 id="projectModalTitle" class="text-2xl font-bold mb-6 text-highlight">
+                <i class="fas fa-plus-circle mr-2"></i>Add New Project
+            </h2>
+            <form id="projectForm">
+                <input type="hidden" id="projectId">
+                <div class="mb-4">
+                    <label class="block mb-2">Project Title</label>
+                    <input type="text" id="projectTitle" class="form-input" required>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block mb-2">Project Type</label>
+                        <select id="projectType" class="form-input">
+                            <option value="web">Web Application</option>
+                            <option value="mobile">Mobile App</option>
+                            <option value="ai">AI/ML Project</option>
+                            <option value="iot">IoT Project</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block mb-2">Status</label>
+                        <select id="projectStatus" class="form-input">
+                            <option value="planned">Planned</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block mb-2">Description</label>
+                    <textarea id="projectDescription" rows="3" class="form-input" required></textarea>
+                </div>
+                
+                <div class="flex justify-end space-x-3">
+                    <button type="button" id="cancelProjectBtn" class="btn-secondary px-4 py-2">Cancel</button>
+                    <button type="submit" class="btn-primary px-4 py-2">Save Project</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div id="researchModal" class="modal">
+        <div class="modal-content">
+            <h2 id="researchModalTitle" class="text-2xl font-bold mb-6 text-highlight">
+                <i class="fas fa-file-alt mr-2"></i>Add Research Paper
+            </h2>
+            <form id="researchForm">
+                <input type="hidden" id="researchId">
+                <div class="mb-4">
+                    <label class="block mb-2">Research Title</label>
+                    <input type="text" id="researchTitle" class="form-input" required>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block mb-2">Research Area</label>
+                        <input type="text" id="researchArea" class="form-input" required>
+                    </div>
+                    <div>
+                        <label class="block mb-2">Publication Date</label>
+                        <input type="date" id="researchDate" class="form-input" required>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block mb-2">Abstract</label>
+                    <textarea id="researchAbstract" rows="4" class="form-input" required></textarea>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block mb-2">Link to Paper (optional)</label>
+                    <input type="url" id="researchLink" class="form-input">
+                </div>
+                
+                <div class="flex justify-end space-x-3">
+                    <button type="button" id="cancelResearchBtn" class="btn-secondary px-4 py-2">Cancel</button>
+                    <button type="submit" class="btn-primary px-4 py-2">Save Research</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Content Container -->
+    <div class="content-container">
+        <!-- Navigation Bar -->
+        <nav class="fixed top-0 w-full bg-secondary/80 backdrop-blur-md z-50 shadow-lg">
+            <div class="container mx-auto px-4">
+                <div class="flex items-center justify-between h-20">
+                    <!-- Logo -->
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center">
+                            <i class="fas fa-code text-primary text-xl"></i>
+                        </div>
+                        <a href="../index.html" class="text-2xl font-bold text-accent flex items-center">
+                            CASA
+                            <span class="ml-1 text-xs bg-highlight text-primary px-2 py-1 rounded-full">AI</span>
+                        </a>
+                    </div>
+
+                    <!-- User Profile with Dropdown -->
+                    <div class="dropdown relative">
+                        <button id="userDropdownBtn" class="flex items-center space-x-3 focus:outline-none">
+                            <div class="text-right hidden md:block">
+                                <p id="userName" class="font-medium">User</p>
+                                <p id="userEmail" class="text-sm text-text/80">user@example.com</p>
+                            </div>
+                            <div class="relative">
+                                <img id="userProfilePic" src="https://via.placeholder.com/40" alt="Profile" class="w-10 h-10 rounded-full border-2 border-accent">
+                                <div id="loginBadge" class="login-badge hidden">
+                                    G
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-down text-sm ml-1"></i>
+                        </button>
+                        
+                        <!-- Dropdown Menu -->
+                        <div class="dropdown-content">
+                            <div class="p-4 border-b border-gray-700">
+                                <p id="dropdownUserName" class="font-medium">User</p>
+                                <p id="dropdownUserEmail" class="text-xs text-text/80 truncate">user@example.com</p>
+                                <span id="loginMethodText" class="text-xs text-accent mt-1 block hidden">
+                                    <i class="fab fa-google mr-1"></i> Signed in with Google
+                                </span>
+                            </div>
+                            <a href="#" data-section="profile" class="dropdown-item section-link">
+                                <i class="fas fa-user mr-3"></i> My Profile
+                            </a>
+                            <a href="#" data-section="projects" class="dropdown-item section-link">
+                                <i class="fas fa-project-diagram mr-3"></i> My Projects
+                            </a>
+                            <a href="#" data-section="research" class="dropdown-item section-link">
+                                <i class="fas fa-file-alt mr-3"></i> Research Papers
+                            </a>
+                            <a href="#" data-section="settings" class="dropdown-item section-link">
+                                <i class="fas fa-cog mr-3"></i> Settings
+                            </a>
+                            <a href="#" id="logoutBtn" class="dropdown-item">
+                                <i class="fas fa-sign-out-alt mr-3"></i> Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="container mx-auto px-4 py-24">
+            <!-- Dashboard Section (default) -->
+            <div id="dashboardSection" class="active-section">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- User Profile Card -->
+                    <div class="lg:col-span-1">
+                        <div class="dashboard-card user-profile">
+                            <div class="text-center mb-6">
+                                <div class="relative inline-block">
+                                    <img id="mainProfilePic" src="https://via.placeholder.com/40" alt="Profile" class="w-32 h-32 rounded-full mx-auto border-4 border-accent">
+                                    <div id="mainLoginBadge" class="login-badge hidden" style="width: 32px; height: 32px; font-size: 14px; bottom: -12px; right: -12px;">
+                                        <i class="fab fa-google"></i>
+                                    </div>
+                                </div>
+                                <h2 id="mainUserName" class="text-2xl font-bold mt-4">User</h2>
+                                <p id="mainUserEmail" class="text-text/80">user@example.com</p>
+                                <p id="membershipType" class="mt-2 px-3 py-1 bg-primary/50 rounded-full inline-block">
+                                    <i class="fas fa-user-graduate mr-2"></i>
+                                    Student Member
+                                </p>
+                            </div>
+                            
+                            <div class="mt-6">
+                                <h3 class="text-lg font-bold mb-3">Quick Actions</h3>
+                                <button id="addProjectBtn" class="w-full mb-3 py-2 bg-accent text-primary font-bold rounded-lg hover:bg-[#0099CC] transition-colors">
+                                    <i class="fas fa-plus mr-2"></i>Add Project
+                                </button>
+                                <button id="addResearchBtn" class="w-full py-2 bg-secondary text-accent border border-accent font-bold rounded-lg hover:bg-primary/20 transition-colors">
+                                    <i class="fas fa-file-alt mr-2"></i>Add Research
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- My Projects Section -->
+                        <div class="dashboard-card mt-8">
+                            <h3 class="text-xl font-bold mb-4 flex items-center">
+                                <i class="fas fa-project-diagram mr-2"></i> My Projects
+                            </h3>
+                            <div id="projectsList" class="space-y-3">
+                                <div class="loading-indicator">
+                                    <div class="loading-spinner"></div>
+                                    <p>Loading projects...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dashboard Content -->
+                    <div class="lg:col-span-2">
+                        <div class="dashboard-card">
+                            <h1 class="text-3xl font-bold mb-6 text-accent">
+                                <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                            </h1>
+                            
+                            <!-- Stats -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                                <div class="bg-primary/50 p-4 rounded-lg text-center transition-transform hover:scale-[1.03]">
+                                    <p class="text-2xl font-bold" id="projectsCount">0</p>
+                                    <p class="text-text/80">Active Projects</p>
+                                </div>
+                                <div class="bg-primary/50 p-4 rounded-lg text-center transition-transform hover:scale-[1.03]">
+                                    <p class="text-2xl font-bold" id="researchCount">0</p>
+                                    <p class="text-text/80">Research Papers</p>
+                                </div>
+                                <div class="bg-primary/50 p-4 rounded-lg text-center transition-transform hover:scale-[1.03]">
+                                    <p class="text-2xl font-bold" id="tasksCount">0</p>
+                                    <p class="text-text/80">Pending Tasks</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Recent Activity -->
+                            <h2 class="text-2xl font-bold mb-4">
+                                <i class="fas fa-history mr-2"></i>Recent Activity
+                            </h2>
+                            <div id="recentActivity" class="space-y-4">
+                                <div class="bg-primary/30 p-4 rounded-lg border-l-4 border-accent">
+                                    <div class="flex justify-between items-center">
+                                        <h3 class="font-bold">Joined CASA Portal</h3>
+                                        <span class="text-sm text-text/70">Today</span>
+                                    </div>
+                                    <p class="mt-2 text-sm text-text/80">Welcome to the CASA member portal!</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Research Papers Section -->
+                        <div class="dashboard-card mt-8">
+                            <h2 class="text-2xl font-bold mb-4">
+                                <i class="fas fa-file-alt mr-2"></i>Research Papers
+                            </h2>
+                            <div id="researchList" class="space-y-4">
+                                <div class="loading-indicator">
+                                    <div class="loading-spinner"></div>
+                                    <p>Loading research papers...</p>
+                                </div>
+                            </div>
+                            
+                            <button id="addResearchBtn2" class="mt-6 w-full py-3 bg-secondary text-accent border-2 border-dashed border-accent rounded-lg font-bold hover:bg-primary/20 transition-colors">
+                                <i class="fas fa-plus mr-2"></i>Add Research Paper
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Profile Section -->
+            <div id="profileSection" class="hidden-section">
+                <div class="dashboard-card">
+                    <h1 class="text-3xl font-bold mb-6 text-accent">
+                        <i class="fas fa-user mr-2"></i>My Profile
+                    </h1>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="md:col-span-1 text-center">
+                            <div class="relative inline-block mb-6">
+                                <img id="profilePic" src="https://via.placeholder.com/150" alt="Profile" class="w-40 h-40 rounded-full mx-auto border-4 border-accent">
+                                <button id="changePhotoBtn" class="absolute bottom-2 right-2 bg-accent text-primary rounded-full w-10 h-10 flex items-center justify-center">
+                                    <i class="fas fa-camera"></i>
+                                </button>
+                            </div>
+                            
+                            <h2 id="profileUserName" class="text-2xl font-bold mb-2">User Name</h2>
+                            <p id="profileUserEmail" class="text-text/80 mb-4">user@example.com</p>
+                            <p id="profileMembership" class="px-3 py-1 bg-primary/50 rounded-full inline-block">
+                                <i class="fas fa-user-graduate mr-2"></i>
+                                Student Member
+                            </p>
+                        </div>
+                        
+                        <div class="md:col-span-2">
+                            <h3 class="text-xl font-bold mb-4">Personal Information</h3>
+                            <form id="profileForm">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <label class="block mb-2">Full Name</label>
+                                        <input type="text" id="fullName" class="form-input" required>
+                                    </div>
+                                    <div>
+                                        <label class="block mb-2">Email</label>
+                                        <input type="email" id="profileEmail" class="form-input" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <label class="block mb-2">Phone Number</label>
+                                        <input type="tel" id="phoneNumber" class="form-input">
+                                    </div>
+                                    <div>
+                                        <label class="block mb-2">Membership Type</label>
+                                        <select id="profileMembershipType" class="form-input">
+                                            <option value="student">Student Member</option>
+                                            <option value="alumni">Alumni Member</option>
+                                            <option value="faculty">Faculty Member</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-6">
+                                    <label class="block mb-2">Bio</label>
+                                    <textarea id="bio" rows="3" class="form-input"></textarea>
+                                </div>
+                                
+                                <div class="flex justify-end">
+                                    <button type="submit" class="btn-primary px-6 py-2">Update Profile</button>
+                                </div>
+                            </form>
+                            
+                            <div class="mt-8 pt-6 border-t border-gray-700">
+                                <h3 class="text-xl font-bold mb-4">Change Password</h3>
+                                <form id="passwordForm">
+                                    <div class="mb-4">
+                                        <label class="block mb-2">Current Password</label>
+                                        <input type="password" id="currentPassword" class="form-input" required>
+                                    </div>
+                                    
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                        <div>
+                                            <label class="block mb-2">New Password</label>
+                                            <input type="password" id="newPassword" class="form-input" required>
+                                        </div>
+                                        <div>
+                                            <label class="block mb-2">Confirm Password</label>
+                                            <input type="password" id="confirmPassword" class="form-input" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="passwordError" class="text-red-500 mb-4 hidden">
+                                        Passwords do not match
+                                    </div>
+                                    
+                                    <div class="flex justify-end">
+                                        <button type="submit" class="btn-primary px-6 py-2">Change Password</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Projects Section -->
+            <div id="projectsSection" class="hidden-section">
+                <div class="dashboard-card">
+                    <div class="flex justify-between items-center mb-6">
+                        <h1 class="text-3xl font-bold text-accent">
+                            <i class="fas fa-project-diagram mr-2"></i>My Projects
+                        </h1>
+                        <button id="addProjectBtn2" class="btn-primary">
+                            <i class="fas fa-plus mr-2"></i>Add Project
+                        </button>
+                    </div>
+                    
+                    <div id="projectsListFull" class="space-y-4">
+                        <div class="loading-indicator">
+                            <div class="loading-spinner"></div>
+                            <p>Loading projects...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Research Section -->
+            <div id="researchSection" class="hidden-section">
+                <div class="dashboard-card">
+                    <div class="flex justify-between items-center mb-6">
+                        <h1 class="text-3xl font-bold text-accent">
+                            <i class="fas fa-file-alt mr-2"></i>Research Papers
+                        </h1>
+                        <button id="addResearchBtn3" class="btn-primary">
+                            <i class="fas fa-plus mr-2"></i>Add Research
+                        </button>
+                    </div>
+                    
+                    <div id="researchListFull" class="space-y-4">
+                        <div class="loading-indicator">
+                            <div class="loading-spinner"></div>
+                            <p>Loading research papers...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Settings Section -->
+            <div id="settingsSection" class="hidden-section">
+                <div class="dashboard-card">
+                    <h1 class="text-3xl font-bold mb-6 text-accent">
+                        <i class="fas fa-cog mr-2"></i>Settings
+                    </h1>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="lg:col-span-2">
+                            <h2 class="text-2xl font-bold mb-4">Appearance</h2>
+                            
+                            <div class="mb-8">
+                                <h3 class="text-lg font-bold mb-3">Theme</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="theme-option" data-theme="dark">
+                                        <div class="theme-preview dark-preview"></div>
+                                        <div>
+                                            <p class="font-medium">Dark</p>
+                                            <p class="text-sm text-text/70">Default theme</p>
+                                        </div>
+                                    </div>
+                                    <div class="theme-option" data-theme="light">
+                                        <div class="theme-preview light-preview"></div>
+                                        <div>
+                                            <p class="font-medium">Light</p>
+                                            <p class="text-sm text-text/70">Bright theme</p>
+                                        </div>
+                                    </div>
+                                    <div class="theme-option" data-theme="blue">
+                                        <div class="theme-preview blue-preview"></div>
+                                        <div>
+                                            <p class="font-medium">Blue</p>
+                                            <p class="text-sm text-text/70">Deep blue theme</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-8">
+                                <h3 class="text-lg font-bold mb-3">Layout</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="theme-option">
+                                        <i class="fas fa-columns text-2xl mr-4 text-accent"></i>
+                                        <div>
+                                            <p class="font-medium">Two Columns</p>
+                                            <p class="text-sm text-text/70">Default layout</p>
+                                        </div>
+                                    </div>
+                                    <div class="theme-option">
+                                        <i class="fas fa-grip-horizontal text-2xl mr-4 text-accent"></i>
+                                        <div>
+                                            <p class="font-medium">Grid View</p>
+                                            <p class="text-sm text-text/70">Card-based layout</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <h2 class="text-2xl font-bold mb-4">Account Settings</h2>
+                            <div class="mb-8">
+                                <h3 class="text-lg font-bold mb-3">Privacy</h3>
+                                <div class="space-y-3">
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="showProfile" class="mr-3 h-5 w-5 text-accent rounded">
+                                        <label for="showProfile">Make my profile public</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="showEmail" class="mr-3 h-5 w-5 text-accent rounded">
+                                        <label for="showEmail">Show email address on profile</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h2 class="text-2xl font-bold mb-4">Danger Zone</h2>
+                            <div class="bg-red-900/20 border border-red-700 rounded-lg p-6">
+                                <h3 class="text-lg font-bold mb-2">Delete Account</h3>
+                                <p class="text-sm mb-4">Permanently delete your account and all associated data.</p>
+                                <button id="deleteAccountBtn" class="btn-secondary w-full bg-red-900/30 border-red-700 text-red-400 hover:bg-red-900/50">
+                                    Delete My Account
+                                </button>
+                            </div>
+                            
+                            <div class="mt-6">
+                                <h3 class="text-lg font-bold mb-2">Export Data</h3>
+                                <p class="text-sm mb-4">Download all your data in a ZIP file.</p>
+                                <button id="exportDataBtn" class="btn-secondary w-full">
+                                    <i class="fas fa-download mr-2"></i>Export Data
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-secondary py-8 mt-20">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="mb-4 md:mb-0">
+                        <p class="text-accent font-headline text-xl">CASA</p>
+                        <p class="text-sm">© 2024 Computer Applications Student Association</p>
+                    </div>
+                    <div class="flex space-x-4">
+                        <a href="#" class="hover:text-accent transition-colors">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="#" class="hover:text-accent transition-colors">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="#" class="hover:text-accent transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Particles.js -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBmNvVdB_GeYrl1UNMkOGubuN_i6__jM-w",
+            authDomain: "casa-8f0ba.firebaseapp.com",
+            projectId: "casa-8f0ba",
+            storageBucket: "casa-8f0ba.appspot.com",
+            messagingSenderId: "637059274531",
+            appId: "1:637059274531:web:4cee4a8c6953b4497c9e96",
+            measurementId: "G-MZXKS10HWJ"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        
+        // DOM elements
+        const userDropdownBtn = document.getElementById('userDropdownBtn');
+        const userName = document.getElementById('userName');
+        const userEmail = document.getElementById('userEmail');
+        const userProfilePic = document.getElementById('userProfilePic');
+        const loginBadge = document.getElementById('loginBadge');
+        const dropdownUserName = document.getElementById('dropdownUserName');
+        const dropdownUserEmail = document.getElementById('dropdownUserEmail');
+        const loginMethodText = document.getElementById('loginMethodText');
+        const mainUserName = document.getElementById('mainUserName');
+        const mainUserEmail = document.getElementById('mainUserEmail');
+        const mainProfilePic = document.getElementById('mainProfilePic');
+        const mainLoginBadge = document.getElementById('mainLoginBadge');
+        const membershipType = document.getElementById('membershipType');
+        
+        // User data
+        let currentUser = null;
+        let isGoogleUser = false;
+        
+        // Initialize particles
+        document.addEventListener('DOMContentLoaded', function() {
+            particlesJS('particles-js', {
+                particles: {
+                    number: { value: 80, density: { enable: true, value_area: 800 } },
+                    color: { value: "#00BFFF" },
+                    shape: { type: "circle" },
+                    opacity: { value: 0.5, random: true },
+                    size: { value: 3, random: true },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: "#00BFFF",
+                        opacity: 0.4,
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 2,
+                        direction: "none",
+                        random: true,
+                        straight: false,
+                        out_mode: "out",
+                        bounce: false
+                    }
+                },
+                interactivity: {
+                    detect_on: "window",
+                    events: {
+                        onhover: { enable: true, mode: "grab" },
+                        onclick: { enable: true, mode: "push" },
+                        resize: true
+                    }
+                }
+            });
+            
+            // Check authentication state
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    currentUser = user;
+                    isGoogleUser = user.providerData.some(provider => provider.providerId === 'google.com');
+                    
+                    // Update UI with user data
+                    updateUserUI(user);
+                    
+                    // Load user data from Firestore
+                    loadUserData(user.uid);
+                    
+                    // Load projects and research papers for this user
+                    loadProjects();
+                    loadResearchPapers();
+                } else {
+                    // Redirect to login if not authenticated
+                    window.location.href = '../member-login.html';
+                }
+            });
+            
+            // Event listeners
+            setupEventListeners();
+        });
+        
+        // Update user UI with Firebase user data
+        function updateUserUI(user) {
+            const displayName = user.displayName || 'User';
+            const email = user.email || 'user@example.com';
+            const photoURL = user.photoURL || 'https://via.placeholder.com/40';
+            
+            // Update elements
+            userName.textContent = displayName;
+            userEmail.textContent = email;
+            userProfilePic.src = photoURL;
+            dropdownUserName.textContent = displayName;
+            dropdownUserEmail.textContent = email;
+            mainUserName.textContent = displayName;
+            mainUserEmail.textContent = email;
+            mainProfilePic.src = photoURL;
+            
+            // Show Google badge if Google user
+            if (isGoogleUser) {
+                loginBadge.classList.remove('hidden');
+                loginBadge.innerHTML = '<i class="fab fa-google"></i>';
+                loginMethodText.classList.remove('hidden');
+                mainLoginBadge.classList.remove('hidden');
+                mainLoginBadge.innerHTML = '<i class="fab fa-google"></i>';
+            }
+        }
+        
+        // Load additional user data from Firestore
+        function loadUserData(userId) {
+            db.collection('users').doc(userId).get()
+                .then(doc => {
+                    if (doc.exists) {
+                        const userData = doc.data();
+                        
+                        // Update membership type
+                        if (userData.membershipType) {
+                            const membershipText = userData.membershipType.charAt(0).toUpperCase() + 
+                                                  userData.membershipType.slice(1) + ' Member';
+                            membershipType.innerHTML = `<i class="fas fa-user-graduate mr-2"></i>${membershipText}`;
+                        }
+                        
+                        // Update profile section
+                        document.getElementById('profileUserName').textContent = userData.name || 'User';
+                        document.getElementById('profileUserEmail').textContent = userData.email || 'user@example.com';
+                        document.getElementById('profileMembership').textContent = userData.membershipType ? 
+                            userData.membershipType.charAt(0).toUpperCase() + userData.membershipType.slice(1) + ' Member' : 
+                            'Student Member';
+                            
+                        document.getElementById('fullName').value = userData.name || '';
+                        document.getElementById('profileEmail').value = userData.email || '';
+                        document.getElementById('phoneNumber').value = userData.phone || '';
+                        document.getElementById('profileMembershipType').value = userData.membershipType || 'student';
+                        document.getElementById('bio').value = userData.bio || '';
+                    }
+                })
+                .catch(error => {
+                    console.error("Error loading user data:", error);
+                });
+        }
+        
+        // Setup event listeners
+        function setupEventListeners() {
+            // Section navigation
+            document.querySelectorAll('.section-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const section = this.getAttribute('data-section');
+                    showSection(section);
+                });
+            });
+            
+            // Add project buttons
+            document.getElementById('addProjectBtn').addEventListener('click', () => openProjectModal());
+            document.getElementById('addProjectBtn2').addEventListener('click', () => openProjectModal());
+            
+            // Add research buttons
+            document.getElementById('addResearchBtn').addEventListener('click', () => openResearchModal());
+            document.getElementById('addResearchBtn2').addEventListener('click', () => openResearchModal());
+            document.getElementById('addResearchBtn3').addEventListener('click', () => openResearchModal());
+            
+            // Modal close buttons
+            document.getElementById('cancelProjectBtn').addEventListener('click', () => closeModal('projectModal'));
+            document.getElementById('cancelResearchBtn').addEventListener('click', () => closeModal('researchModal'));
+            
+            // Form submissions
+            document.getElementById('projectForm').addEventListener('submit', handleProjectSubmit);
+            document.getElementById('researchForm').addEventListener('submit', handleResearchSubmit);
+            document.getElementById('profileForm').addEventListener('submit', handleProfileUpdate);
+            document.getElementById('passwordForm').addEventListener('submit', handlePasswordChange);
+            
+            // Logout
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                auth.signOut().then(() => {
+                    window.location.href = '../member-login.html';
+                });
+            });
+            
+            // Theme selection
+            document.querySelectorAll('.theme-option[data-theme]').forEach(option => {
+                option.addEventListener('click', function() {
+                    const theme = this.getAttribute('data-theme');
+                    document.documentElement.className = theme;
+                    saveSetting('theme', theme);
+                });
+            });
+        }
+        
+        // Show specific section
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.hidden-section, .active-section').forEach(section => {
+                section.classList.remove('active-section');
+                section.classList.add('hidden-section');
+            });
+            
+            // Show requested section
+            const section = document.getElementById(`${sectionId}Section`);
+            if (section) {
+                section.classList.remove('hidden-section');
+                section.classList.add('active-section');
+            }
+        }
+        
+        // Open project modal
+        function openProjectModal(project = null) {
+            const modal = document.getElementById('projectModal');
+            const title = document.getElementById('projectModalTitle');
+            const form = document.getElementById('projectForm');
+            
+            if (project) {
+                // Edit existing project
+                title.innerHTML = '<i class="fas fa-edit mr-2"></i>Edit Project';
+                document.getElementById('projectId').value = project.id;
+                document.getElementById('projectTitle').value = project.title;
+                document.getElementById('projectType').value = project.type;
+                document.getElementById('projectStatus').value = project.status;
+                document.getElementById('projectDescription').value = project.description;
+            } else {
+                // Add new project
+                title.innerHTML = '<i class="fas fa-plus-circle mr-2"></i>Add New Project';
+                form.reset();
+                document.getElementById('projectId').value = '';
+            }
+            
+            modal.style.display = 'flex';
+        }
+        
+        // Open research modal
+        function openResearchModal(research = null) {
+            const modal = document.getElementById('researchModal');
+            const title = document.getElementById('researchModalTitle');
+            const form = document.getElementById('researchForm');
+            
+            if (research) {
+                // Edit existing research
+                title.innerHTML = '<i class="fas fa-edit mr-2"></i>Edit Research Paper';
+                document.getElementById('researchId').value = research.id;
+                document.getElementById('researchTitle').value = research.title;
+                document.getElementById('researchArea').value = research.area;
+                document.getElementById('researchDate').value = research.date;
+                document.getElementById('researchAbstract').value = research.abstract;
+                document.getElementById('researchLink').value = research.link || '';
+            } else {
+                // Add new research
+                title.innerHTML = '<i class="fas fa-file-alt mr-2"></i>Add Research Paper';
+                form.reset();
+                document.getElementById('researchId').value = '';
+                document.getElementById('researchDate').value = new Date().toISOString().split('T')[0];
+            }
+            
+            modal.style.display = 'flex';
+        }
+        
+        // Close modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+        
+        // Handle project form submission
+        function handleProjectSubmit(e) {
+            e.preventDefault();
+            
+            const projectId = document.getElementById('projectId').value;
+            const projectData = {
+                title: document.getElementById('projectTitle').value,
+                type: document.getElementById('projectType').value,
+                status: document.getElementById('projectStatus').value,
+                description: document.getElementById('projectDescription').value,
+                userId: currentUser.uid,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+            
+            if (projectId) {
+                // Update existing project
+                db.collection('projects').doc(projectId).update(projectData)
+                    .then(() => {
+                        addActivity(`Updated project: ${projectData.title}`);
+                        closeModal('projectModal');
+                        loadProjects();
+                    })
+                    .catch(error => {
+                        console.error("Error updating project:", error);
+                        alert('Error updating project. Please try again.');
+                    });
+            } else {
+                // Add new project
+                db.collection('projects').add(projectData)
+                    .then(() => {
+                        addActivity(`Added new project: ${projectData.title}`);
+                        closeModal('projectModal');
+                        loadProjects();
+                    })
+                    .catch(error => {
+                        console.error("Error adding project:", error);
+                        alert('Error adding project. Please try again.');
+                    });
+            }
+        }
+        
+        // Handle research form submission
+        function handleResearchSubmit(e) {
+            e.preventDefault();
+            
+            const researchId = document.getElementById('researchId').value;
+            const researchData = {
+                title: document.getElementById('researchTitle').value,
+                area: document.getElementById('researchArea').value,
+                date: document.getElementById('researchDate').value,
+                abstract: document.getElementById('researchAbstract').value,
+                link: document.getElementById('researchLink').value || '',
+                userId: currentUser.uid,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+            
+            if (researchId) {
+                // Update existing research
+                db.collection('research').doc(researchId).update(researchData)
+                    .then(() => {
+                        addActivity(`Updated research paper: ${researchData.title}`);
+                        closeModal('researchModal');
+                        loadResearchPapers();
+                    })
+                    .catch(error => {
+                        console.error("Error updating research:", error);
+                        alert('Error updating research paper. Please try again.');
+                    });
+            } else {
+                // Add new research
+                db.collection('research').add(researchData)
+                    .then(() => {
+                        addActivity(`Added new research paper: ${researchData.title}`);
+                        closeModal('researchModal');
+                        loadResearchPapers();
+                    })
+                    .catch(error => {
+                        console.error("Error adding research:", error);
+                        alert('Error adding research paper. Please try again.');
+                    });
+            }
+        }
+        
+        // Load projects from Firestore for current user
+        function loadProjects() {
+            const projectsList = document.getElementById('projectsList');
+            const projectsListFull = document.getElementById('projectsListFull');
+            
+            // Show loading state
+            projectsList.innerHTML = '<div class="loading-indicator"><div class="loading-spinner"></div><p>Loading projects...</p></div>';
+            projectsListFull.innerHTML = '<div class="loading-indicator"><div class="loading-spinner"></div><p>Loading projects...</p></div>';
+            
+            db.collection('projects')
+                .where('userId', '==', currentUser.uid)
+                .get()
+                .then(querySnapshot => {
+                    projectsList.innerHTML = '';
+                    projectsListFull.innerHTML = '';
+                    
+                    if (querySnapshot.empty) {
+                        projectsList.innerHTML = '<p class="text-center py-4 text-text/70">No projects found</p>';
+                        projectsListFull.innerHTML = '<p class="text-center py-8 text-text/70">No projects found</p>';
+                        return;
+                    }
+                    
+                    // Convert to array and sort by createdAt manually
+                    const projects = [];
+                    querySnapshot.forEach(doc => {
+                        const projectData = doc.data();
+                        projects.push({
+                            id: doc.id,
+                            ...projectData,
+                            // Convert Firestore Timestamp to JavaScript Date if needed
+                            createdAt: projectData.createdAt ? projectData.createdAt.toDate() : new Date(),
+                            updatedAt: projectData.updatedAt ? projectData.updatedAt.toDate() : new Date()
+                        });
+                    });
+                    
+                    // Sort by creation date (newest first)
+                    projects.sort((a, b) => b.createdAt - a.createdAt);
+                    
+                    projects.forEach(project => {
+                        const projectHTML = `
+                            <div class="project-item">
+                                <div class="flex justify-between items-start">
+                                    <h4 class="font-bold">${project.title || 'Untitled Project'}</h4>
+                                    <span class="text-sm bg-accent/20 text-accent px-2 py-1 rounded-full">
+                                        ${project.status ? project.status.replace('_', ' ') : 'Unknown Status'}
+                                    </span>
+                                </div>
+                                <p class="text-sm text-text/80 mt-1">${project.description ? project.description.substring(0, 100) + '...' : 'No description available'}</p>
+                                <p class="text-xs text-text/60 mt-2">
+                                    <i class="fas fa-${getProjectIcon(project.type)} mr-1"></i>
+                                    ${project.type || 'No type specified'}
+                                </p>
+                                <div class="project-actions">
+                                    <button class="action-btn edit-btn" data-id="${project.id}">
+                                        <i class="fas fa-edit mr-1"></i>Edit
+                                    </button>
+                                    <button class="action-btn delete-btn" data-id="${project.id}">
+                                        <i class="fas fa-trash mr-1"></i>Delete
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        
+                        projectsList.innerHTML += projectHTML;
+                        projectsListFull.innerHTML += projectHTML;
+                    });
+                    
+                    // Add event listeners to buttons
+                    document.querySelectorAll('.edit-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const projectId = this.getAttribute('data-id');
+                            db.collection('projects').doc(projectId).get()
+                                .then(doc => {
+                                    if (doc.exists) {
+                                        openProjectModal({id: doc.id, ...doc.data()});
+                                    }
+                                });
+                        });
+                    });
+                    
+                    document.querySelectorAll('.delete-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const projectId = this.getAttribute('data-id');
+                            if (confirm('Are you sure you want to delete this project?')) {
+                                db.collection('projects').doc(projectId).delete()
+                                    .then(() => {
+                                        loadProjects();
+                                        addActivity('Deleted a project');
+                                    });
+                            }
+                        });
+                    });
+                    
+                    // Update stats
+                    updateStats();
+                })
+                .catch(error => {
+                    console.error("Error loading projects:", error);
+                    projectsList.innerHTML = '<p class="text-center py-4 text-red-500">Error loading projects</p>';
+                    projectsListFull.innerHTML = '<p class="text-center py-8 text-red-500">Error loading projects</p>';
+                });
+        }
+        
+        // Load research papers from Firestore for current user
+        function loadResearchPapers() {
+            const researchList = document.getElementById('researchList');
+            const researchListFull = document.getElementById('researchListFull');
+            
+            // Show loading state
+            researchList.innerHTML = '<div class="loading-indicator"><div class="loading-spinner"></div><p>Loading research papers...</p></div>';
+            researchListFull.innerHTML = '<div class="loading-indicator"><div class="loading-spinner"></div><p>Loading research papers...</p></div>';
+            
+            db.collection('research')
+                .where('userId', '==', currentUser.uid)
+                .get()
+                .then(querySnapshot => {
+                    researchList.innerHTML = '';
+                    researchListFull.innerHTML = '';
+                    
+                    if (querySnapshot.empty) {
+                        researchList.innerHTML = '<p class="text-center py-4 text-text/70">No research papers found</p>';
+                        researchListFull.innerHTML = '<p class="text-center py-8 text-text/70">No research papers found</p>';
+                        return;
+                    }
+                    
+                    // Convert to array and sort by createdAt manually
+                    const researchPapers = [];
+                    querySnapshot.forEach(doc => {
+                        const researchData = doc.data();
+                        researchPapers.push({
+                            id: doc.id,
+                            ...researchData,
+                            // Convert Firestore Timestamp to JavaScript Date if needed
+                            createdAt: researchData.createdAt ? researchData.createdAt.toDate() : new Date(),
+                            updatedAt: researchData.updatedAt ? researchData.updatedAt.toDate() : new Date()
+                        });
+                    });
+                    
+                    // Sort by creation date (newest first)
+                    researchPapers.sort((a, b) => b.createdAt - a.createdAt);
+                    
+                    researchPapers.forEach(research => {
+                        const formattedDate = research.date ? new Date(research.date).toLocaleDateString() : 'Unknown date';
+                        const researchHTML = `
+                            <div class="research-item">
+                                <div class="flex justify-between items-start">
+                                    <h4 class="font-bold">${research.title || 'Untitled Research'}</h4>
+                                    <span class="text-sm text-text/70">${formattedDate}</span>
+                                </div>
+                                <p class="text-sm text-text/80 mt-1">${research.area || 'No area specified'}</p>
+                                <p class="text-sm text-text/80 mt-2">${research.abstract ? research.abstract.substring(0, 150) + '...' : 'No abstract available'}</p>
+                                <div class="research-actions">
+                                    <button class="action-btn edit-btn" data-id="${research.id}">
+                                        <i class="fas fa-edit mr-1"></i>Edit
+                                    </button>
+                                    <button class="action-btn delete-btn" data-id="${research.id}">
+                                        <i class="fas fa-trash mr-1"></i>Delete
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        
+                        researchList.innerHTML += researchHTML;
+                        researchListFull.innerHTML += researchHTML;
+                    });
+                    
+                    // Add event listeners to buttons
+                    document.querySelectorAll('.research-item .edit-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const researchId = this.getAttribute('data-id');
+                            db.collection('research').doc(researchId).get()
+                                .then(doc => {
+                                    if (doc.exists) {
+                                        openResearchModal({id: doc.id, ...doc.data()});
+                                    }
+                                });
+                        });
+                    });
+                    
+                    document.querySelectorAll('.research-item .delete-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const researchId = this.getAttribute('data-id');
+                            if (confirm('Are you sure you want to delete this research paper?')) {
+                                db.collection('research').doc(researchId).delete()
+                                    .then(() => {
+                                        loadResearchPapers();
+                                        addActivity('Deleted a research paper');
+                                    });
+                            }
+                        });
+                    });
+                    
+                    // Update stats
+                    updateStats();
+                })
+                .catch(error => {
+                    console.error("Error loading research papers:", error);
+                    researchList.innerHTML = '<p class="text-center py-4 text-red-500">Error loading research papers</p>';
+                    researchListFull.innerHTML = '<p class="text-center py-8 text-red-500">Error loading research papers</p>';
+                });
+        }
+        
+        // Update dashboard stats
+        function updateStats() {
+            const projectItems = document.querySelectorAll('.project-item').length;
+            const researchItems = document.querySelectorAll('.research-item').length;
+            
+            document.getElementById('projectsCount').textContent = projectItems;
+            document.getElementById('researchCount').textContent = researchItems;
+            document.getElementById('tasksCount').textContent = projectItems * 2; // Sample calculation
+        }
+        
+        // Handle profile update
+        function handleProfileUpdate(e) {
+            e.preventDefault();
+            
+            const userData = {
+                name: document.getElementById('fullName').value,
+                email: document.getElementById('profileEmail').value,
+                phone: document.getElementById('phoneNumber').value,
+                membershipType: document.getElementById('profileMembershipType').value,
+                bio: document.getElementById('bio').value,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+            
+            db.collection('users').doc(currentUser.uid).set(userData, { merge: true })
+                .then(() => {
+                    // Update UI
+                    userName.textContent = userData.name;
+                    dropdownUserName.textContent = userData.name;
+                    mainUserName.textContent = userData.name;
+                    document.getElementById('profileUserName').textContent = userData.name;
+                    
+                    const membershipText = userData.membershipType.charAt(0).toUpperCase() + 
+                                          userData.membershipType.slice(1) + ' Member';
+                    membershipType.innerHTML = `<i class="fas fa-user-graduate mr-2"></i>${membershipText}`;
+                    document.getElementById('profileMembership').textContent = membershipText;
+                    
+                    addActivity('Updated profile information');
+                    alert('Profile updated successfully!');
+                })
+                .catch(error => {
+                    console.error("Error updating profile:", error);
+                    alert('Error updating profile. Please try again.');
+                });
+        }
+        
+        // Handle password change
+        function handlePasswordChange(e) {
+            e.preventDefault();
+            
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const errorElement = document.getElementById('passwordError');
+            
+            // Reset error
+            errorElement.classList.add('hidden');
+            
+            // Validate passwords match
+            if (newPassword !== confirmPassword) {
+                errorElement.textContent = 'Passwords do not match';
+                errorElement.classList.remove('hidden');
+                return;
+            }
+            
+            // Validate password strength (optional)
+            if (newPassword.length < 6) {
+                errorElement.textContent = 'Password must be at least 6 characters';
+                errorElement.classList.remove('hidden');
+                return;
+            }
+            
+            // Reauthenticate user
+            const credential = firebase.auth.EmailAuthProvider.credential(
+                currentUser.email, 
+                currentPassword
+            );
+            
+            currentUser.reauthenticateWithCredential(credential)
+                .then(() => {
+                    // Update password
+                    currentUser.updatePassword(newPassword)
+                        .then(() => {
+                            addActivity('Changed password');
+                            alert('Password changed successfully!');
+                            document.getElementById('passwordForm').reset();
+                        })
+                        .catch(error => {
+                            console.error("Error updating password:", error);
+                            alert('Error updating password. Please try again.');
+                        });
+                })
+                .catch(error => {
+                    console.error("Reauthentication failed:", error);
+                    errorElement.textContent = 'Current password is incorrect';
+                    errorElement.classList.remove('hidden');
+                });
+        }
+        
+        // Add activity to recent activity
+        function addActivity(text) {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            const activityHTML = `
+                <div class="bg-primary/30 p-4 rounded-lg border-l-4 border-accent">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold">${text}</h3>
+                        <span class="text-sm text-text/70">${timeString}</span>
+                    </div>
+                    <p class="mt-2 text-sm text-text/80">Activity recorded</p>
+                </div>
+            `;
+            
+            // Prepend to recent activity
+            document.getElementById('recentActivity').innerHTML = activityHTML + document.getElementById('recentActivity').innerHTML;
+        }
+        
+        // Save setting to Firestore
+        function saveSetting(key, value) {
+            db.collection('user_settings').doc(currentUser.uid).set({
+                [key]: value,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            }, { merge: true });
+        }
+        
+        // Get project icon based on type
+        function getProjectIcon(type) {
+            const icons = {
+                web: 'globe',
+                mobile: 'mobile',
+                ai: 'brain',
+                iot: 'microchip',
+                other: 'project-diagram'
+            };
+            return icons[type] || 'project-diagram';
+        }
+        
+        // Close modals when clicking outside
+        window.addEventListener('click', (e) => {
+            const projectModal = document.getElementById('projectModal');
+            const researchModal = document.getElementById('researchModal');
+            
+            if (e.target === projectModal) projectModal.style.display = 'none';
+            if (e.target === researchModal) researchModal.style.display = 'none';
+        });
+    </script>
+</body>
+</html>

@@ -9,7 +9,11 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
 
     <!-- Custom Tailwind Configuration -->
     <script>
@@ -418,12 +422,12 @@
                             <form id="loginForm">
                                 <div class="mb-5 form-group">
                                     <label class="block mb-2">Email Address</label>
-                                    <input type="email" name="email" class="w-full form-input" required>
+                                    <input type="email" name="email" id="loginEmail" class="w-full form-input" required>
                                 </div>
 
                                 <div class="mb-5 form-group">
                                     <label class="block mb-2">Password</label>
-                                    <input type="password" name="password" class="w-full form-input" required>
+                                    <input type="password" name="password" id="loginPassword" class="w-full form-input" required>
                                     <div class="text-right mt-1">
                                         <a href="#" class="text-sm text-accent hover:underline">Forgot password?</a>
                                     </div>
@@ -465,23 +469,23 @@
                             <form id="signupForm">
                                 <div class="mb-5 form-group">
                                     <label class="block mb-2">Full Name</label>
-                                    <input type="text" name="name" class="w-full form-input" required>
+                                    <input type="text" name="name" id="signupName" class="w-full form-input" required>
                                 </div>
 
                                 <div class="mb-5 form-group">
                                     <label class="block mb-2">Email Address</label>
-                                    <input type="email" name="email" class="w-full form-input" required>
+                                    <input type="email" name="email" id="signupEmail" class="w-full form-input" required>
                                 </div>
 
                                 <div class="grid grid-cols-2 gap-4 mb-5">
                                     <div class="form-group">
                                         <label class="block mb-2">Password</label>
-                                        <input type="password" id="password" name="password" class="w-full form-input"
+                                        <input type="password" id="signupPassword" name="password" class="w-full form-input"
                                             required>
                                     </div>
                                     <div class="form-group">
                                         <label class="block mb-2">Confirm Password</label>
-                                        <input type="password" id="confirm_password" name="confirm_password"
+                                        <input type="password" id="confirmPassword" name="confirm_password"
                                             class="w-full form-input" required>
                                         <small id="passwordError" style="color:red; display:none;">Passwords do not
                                             match.</small>
@@ -490,12 +494,11 @@
 
                                 <div class="mb-5 form-group">
                                     <label class="block mb-2">Membership Type</label>
-                                    <select name="membership" class="w-full form-input">
+                                    <select name="membership" id="membershipType" class="w-full form-input">
                                         <option value="student">Student Member</option>
                                         <option value="alumni">Alumni Member</option>
                                         <option value="faculty">Faculty Member</option>
                                     </select>
-
                                 </div>
 
                                 <div class="flex items-center mb-6 form-group">
@@ -542,180 +545,84 @@
         </footer>
     </div>
 
-    <script>
-        window.onload = function () {
-            google.accounts.id.initialize({
-                client_id: "320820923103-5d0b1sjrftrk9tsc6nsikr48bccdlkhl.apps.googleusercontent.com",
-                callback: handleCredentialResponse
-            });
-
-            document.getElementById("googleLoginBtn").addEventListener("click", () => {
-                google.accounts.id.prompt(); // Show one-tap prompt or popup
-            });
-        };
-
-        async function handleCredentialResponse(response) {
-            const formData = new FormData();
-            formData.append('credential', response.credential);
-
-            try {
-                const res = await fetch('database/google-login.php', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const result = await res.json();
-
-                if (result.status === 'success') {
-                    // Redirect to dashboard
-                    window.location.href = 'user/main.php';
-                } else {
-                    alert("Google login failed: " + result.message);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('An error occurred during Google login');
-            }
-        }
-    </script>
-
-
     <!-- Enhanced Particles Script -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
     <script>
-        function validatePasswordMatch() {
-            const pwd = document.getElementById("password").value;
-            const cpwd = document.getElementById("confirm_password").value;
-            const errorMsg = document.getElementById("passwordError");
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBmNvVdB_GeYrl1UNMkOGubuN_i6__jM-w",
+            authDomain: "casa-8f0ba.firebaseapp.com",
+            projectId: "casa-8f0ba",
+            storageBucket: "casa-8f0ba.appspot.com",
+            messagingSenderId: "637059274531",
+            appId: "1:637059274531:web:4cee4a8c6953b4497c9e96",
+            measurementId: "G-MZXKS10HWJ"
+        };
 
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        
+        // Initialize Google Auth Provider
+        const googleProvider = new firebase.auth.GoogleAuthProvider();
+        
+        // Flip card functionality
+        function flipCard() {
+            const container = document.getElementById('flipContainer');
+            container.classList.toggle('flipped');
+            document.getElementById('loginMessage').innerHTML = '';
+            document.getElementById('signupMessage').innerHTML = '';
+            animateFormElements();
+        }
+        
+        // Password validation
+        function validatePasswordMatch() {
+            const pwd = document.getElementById("signupPassword").value;
+            const cpwd = document.getElementById("confirmPassword").value;
+            const errorMsg = document.getElementById("passwordError");
+            
             if (pwd !== cpwd) {
                 errorMsg.style.display = "block";
-                return false; // prevent form submission
+                return false;
             } else {
                 errorMsg.style.display = "none";
                 return true;
             }
         }
-    </script>
-
-    <script>
-        // Flip card functionality
-        function flipCard() {
-            const container = document.getElementById('flipContainer');
-            container.classList.toggle('flipped');
-
-            // Reset messages
-            document.getElementById('loginMessage').innerHTML = '';
-            document.getElementById('signupMessage').innerHTML = '';
-
-            // Animate form elements
-            animateFormElements();
-        }
-
+        
         // Particles initialization
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             particlesJS('particles-js', {
                 particles: {
-                    number: {
-                        value: 100,
-                        density: {
-                            enable: true,
-                            value_area: 800
-                        }
-                    },
-                    color: {
-                        value: '#F5F7FC'
-                    },
-                    shape: {
-                        type: 'circle',
-                        stroke: {
-                            width: 0,
-                            color: '#F5F7FC'
-                        }
-                    },
-                    opacity: {
-                        value: 1.5,
-                        random: true,
-                        anim: {
-                            enable: true,
-                            speed: 1,
-                            opacity_min: 2,
-                            sync: false
-                        }
-                    },
-                    size: {
-                        value: 4,
-                        random: true,
-                        anim: {
-                            enable: true,
-                            speed: 2,
-                            size_min: 1,
-                            sync: false
-                        }
-                    },
-                    line_linked: {
-                        enable: true,
-                        distance: 150,
-                        color: '#FFFFFF',
-                        opacity: 0.6,
-                        width: 1.5
-                    },
-                    move: {
-                        enable: true,
-                        speed: 3,
-                        direction: 'none',
-                        random: true,
-                        straight: false,
-                        out_mode: 'out',
-                        bounce: false,
-                        attract: {
-                            enable: true,
-                            rotateX: 600,
-                            rotateY: 1200
-                        }
-                    }
+                    number: { value: 100, density: { enable: true, value_area: 800 } },
+                    color: { value: '#F5F7FC' },
+                    shape: { type: 'circle', stroke: { width: 0, color: '#F5F7FC' } },
+                    opacity: { value: 1.5, random: true, anim: { enable: true, speed: 1, opacity_min: 2, sync: false } },
+                    size: { value: 4, random: true, anim: { enable: true, speed: 2, size_min: 1, sync: false } },
+                    line_linked: { enable: true, distance: 150, color: '#FFFFFF', opacity: 0.6, width: 1.5 },
+                    move: { enable: true, speed: 3, direction: 'none', random: true, straight: false, out_mode: 'out', bounce: false, attract: { enable: true, rotateX: 600, rotateY: 1200 } }
                 },
                 interactivity: {
                     detect_on: 'window',
                     events: {
-                        onhover: {
-                            enable: true,
-                            mode: 'grab',
-                            parallax: {
-                                enable: true,
-                                force: 60,
-                                smooth: 10
-                            }
-                        },
-                        onclick: {
-                            enable: true,
-                            mode: 'push',
-                            particles_nb: 6
-                        },
+                        onhover: { enable: true, mode: 'grab', parallax: { enable: true, force: 60, smooth: 10 } },
+                        onclick: { enable: true, mode: 'push', particles_nb: 6 },
                         resize: true
                     },
                     modes: {
-                        grab: {
-                            distance: 180,
-                            line_linked: {
-                                opacity: 1
-                            }
-                        },
-                        push: {
-                            particles_nb: 6
-                        },
-                        remove: {
-                            particles_nb: 2
-                        }
+                        grab: { distance: 180, line_linked: { opacity: 1 } },
+                        push: { particles_nb: 6 },
+                        remove: { particles_nb: 2 }
                     }
                 },
                 retina_detect: true
             });
-
-            // Animate form elements on load
+            
             setTimeout(animateFormElements, 300);
         });
-
+        
         // Function to animate form elements
         function animateFormElements() {
             const formGroups = document.querySelectorAll('.form-group');
@@ -727,141 +634,166 @@
                 }, index * 100);
             });
         }
-
+        
         // Mobile menu functionality
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const closeMenuButton = document.getElementById('close-menu');
         const mobileMenu = document.getElementById('mobile-menu');
         const overlay = document.getElementById('overlay');
         const hamburgerIcon = document.getElementById('hamburger-icon');
-
+        
         function openMobileMenu() {
             mobileMenu.classList.add('open');
             overlay.classList.add('active');
             hamburgerIcon.classList.add('open');
             document.body.classList.add('overflow-hidden');
         }
-
+        
         function closeMobileMenu() {
             mobileMenu.classList.remove('open');
             overlay.classList.remove('active');
             hamburgerIcon.classList.remove('open');
             document.body.classList.remove('overflow-hidden');
         }
-
+        
         mobileMenuButton.addEventListener('click', openMobileMenu);
         closeMenuButton.addEventListener('click', closeMobileMenu);
         overlay.addEventListener('click', closeMobileMenu);
-
-        // Close mobile menu when clicking on a link
-        document.querySelectorAll('#mobile-menu .nav-link').forEach(link => {
-            link.addEventListener('click', closeMobileMenu);
-        });
-
-        // Theme toggle
-        const themeToggle = document.getElementById('theme-toggle');
-        const html = document.documentElement;
-
-        function updateThemeIcon() {
-            const isDark = html.classList.contains('dark');
-            const moonIcon = themeToggle.querySelector('.fa-moon');
-            const sunIcon = themeToggle.querySelector('.fa-sun');
-
-            if (isDark) {
-                moonIcon.classList.add('hidden');
-                sunIcon.classList.remove('hidden');
-            } else {
-                moonIcon.classList.remove('hidden');
-                sunIcon.classList.add('hidden');
-            }
-        }
-
-
+        
         // Login form submission
-        document.getElementById('loginForm').addEventListener('submit', async function (e) {
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const formData = new FormData(this);
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
             const messageDiv = document.getElementById('loginMessage');
             messageDiv.innerHTML = '<p class="success-message">Signing you in...</p>';
-
+            
             try {
-                const response = await fetch('database/login.php', {
-                    method: 'POST',
-                    body: formData
-                });
-                const result = await response.json();
-
-                if (result.status === 'success') {
-                    messageDiv.innerHTML = `<p class="success-message">${result.message}</p>`;
-                    // Redirect to dashboard after 1.5 seconds
-                    setTimeout(() => {
-                        window.location.href = 'user/main.html';
-                    }, 1500);
-                } else {
-                    messageDiv.innerHTML = `<p class="error-message">${result.message}</p>`;
-                }
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+                
+                messageDiv.innerHTML = `<p class="success-message">Login successful! Redirecting...</p>`;
+                setTimeout(() => {
+                    window.location.href = 'user/main.html';
+                }, 1500);
             } catch (error) {
-                console.error('Error:', error);
-                messageDiv.innerHTML = '<p class="error-message">An error occurred. Please try again.</p>';
+                console.error('Login error:', error);
+                let message = '';
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                        message = 'User not found. Please sign up.';
+                        break;
+                    case 'auth/wrong-password':
+                        message = 'Incorrect password. Please try again.';
+                        break;
+                    default:
+                        message = 'Login failed. Please try again later.';
+                }
+                messageDiv.innerHTML = `<p class="error-message">${message}</p>`;
             }
         });
-
+        
         // Signup form submission
-        document.getElementById('signupForm').addEventListener('submit', async function (e) {
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const formData = new FormData(this);
+            
+            // Validate passwords match
+            if (!validatePasswordMatch()) return;
+            
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const membership = document.getElementById('membershipType').value;
             const messageDiv = document.getElementById('signupMessage');
-
-            // Check if passwords match
-            if (formData.get('password') !== formData.get('confirm_password')) {
-                messageDiv.innerHTML = '<p class="error-message">Passwords do not match.</p>';
-                return;
-            }
-
-            // Remove confirm_password from form data
-            formData.delete('confirm_password');
-
+            
             messageDiv.innerHTML = '<p class="success-message">Creating your account...</p>';
-
+            
             try {
-                const response = await fetch('database/signup.php', {
-                    method: 'POST',
-                    body: formData
+                // Create user in Firebase Authentication
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+                
+                // Save additional user data in Firestore
+                await db.collection('users').doc(user.uid).set({
+                    name: name,
+                    email: email,
+                    membershipType: membership,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    lastLogin: firebase.firestore.FieldValue.serverTimestamp()
                 });
-                const result = await response.json();
-
-                if (result.status === 'success') {
-                    const name = formData.get('name');
-                    const email = formData.get('email');
-                    messageDiv.innerHTML = `
-                <div class="success-message p-4 rounded-lg bg-green-900/30">
-                    <p class="font-bold">${result.message}</p>
-                    <p class="mt-1">Welcome to CASA, ${name}!</p>
-                    <p class="mt-2">A verification email has been sent to ${email}.</p>
-                </div>
-            `;
-
-                    // Clear form and flip back to login after 3 seconds
-                    this.reset();
-                    setTimeout(() => {
-                        flipCard();
-                        messageDiv.innerHTML = '';
-                    }, 3000);
-                } else {
-                    messageDiv.innerHTML = `<p class="error-message">${result.message}</p>`;
-                }
+                
+                messageDiv.innerHTML = `
+                    <div class="success-message p-4 rounded-lg bg-green-900/30">
+                        <p class="font-bold">Account created successfully!</p>
+                        <p class="mt-1">Welcome to CASA, ${name}!</p>
+                        <p class="mt-2">You can now log in to your account.</p>
+                    </div>
+                `;
+                
+                // Clear form and flip back to login after 3 seconds
+                this.reset();
+                setTimeout(() => {
+                    flipCard();
+                    messageDiv.innerHTML = '';
+                }, 3000);
             } catch (error) {
-                console.error('Error:', error);
-                messageDiv.innerHTML = '<p class="error-message">An error occurred. Please try again.</p>';
+                console.error('Signup error:', error);
+                let message = '';
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        message = 'Email already in use. Please log in.';
+                        break;
+                    case 'auth/weak-password':
+                        message = 'Password should be at least 6 characters.';
+                        break;
+                    default:
+                        message = 'Account creation failed. Please try again.';
+                }
+                messageDiv.innerHTML = `<p class="error-message">${message}</p>`;
             }
         });
-
-        // Add animation to page elements
-        document.addEventListener('DOMContentLoaded', () => {
-            const elements = document.querySelectorAll('.animate-fadeInDown');
-            elements.forEach((el, index) => {
-                el.style.animationDelay = `${index * 0.1}s`;
-            });
+        
+        // Google login
+        document.getElementById('googleLoginBtn').addEventListener('click', () => {
+            auth.signInWithPopup(googleProvider)
+                .then(async (result) => {
+                    const user = result.user;
+                    
+                    // Check if user exists in Firestore
+                    const userDoc = await db.collection('users').doc(user.uid).get();
+                    
+                    if (!userDoc.exists) {
+                        // Save user data to Firestore if new user
+                        await db.collection('users').doc(user.uid).set({
+                            name: user.displayName,
+                            email: user.email,
+                            membershipType: 'student', // Default membership
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    }
+                    
+                    // Redirect to dashboard
+                    window.location.href = 'user/main.html';
+                })
+                .catch((error) => {
+                    console.error('Google login error:', error);
+                    document.getElementById('loginMessage').innerHTML = 
+                        `<p class="error-message">Google login failed: ${error.message}</p>`;
+                });
+        });
+        
+        // Listen for auth state changes
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                console.log('User is logged in:', user.email);
+                // Update last login time
+                db.collection('users').doc(user.uid).update({
+                    lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            } else {
+                console.log('User is logged out');
+            }
         });
     </script>
 </body>

@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - CASA</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0D1117',
+                        accent: '#00BFFF',
+                        highlight: '#FEE440',
+                        secondary: '#222831',
+                        text: '#E0E0E0',
+                    },
+                    fontFamily: {
+                        'headline': ['Poppins', 'Montserrat', 'sans-serif'],
+                        'body': ['Inter', 'Nunito', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            background-color: #0D1117;
+        }
+
+        .contact-card {
+            background: rgba(34, 40, 49, 0.9);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            transition: all 0.4s ease;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 191, 255, 0.3);
+            border-color: #00BFFF;
+        }
+
+        .highlight-card {
+            border: 2px solid #FEE440;
+            position: relative;
+            z-index: 10;
+        }
+
+        .highlight-card::after {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border-radius: 20px;
+            background: linear-gradient(45deg, #00BFFF, #FEE440);
+            z-index: -1;
+            opacity: 0.2;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.2;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
+
+            100% {
+                opacity: 0.2;
+            }
+        }
+
+        .contact-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 30px;
+            background: rgba(0, 191, 255, 0.2);
+            color: #00BFFF;
+            transition: all 0.3s;
+        }
+
+        .contact-card:hover .contact-icon {
+            transform: scale(1.1);
+            background: #00BFFF;
+            color: #0D1117;
+        }
+
+        .social-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: #E0E0E0;
+            margin: 0 5px;
+            transition: all 0.3s;
+        }
+
+        .social-icon:hover {
+            transform: translateY(-5px);
+            background: #00BFFF;
+            color: #0D1117;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-in forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-in-left {
+            animation: slideInLeft 0.8s ease-in forwards;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .slide-in-right {
+            animation: slideInRight 0.8s ease-in forwards;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .nav-link {
+            position: relative;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            color: #E0E0E0;
+            transition: color 0.3s;
+        }
+        
+        .nav-link:hover {
+            color: #00BFFF;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: #00BFFF;
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover::after {
+            left: 0;
+            width: 100%;
+        }
+        
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100%;
+            width: 280px;
+            background-color: #222831;
+            z-index: 100;
+            transform: translateX(100%);
+            transition: transform 0.5s ease;
+        }
+        
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 99;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+        
+        .menu-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .hamburger-line {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background-color: #E0E0E0;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+        
+        .hamburger-icon.open .hamburger-line:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        
+        .hamburger-icon.open .hamburger-line:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger-icon.open .hamburger-line:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+    </style>
+
+    <!-- Fonts & Icons -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Nunito:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body class="text-text font-body">
+    <!-- Particles Background -->
+    <div id="particles-js"></div>
+
+    <!-- Navigation Bar -->
+    <nav class="fixed top-0 w-full bg-secondary/80 backdrop-blur-md z-50 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center animate-pulse-slow">
+                        <i class="fas fa-code text-primary text-xl"></i>
+                    </div>
+                    <a href="#" class="text-2xl font-bold text-accent flex items-center">
+                        CASA
+                        <span
+                            class="ml-1 text-xs bg-highlight text-primary px-2 py-1 rounded-full animate-bounce-slow">AI</span>
+                    </a>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex space-x-1">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="events.html" class="nav-link">Events</a>
+                    <a href="projects.html" class="nav-link text-accent">Projects</a>
+                    <a href="contact.html" class="nav-link">Contact</a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="p-2 rounded-lg hover:bg-primary/20 transition-colors">
+                        <div id="hamburger-icon" class="space-y-1.5">
+                            <span class="hamburger-line"></span>
+                            <span class="hamburger-line"></span>
+                            <span class="hamburger-line"></span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu">
+        <div class="h-full flex flex-col">
+            <div class="p-6 border-b border-gray-700 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center">
+                        <i class="fas fa-code text-primary text-xl"></i>
+                    </div>
+                    <span class="text-xl font-bold text-accent">CASA</span>
+                </div>
+                <button id="close-menu" class="p-2 rounded-lg hover:bg-primary/20">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
+
+            <div class="flex-1 p-6 flex flex-col space-y-4">
+                <a href="index.html" class="nav-link py-3 border-b border-gray-700">Home</a>
+                <a href="about.html" class="nav-link py-3 border-b border-gray-700">About</a>
+                <a href="events.html" class="nav-link py-3 border-b border-gray-700">Events</a>
+                <a href="projects.html" class="nav-link py-3 border-b border-gray-700 text-accent">Projects</a>
+                <a href="contact.html" class="nav-link py-3">Contact</a>
+            </div>
+
+            <div class="p-6 border-t border-gray-700">
+                <div class="flex space-x-4 justify-center">
+                    <a href="#"
+                        class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="#"
+                        class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#"
+                        class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#"
+                        class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                        <i class="fab fa-discord"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay for mobile menu -->
+    <div id="overlay" class="menu-overlay"></div>
+
+    <!-- Contact Page Content -->
+    <section class="pt-32 pb-16 min-h-screen">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h1 class="text-4xl md:text-5xl font-headline font-bold text-accent mb-4">
+                    Contact Us
+                </h1>
+                <p class="text-lg text-text/80 max-w-2xl mx-auto">
+                    Get in touch with the Computer and AI/ML Student Association team. We're here to answer any
+                    questions and connect with you.
+                </p>
+            </div>
+
+            <!-- Principal Contact Card -->
+            <div class="max-w-2xl mx-auto mb-20 fade-in">
+                <div class="contact-card highlight-card">
+                    <div class="flex flex-col items-center text-center">
+                        <img src="/img/principal.jpg"
+                            alt="Ms. Jyoti Kininge"
+                            class="w-32 h-32 rounded-full object-cover border-4 border-highlight mx-auto mb-6">
+                        <h3 class="text-2xl font-bold text-highlight mb-2">Ms. Jyoti Kininge</h3>
+                        <p class="text-xl font-semibold mb-4">Principal & Mentor</p>
+                        <div class="mb-6">
+                            <p class="flex items-center justify-center mb-2">
+                                <i class="fas fa-phone-alt mr-2 text-accent"></i>
+                                <span>+919901400615</span>
+                            </p>
+                            <p class="flex items-center justify-center">
+                                <i class="fas fa-envelope mr-2 text-accent"></i>
+                                <span>klebcanpn@gmail.com</span>
+                            </p>
+                        </div>
+                        <div class="flex justify-center">
+                            <a href="#" class="social-icon">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="social-icon">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Founders Section -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <!-- Founder Card -->
+                <div class="contact-card slide-in-left">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="contact-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <img src="/img/sai.jpg"
+                            alt="Saiprasad Shiragave"
+                            class="w-24 h-24 rounded-full object-cover border-4 border-accent mx-auto mb-4">
+                        <h3 class="text-xl font-bold text-accent mb-2">Saiprasad Shiragave</h3>
+                        <p class="font-semibold mb-4">Founder & Strategic Advisor</p>
+                        <div class="mb-4">
+                            <p class="flex items-center justify-center mb-2">
+                                <i class="fas fa-phone-alt mr-2 text-accent"></i>
+                                <span>+91 7378824480</span>
+                            </p>
+                            <p class="flex items-center justify-center">
+                                <i class="fas fa-envelope mr-2 text-accent"></i>
+                                <span>saiprasadshiragave@gmail.com</span>
+                            </p>
+                        </div>
+                        <div class="flex justify-center">
+                            <a href="#" class="social-icon">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="social-icon">
+                                <i class="fab fa-github"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Co-Founder Card -->
+                <div class="contact-card slide-in-right">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="contact-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <img src="/img/pavan.jpg"
+                            alt="Pavan Patil"
+                            class="w-24 h-24 rounded-full object-cover border-4 border-accent mx-auto mb-4">
+                        <h3 class="text-xl font-bold text-accent mb-2">Pavan Patil</h3>
+                        <p class="font-semibold mb-4">Executive Director & Technical Advisor</p>
+                        <div class="mb-4">
+                            <p class="flex items-center justify-center mb-2">
+                                <i class="fas fa-phone-alt mr-2 text-accent"></i>
+                                <span>+91 9322108023</span>
+                            </p>
+                            <p class="flex items-center justify-center">
+                                <i class="fas fa-envelope mr-2 text-accent"></i>
+                                <span>pavanpatil8023@gmail.com</span>
+                            </p>
+                        </div>
+                        <div class="flex justify-center">
+                            <a href="#" class="social-icon">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="social-icon">
+                                <i class="fab fa-github"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Organization Contact -->
+            <div class="max-w-2xl mx-auto mt-16 fade-in">
+                <div class="contact-card">
+                    <div class="text-center">
+                        <h3 class="text-2xl font-bold text-accent mb-6">
+                            <i class="fas fa-envelope-open-text mr-2"></i>Get in Touch with CASA
+                        </h3>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                            <div class="flex flex-col items-center">
+                                <div class="contact-icon">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <h4 class="text-lg font-bold mb-2">Email</h4>
+                                <p>casa05.kle@gmail.com</p>
+                            </div>
+
+                            <div class="flex flex-col items-center">
+                                <div class="contact-icon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <h4 class="text-lg font-bold mb-2">Location</h4>
+                                <p>KLE Society's College of BCA, Nipani</p>
+                            </div>
+                        </div>
+
+                        <div class="mb-8">
+                            <h4 class="text-lg font-bold mb-4">Follow Us</h4>
+                            <div class="flex justify-center space-x-4">
+                                <a href="#" class="social-icon">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                                <a href="#" class="social-icon">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="#" class="social-icon">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                                <a href="#" class="social-icon">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div>
+                            <p class="text-text/80 italic">"Coming together is a beginning, staying together is
+                                progress, and working together is success."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-secondary py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <p class="text-accent font-headline text-xl">CASA</p>
+                    <p class="text-sm">Computer and AI/ML Student Association</p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="#" class="hover:text-accent transition-colors">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="#" class="hover:text-accent transition-colors">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="#" class="hover:text-accent transition-colors">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Particles Script -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <script>
+        // Initialize Particles
+        document.addEventListener('DOMContentLoaded', function () {
+            particlesJS('particles-js', {
+                particles: {
+                    number: { value: 80, density: { enable: true, value_area: 800 } },
+                    color: { value: "#00BFFF" },
+                    shape: { type: "circle" },
+                    opacity: { value: 0.5, random: true },
+                    size: { value: 3, random: true },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: "#00BFFF",
+                        opacity: 0.4,
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 2,
+                        direction: "none",
+                        random: true,
+                        straight: false,
+                        out_mode: "out",
+                        bounce: false
+                    }
+                },
+                interactivity: {
+                    detect_on: "window",
+                    events: {
+                        onhover: { enable: true, mode: "grab" },
+                        onclick: { enable: true, mode: "push" },
+                        resize: true
+                    }
+                }
+            });
+
+            // Mobile menu functionality
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const closeMenuButton = document.getElementById('close-menu');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const overlay = document.getElementById('overlay');
+            const hamburgerIcon = document.getElementById('hamburger-icon');
+
+            function openMobileMenu() {
+                mobileMenu.classList.add('open');
+                overlay.classList.add('active');
+                hamburgerIcon.classList.add('open');
+                document.body.classList.add('overflow-hidden');
+            }
+
+            function closeMobileMenu() {
+                mobileMenu.classList.remove('open');
+                overlay.classList.remove('active');
+                hamburgerIcon.classList.remove('open');
+                document.body.classList.remove('overflow-hidden');
+            }
+
+            mobileMenuButton.addEventListener('click', openMobileMenu);
+            closeMenuButton.addEventListener('click', closeMobileMenu);
+            overlay.addEventListener('click', closeMobileMenu);
+
+            // Close mobile menu when clicking on a link
+            document.querySelectorAll('#mobile-menu .nav-link').forEach(link => {
+                link.addEventListener('click', closeMobileMenu);
+            });
+        });
+    </script>
+</body>
+
+</html>

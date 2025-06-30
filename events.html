@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CASA Events</title>
-
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Custom Tailwind Configuration -->
+    
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -30,8 +32,7 @@
             }
         }
     </script>
-
-    <!-- Styles -->
+    
     <style>
         .nav-link {
             position: relative;
@@ -61,71 +62,107 @@
             width: 100%;
         }
         
-        .mobile-menu {
-            position: fixed;
-            top: 0;
-            right: 0;
-            height: 100%;
-            width: 280px;
-            background-color: #222831;
-            z-index: 100;
-            transform: translateX(100%);
-            transition: transform 0.5s ease;
+        /* Flip card styles */
+        .flip-card {
+            background-color: transparent;
+            perspective: 1000px;
+            height: 380px;
         }
         
-        .mobile-menu.open {
-            transform: translateX(0);
-        }
-        
-        .menu-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
+        .flip-card-inner {
+            position: relative;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 99;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
         }
         
-        .menu-overlay.active {
-            opacity: 1;
-            pointer-events: all;
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
         }
         
-        .hamburger-line {
-            display: block;
-            width: 24px;
-            height: 2px;
-            background-color: #E0E0E0;
-            border-radius: 2px;
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+        
+        .flip-card-front {
+            background-color: #222831;
+            color: white;
+        }
+        
+        .flip-card-back {
+            background-color: #222831;
+            color: white;
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+        }
+        
+        .event-image {
+            height: 200px;
+            object-fit: cover;
+            width: 100%;
+        }
+        
+        .event-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .filter-btn {
+            background: rgba(34, 40, 49, 0.5);
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            color: #E0E0E0;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            margin: 0 0.25rem 0.5rem;
+            cursor: pointer;
             transition: all 0.3s;
         }
         
-        .hamburger-icon.open .hamburger-line:nth-child(1) {
-            transform: translateY(7px) rotate(45deg);
+        .filter-btn.active, .filter-btn:hover {
+            background: #00BFFF;
+            color: #0D1117;
         }
         
-        .hamburger-icon.open .hamburger-line:nth-child(2) {
-            opacity: 0;
+        .event-date-badge {
+            background: #00BFFF;
+            color: #0D1117;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
         }
         
-        .hamburger-icon.open .hamburger-line:nth-child(3) {
-            transform: translateY(-7px) rotate(-45deg);
-        }
-        
-        .event-card {
-            background-color: #222831;
-            border-radius: 12px;
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .event-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        .event-tag {
+            display: inline-block;
+            background: rgba(0, 191, 255, 0.2);
+            color: #00BFFF;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
         }
         
         #particles-js {
@@ -143,22 +180,12 @@
             z-index: 1;
             background-color: rgba(13, 17, 23, 0.85);
         }
-        
-        .fade-in {
-            animation: fadeIn 0.5s ease-in forwards;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
     </style>
-
+    
     <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Nunito:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-
 <body class="text-text font-body">
     <!-- Particles Background -->
     <div id="particles-js"></div>
@@ -188,65 +215,9 @@
                         <a href="projects.html" class="nav-link">Projects</a>
                         <a href="contact.html" class="nav-link">Contact</a>
                     </div>
-
-                    <!-- Mobile menu button -->
-                    <div class="md:hidden">
-                        <button id="mobile-menu-button" class="p-2 rounded-lg hover:bg-primary/20 transition-colors">
-                            <div id="hamburger-icon" class="space-y-1.5">
-                                <span class="hamburger-line"></span>
-                                <span class="hamburger-line"></span>
-                                <span class="hamburger-line"></span>
-                            </div>
-                        </button>
-                    </div>
                 </div>
             </div>
         </nav>
-
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="mobile-menu">
-            <div class="h-full flex flex-col">
-                <div class="p-6 border-b border-gray-700 flex justify-between items-center">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center">
-                            <i class="fas fa-code text-primary text-xl"></i>
-                        </div>
-                        <span class="text-xl font-bold text-accent">CASA</span>
-                    </div>
-                    <button id="close-menu" class="p-2 rounded-lg hover:bg-primary/20">
-                        <i class="fas fa-times text-lg"></i>
-                    </button>
-                </div>
-
-                <div class="flex-1 p-6 flex flex-col space-y-4">
-                    <a href="index.html" class="nav-link py-3 border-b border-gray-700">Home</a>
-                    <a href="about.html" class="nav-link py-3 border-b border-gray-700">About</a>
-                    <a href="events.html" class="nav-link py-3 border-b border-gray-700 text-accent">Events</a>
-                    <a href="projects.html" class="nav-link py-3 border-b border-gray-700">Projects</a>
-                    <a href="contact.html" class="nav-link py-3">Contact</a>
-                </div>
-
-                <div class="p-6 border-t border-gray-700">
-                    <div class="flex space-x-4 justify-center">
-                        <a href="#" class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
-                            <i class="fab fa-github"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
-                            <i class="fab fa-discord"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Overlay for mobile menu -->
-        <div id="overlay" class="menu-overlay"></div>
 
         <!-- Events Page -->
         <section class="py-16 pt-32">
@@ -259,13 +230,22 @@
                         Join us for exciting workshops, hackathons, and networking events designed to fuel your passion
                         for technology.
                     </p>
+                    
+                    <!-- Event Filters -->
+                    <div class="flex flex-wrap justify-center mt-8 mb-6">
+                        <button class="filter-btn active" data-filter="all">All Events</button>
+                        <button class="filter-btn" data-filter="hackathon">Hackathons</button>
+                        <button class="filter-btn" data-filter="workshop">Workshops</button>
+                        <button class="filter-btn" data-filter="conference">Conferences</button>
+                        <button class="filter-btn" data-filter="social">Social Events</button>
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="events-container">
-                    <!-- Events will be loaded dynamically from database -->
-                    <div class="text-center py-12">
+                    <!-- Events will be loaded dynamically from Firestore -->
+                    <div class="text-center py-12 col-span-3">
                         <i class="fas fa-spinner fa-spin text-accent text-3xl mb-4"></i>
-                        <p>Loading events...</p>
+                        <p>Loading events from Firestore...</p>
                     </div>
                 </div>
             </div>
@@ -300,6 +280,21 @@
 
     <!-- Main Script -->
     <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBmNvVdB_GeYrl1UNMkOGubuN_i6__jM-w",
+            authDomain: "casa-8f0ba.firebaseapp.com",
+            projectId: "casa-8f0ba",
+            storageBucket: "casa-8f0ba.appspot.com",
+            messagingSenderId: "637059274531",
+            appId: "1:637059274531:web:4cee4a8c6953b4497c9e96",
+            measurementId: "G-MZXKS10HWJ"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        
         // Initialize Particles
         document.addEventListener('DOMContentLoaded', function () {
             particlesJS('particles-js', {
@@ -318,7 +313,7 @@
                         type: 'circle'
                     },
                     opacity: {
-                        value: 1.5,
+                        value: 0.8,
                         random: true
                     },
                     size: {
@@ -329,8 +324,8 @@
                         enable: true,
                         distance: 150,
                         color: '#FFFFFF',
-                        opacity: 0.6,
-                        width: 1.5
+                        opacity: 0.4,
+                        width: 1
                     },
                     move: {
                         enable: true,
@@ -355,118 +350,223 @@
                 }
             });
 
-            // Load events for public page
+            // Load events from Firestore
             loadEvents();
+            
+            // Set up filter buttons
+            setupEventFilters();
         });
 
-        // Mobile menu functionality
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const closeMenuButton = document.getElementById('close-menu');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const overlay = document.getElementById('overlay');
-        const hamburgerIcon = document.getElementById('hamburger-icon');
-
-        function openMobileMenu() {
-            mobileMenu.classList.add('open');
-            overlay.classList.add('active');
-            hamburgerIcon.classList.add('open');
-            document.body.classList.add('overflow-hidden');
-        }
-
-        function closeMobileMenu() {
-            mobileMenu.classList.remove('open');
-            overlay.classList.remove('active');
-            hamburgerIcon.classList.remove('open');
-            document.body.classList.remove('overflow-hidden');
-        }
-
-        mobileMenuButton.addEventListener('click', openMobileMenu);
-        closeMenuButton.addEventListener('click', closeMobileMenu);
-        overlay.addEventListener('click', closeMobileMenu);
-
-        // Close mobile menu when clicking on a link
-        document.querySelectorAll('#mobile-menu .nav-link').forEach(link => {
-            link.addEventListener('click', closeMobileMenu);
-        });
-
-        // Load events from database for public page
+        // Load events from Firestore
         function loadEvents() {
-            fetch('database/get-events.php')
-                .then(response => response.json())
-                .then(events => {
-                    const container = document.getElementById('events-container');
-                    container.innerHTML = '';
-
-                    if (events.length === 0) {
+            const container = document.getElementById('events-container');
+            
+            // Show loading state
+            container.innerHTML = `
+                <div class="text-center py-12 col-span-3">
+                    <i class="fas fa-spinner fa-spin text-accent text-3xl mb-4"></i>
+                    <p>Loading events from Firestore...</p>
+                </div>
+            `;
+            
+            // Get events from Firestore
+            db.collection("events")
+                .get()
+                .then((querySnapshot) => {
+                    const events = [];
+                    
+                    if (querySnapshot.empty) {
                         container.innerHTML = `
                             <div class="col-span-3 text-center py-12">
                                 <i class="fas fa-calendar-times text-accent text-4xl mb-4"></i>
-                                <h3 class="text-2xl font-headline font-bold mb-2">No Upcoming Events</h3>
-                                <p class="text-text/80">Check back later for new events!</p>
+                                <h3 class="text-2xl font-headline font-bold mb-2">No Events Found</h3>
+                                <p class="text-text/80">Check back later for upcoming events!</p>
                             </div>
                         `;
                         return;
                     }
-
-                    events.forEach(event => {
-                        // Format date properly
-                        const eventDate = new Date(event.event_date);
-                        const formattedDate = eventDate.toLocaleDateString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                            year: 'numeric'
+                    
+                    querySnapshot.forEach((doc) => {
+                        const eventData = doc.data();
+                        events.push({
+                            id: doc.id,
+                            ...eventData,
+                            // Convert Firestore Timestamp to JavaScript Date
+                            date: eventData.date ? new Date(eventData.date) : new Date()
                         });
-
-                        // Format time properly
-                        const timeString = event.event_time;
-                        const timeParts = timeString.split(':');
-                        let hours = parseInt(timeParts[0]);
-                        const minutes = timeParts[1];
-                        const ampm = hours >= 12 ? 'PM' : 'AM';
-                        hours = hours % 12 || 12;
-                        const formattedTime = `${hours}:${minutes} ${ampm}`;
-
-                        const eventHTML = `
-                            <div class="event-card bg-secondary/50 rounded-xl overflow-hidden fade-in">
+                    });
+                    
+                    // Render events
+                    renderEvents(events);
+                })
+                .catch((error) => {
+                    console.error("Error getting events: ", error);
+                    container.innerHTML = `
+                        <div class="col-span-3 text-center py-12">
+                            <i class="fas fa-exclamation-triangle text-red-500 text-4xl mb-4"></i>
+                            <h3 class="text-2xl font-headline font-bold mb-2">Error Loading Events</h3>
+                            <p class="text-text/80">${error.message}</p>
+                        </div>
+                    `;
+                });
+        }
+        
+        // Render events to the page with flip animation
+        function renderEvents(events) {
+            const container = document.getElementById('events-container');
+            container.innerHTML = '';
+            
+            if (events.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-3 text-center py-12">
+                        <i class="fas fa-calendar-times text-accent text-4xl mb-4"></i>
+                        <h3 class="text-2xl font-headline font-bold mb-2">No Upcoming Events</h3>
+                        <p class="text-text/80">Check back later for new events!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            events.forEach(event => {
+                // Format date properly
+                const formattedDate = event.date.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                });
+                
+                // Format time properly
+                const timeString = event.time || "10:00";
+                const timeParts = timeString.split(':');
+                let hours = parseInt(timeParts[0]);
+                const minutes = timeParts[1];
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12 || 12;
+                const formattedTime = `${hours}:${minutes} ${ampm}`;
+                
+                // Default image if none is provided
+                const imageUrl = event.image || 'https://img.freepik.com/free-vector/hackathon-doodle-handdrawing-team-programmers-web-developers-managers-graphic-designers-deve_88138-1348.jpg';
+                
+                const eventHTML = `
+                    <div class="flip-card fade-in" data-category="${event.category || 'hackathon'}">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
                                 <div class="h-48 overflow-hidden">
-                                    <img src="${event.image_url}" alt="${event.title}" class="w-full h-full object-cover">
+                                    <img src="${imageUrl}" alt="${event.title}" class="event-image">
                                 </div>
-                                <div class="p-6">
+                                <div class="event-content">
                                     <div class="flex justify-between items-start mb-4">
                                         <h3 class="text-xl font-headline font-bold">${event.title}</h3>
-                                        <span class="inline-block bg-accent text-primary px-3 py-1 rounded-full text-sm font-medium">
+                                        <span class="event-date-badge">
                                             ${formattedDate}
                                         </span>
                                     </div>
+                                    
                                     <div class="flex items-center text-text/80 mb-3">
                                         <i class="far fa-clock mr-2"></i>
                                         <span>${formattedTime}</span>
                                     </div>
-                                    <div class="flex items-center text-text/80 mb-4">
+                                    
+                                    <div class="flex items-center text-text/80 mb-3">
                                         <i class="fas fa-map-marker-alt mr-2"></i>
-                                        <span>${event.location}</span>
+                                        <span>${event.location || 'KLE Society\'s College of BCA Nipani'}</span>
                                     </div>
-                                    <p class="text-text/80 mb-6">${event.description}</p>
-                                    <a href="${event.register_link}" target="_blank" class="block bg-accent text-primary px-4 py-2 rounded-lg font-medium hover:bg-accent/90 transition-colors text-center">
+                                    
+                                    <div class="mb-3">
+                                        <span class="event-tag">
+                                            ${event.category || 'Hackathon'}
+                                        </span>
+                                        <span class="event-tag">
+                                            8 Hours
+                                        </span>
+                                    </div>
+                                    
+                                    <p class="text-text/80 mb-4 flex-grow">${event.description || 'Join us for an exciting event!'}</p>
+                                    
+                                    <div class="event-actions">
+                                        <button class="w-full bg-accent/20 text-accent px-4 py-2 rounded-lg font-medium hover:bg-accent/30 transition-colors text-center">
+                                            Hover to see details
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flip-card-back">
+                                <div>
+                                    <h3 class="text-xl font-headline font-bold mb-4">${event.title}</h3>
+                                    <p class="text-text/80 mb-4">${event.description || 'This event will feature exciting workshops and networking opportunities with industry experts.'}</p>
+                                    
+                                    <div class="mb-4">
+                                        <h4 class="font-semibold mb-2">Event Details:</h4>
+                                        <div class="flex items-center text-text/80 mb-2">
+                                            <i class="far fa-calendar mr-2"></i>
+                                            <span>${formattedDate} at ${formattedTime}</span>
+                                        </div>
+                                        <div class="flex items-center text-text/80 mb-2">
+                                            <i class="fas fa-map-marker-alt mr-2"></i>
+                                            <span>${event.location || 'KLE Society\'s College of BCA Nipani'}</span>
+                                        </div>
+                                        <div class="flex items-center text-text/80 mb-2">
+                                            <i class="fas fa-tag mr-2"></i>
+                                            <span>${event.category || 'Hackathon'}</span>
+                                        </div>
+                                        <div class="flex items-center text-text/80">
+                                            <i class="fas fa-hourglass mr-2"></i>
+                                            <span>Duration: 8 Hours</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-auto">
+                                    <a href="${event.register_link || 'https://klebcanipani.com/'}" target="_blank" class="block bg-accent text-primary px-4 py-2 rounded-lg font-medium hover:bg-accent/90 transition-colors text-center">
                                         Register Now
                                     </a>
                                 </div>
                             </div>
-                        `;
-
-                        container.innerHTML += eventHTML;
-                    });
-                })
-                .catch(error => {
-                    console.error('Error loading events:', error);
-                    document.getElementById('events-container').innerHTML = `
-                        <div class="col-span-3 text-center py-12">
-                            <i class="fas fa-exclamation-triangle text-red-500 text-4xl mb-4"></i>
-                            <h3 class="text-2xl font-headline font-bold mb-2">Error Loading Events</h3>
-                            <p class="text-text/80">Please try again later.</p>
                         </div>
-                    `;
+                    </div>
+                `;
+
+                container.innerHTML += eventHTML;
+            });
+        }
+        
+        // Set up event filtering
+        function setupEventFilters() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    button.classList.add('active');
+                    
+                    // Get the filter value
+                    const filterValue = button.getAttribute('data-filter');
+                    
+                    // Filter events
+                    filterEvents(filterValue);
                 });
+            });
+        }
+        
+        // Filter events by category
+        function filterEvents(category) {
+            const eventCards = document.querySelectorAll('.flip-card');
+            
+            eventCards.forEach(card => {
+                if (category === 'all') {
+                    card.style.display = 'block';
+                } else {
+                    if (card.getAttribute('data-category') === category) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                }
+            });
         }
     </script>
 </body>
