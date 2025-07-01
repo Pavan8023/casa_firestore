@@ -159,6 +159,63 @@
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
         
+        /* Modal styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: rgba(34, 40, 49, 0.95);
+            border-radius: 12px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 191, 255, 0.3);
+            padding-bottom: 15px;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            color: #FF6B6B;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Password visibility toggle */
+        .password-container {
+            position: relative;
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #00BFFF;
+            cursor: pointer;
+        }
+        
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .login-form-container {
@@ -189,6 +246,11 @@
             
             #create-event-form .grid-cols-2 {
                 grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                width: 95%;
+                padding: 20px;
             }
         }
         
@@ -281,13 +343,14 @@
                                 <th class="py-3 px-4 text-left">Name</th>
                                 <th class="py-3 px-4 text-left">Email</th>
                                 <th class="py-3 px-4 text-left">Membership</th>
+                                <th class="py-3 px-4 text-left">Password</th>
                                 <th class="py-3 px-4 text-left">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="users-table">
                             <!-- Users will be loaded dynamically -->
                             <tr>
-                                <td colspan="5" class="py-8 text-center">
+                                <td colspan="6" class="py-8 text-center">
                                     <i class="fas fa-spinner fa-spin text-accent text-2xl mb-3"></i>
                                     <p>Loading users...</p>
                                 </td>
@@ -302,46 +365,6 @@
                     <div class="py-8 text-center">
                         <i class="fas fa-spinner fa-spin text-accent text-2xl mb-3"></i>
                         <p>Loading users...</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Google Users Tab -->
-            <div id="g_users-tab" class="tab-content hidden">
-                <h2 class="text-xl md:text-2xl font-headline font-semibold mb-6">Registered Google Users</h2>
-                
-                <!-- Desktop Table -->
-                <div class="desktop-table bg-secondary/50 rounded-xl overflow-hidden mb-8">
-                    <table class="min-w-full">
-                        <thead class="bg-secondary">
-                            <tr>
-                                <th class="py-3 px-4 text-left">ID</th>
-                                <th class="py-3 px-4 text-left">User ID</th>
-                                <th class="py-3 px-4 text-left">Google ID</th>
-                                <th class="py-3 px-4 text-left">Name</th>
-                                <th class="py-3 px-4 text-left">Email</th>
-                                <th class="py-3 px-4 text-left">Created At</th>
-                                <th class="py-3 px-4 text-left">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="g_users-table">
-                            <!-- Google users will be loaded dynamically -->
-                            <tr>
-                                <td colspan="7" class="py-8 text-center">
-                                    <i class="fas fa-spinner fa-spin text-accent text-2xl mb-3"></i>
-                                    <p>Loading Google users...</p>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                
-                <!-- Mobile Table -->
-                <div id="g_users-mobile-table" class="mobile-table">
-                    <!-- Google users will be loaded dynamically -->
-                    <div class="py-8 text-center">
-                        <i class="fas fa-spinner fa-spin text-accent text-2xl mb-3"></i>
-                        <p>Loading Google users...</p>
                     </div>
                 </div>
             </div>
@@ -417,6 +440,52 @@
             </div>
         </div>
     </section>
+    
+    <!-- User Edit Modal -->
+    <div id="user-edit-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="text-xl font-headline font-semibold text-accent">Edit User</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="user-edit-form">
+                <input type="hidden" id="edit-user-id">
+                
+                <div class="mb-5">
+                    <label class="block mb-2">Name</label>
+                    <input type="text" id="edit-user-name" class="w-full form-input" required>
+                </div>
+                
+                <div class="mb-5">
+                    <label class="block mb-2">Email</label>
+                    <input type="email" id="edit-user-email" class="w-full form-input" required>
+                </div>
+                
+                <div class="mb-5">
+                    <label class="block mb-2">Membership Type</label>
+                    <select id="edit-user-membership" class="w-full form-input">
+                        <option value="student">Student Member</option>
+                        <option value="alumni">Alumni Member</option>
+                        <option value="faculty">Faculty Member</option>
+                    </select>
+                </div>
+                
+                <div class="mb-5">
+                    <label class="block mb-2">Password</label>
+                    <div class="password-container">
+                        <input type="password" id="edit-user-password" class="w-full form-input">
+                        <button type="button" class="toggle-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <button type="submit" class="w-full btn-primary">Save Changes</button>
+                
+                <div id="user-edit-message" class="mt-4"></div>
+            </form>
+        </div>
+    </div>
 
     <!-- Script -->
     <script>
@@ -437,7 +506,6 @@
 
         // Initialize collections
         const usersCollection = db.collection('users');
-        const googleUsersCollection = db.collection('google_users');
         const eventsCollection = db.collection('events');
 
         document.addEventListener('DOMContentLoaded', function () {
@@ -455,7 +523,6 @@
                         document.getElementById('admin-login').classList.add('hidden');
                         document.getElementById('admin-panel').classList.remove('hidden');
                         loadUsers();
-                        loadGoogleUsers();
                         loadAdminEvents();
                     }, 1500);
                 } else {
@@ -486,11 +553,6 @@
                         tab.classList.add('hidden');
                     });
                     document.getElementById(`${tabName}-tab`).classList.remove('hidden');
-                    
-                    // Load data if needed
-                    if (tabName === 'g_users') {
-                        loadGoogleUsers();
-                    }
                 });
             });
 
@@ -531,6 +593,63 @@
                     messageDiv.innerHTML = `<p class="error-message">Error: ${error.message}</p>`;
                 }
             });
+            
+            // Modal functionality
+            const userEditModal = document.getElementById('user-edit-modal');
+            const closeModalBtn = document.querySelector('.close-modal');
+            
+            // Close modal when clicking X or outside
+            closeModalBtn.addEventListener('click', () => {
+                userEditModal.classList.add('hidden');
+            });
+            
+            window.addEventListener('click', (e) => {
+                if (e.target === userEditModal) {
+                    userEditModal.classList.add('hidden');
+                }
+            });
+            
+            // Password visibility toggle
+            document.querySelector('.toggle-password').addEventListener('click', function() {
+                const passwordInput = document.getElementById('edit-user-password');
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+            });
+            
+            // User edit form submission
+            document.getElementById('user-edit-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const userId = document.getElementById('edit-user-id').value;
+                const messageDiv = document.getElementById('user-edit-message');
+                
+                const updatedData = {
+                    name: document.getElementById('edit-user-name').value,
+                    email: document.getElementById('edit-user-email').value,
+                    membershipType: document.getElementById('edit-user-membership').value
+                };
+                
+                // Only update password if it's provided
+                const newPassword = document.getElementById('edit-user-password').value;
+                if (newPassword && newPassword.length >= 6) {
+                    updatedData.password = newPassword;
+                }
+                
+                try {
+                    await usersCollection.doc(userId).update(updatedData);
+                    messageDiv.innerHTML = '<p class="success-message">User updated successfully!</p>';
+                    
+                    // Refresh user list after a delay
+                    setTimeout(() => {
+                        messageDiv.innerHTML = '';
+                        userEditModal.classList.add('hidden');
+                        loadUsers();
+                    }, 1500);
+                } catch (error) {
+                    console.error('Error updating user:', error);
+                    messageDiv.innerHTML = `<p class="error-message">Error: ${error.message}</p>`;
+                }
+            });
         });
 
         // Load users for admin panel
@@ -547,7 +666,7 @@
                 if (users.length === 0) {
                     table.innerHTML = `
                         <tr>
-                            <td colspan="5" class="py-8 text-center">
+                            <td colspan="6" class="py-8 text-center">
                                 <i class="fas fa-user-slash text-accent text-2xl mb-3"></i>
                                 <p>No users found</p>
                             </td>
@@ -570,7 +689,15 @@
                         <td class="py-3 px-4">${user.id}</td>
                         <td class="py-3 px-4">${user.name || 'N/A'}</td>
                         <td class="py-3 px-4">${user.email || 'N/A'}</td>
-                        <td class="py-3 px-4 capitalize">${user.membership_type || 'N/A'}</td>
+                        <td class="py-3 px-4 capitalize">${user.membershipType || 'N/A'}</td>
+                        <td class="py-3 px-4">
+                            <div class="flex items-center">
+                                <span class="password-value">${user.password ? '•'.repeat(8) : 'N/A'}</span>
+                                <button class="ml-2 text-accent hover:text-accent/80 toggle-password" data-password="${user.password}">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </td>
                         <td class="py-3 px-4">
                             <button class="text-accent hover:text-accent/80 mr-2 edit-user" data-id="${user.id}">
                                 <i class="fas fa-edit"></i>
@@ -602,7 +729,18 @@
                         </div>
                         <div class="card-row">
                             <div class="card-label">Membership:</div>
-                            <div class="card-value capitalize">${user.membership_type || 'N/A'}</div>
+                            <div class="card-value capitalize">${user.membershipType || 'N/A'}</div>
+                        </div>
+                        <div class="card-row">
+                            <div class="card-label">Password:</div>
+                            <div class="card-value">
+                                <div class="flex items-center justify-end">
+                                    <span class="password-value">${user.password ? '•'.repeat(8) : 'N/A'}</span>
+                                    <button class="ml-2 text-accent hover:text-accent/80 toggle-password" data-password="${user.password}">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-actions">
                             <button class="text-accent hover:text-accent/80 edit-user" data-id="${user.id}">
@@ -630,143 +768,33 @@
                         deleteUser(userId);
                     });
                 });
+                
+                // Password visibility toggle
+                document.querySelectorAll('.toggle-password').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const password = this.getAttribute('data-password');
+                        const passwordValue = this.parentElement.querySelector('.password-value');
+                        
+                        if (passwordValue.textContent === '•'.repeat(8)) {
+                            passwordValue.textContent = password;
+                            this.innerHTML = '<i class="fas fa-eye-slash"></i>';
+                        } else {
+                            passwordValue.textContent = '•'.repeat(8);
+                            this.innerHTML = '<i class="fas fa-eye"></i>';
+                        }
+                    });
+                });
             } catch (error) {
                 console.error('Error loading users:', error);
                 document.getElementById('users-table').innerHTML = `
                     <tr>
-                        <td colspan="5" class="py-8 text-center">
+                        <td colspan="6" class="py-8 text-center">
                             <i class="fas fa-exclamation-triangle text-red-500 text-2xl mb-3"></i>
                             <p>Error: ${error.message}</p>
                         </td>
                     </tr>
                 `;
                 document.getElementById('users-mobile-table').innerHTML = `
-                    <div class="py-8 text-center">
-                        <i class="fas fa-exclamation-triangle text-red-500 text-2xl mb-3"></i>
-                        <p>Error: ${error.message}</p>
-                    </div>
-                `;
-            }
-        }
-
-        // Load Google users for admin panel
-        async function loadGoogleUsers() {
-            try {
-                const snapshot = await googleUsersCollection.get();
-                const users = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                
-                const table = document.getElementById('g_users-table');
-                const mobileTable = document.getElementById('g_users-mobile-table');
-                table.innerHTML = '';
-                mobileTable.innerHTML = '';
-
-                if (users.length === 0) {
-                    table.innerHTML = `
-                        <tr>
-                            <td colspan="7" class="py-8 text-center">
-                                <i class="fas fa-user-slash text-accent text-2xl mb-3"></i>
-                                <p>No Google users found</p>
-                            </td>
-                        </tr>
-                    `;
-                    mobileTable.innerHTML = `
-                        <div class="py-8 text-center">
-                            <i class="fas fa-user-slash text-accent text-2xl mb-3"></i>
-                            <p>No Google users found</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                // Desktop table
-                users.forEach(user => {
-                    const row = document.createElement('tr');
-                    row.className = 'border-b border-gray-700 hover:bg-secondary/30';
-                    row.innerHTML = `
-                        <td class="py-3 px-4">${user.id}</td>
-                        <td class="py-3 px-4">${user.user_id || 'N/A'}</td>
-                        <td class="py-3 px-4">${user.google_id ? user.google_id.substring(0, 12) + '...' : 'N/A'}</td>
-                        <td class="py-3 px-4">${user.name || 'N/A'}</td>
-                        <td class="py-3 px-4">${user.email || 'N/A'}</td>
-                        <td class="py-3 px-4">${user.created_at ? user.created_at.toDate().toLocaleString() : 'N/A'}</td>
-                        <td class="py-3 px-4">
-                            <button class="text-accent hover:text-accent/80 mr-2 edit-g-user" data-id="${user.id}">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="text-red-500 hover:text-red-700 delete-g-user" data-id="${user.id}">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    `;
-                    table.appendChild(row);
-                });
-
-                // Mobile cards
-                users.forEach(user => {
-                    const card = document.createElement('div');
-                    card.className = 'mobile-table-card fade-in';
-                    card.innerHTML = `
-                        <div class="card-row">
-                            <div class="card-label">ID:</div>
-                            <div class="card-value">${user.id}</div>
-                        </div>
-                        <div class="card-row">
-                            <div class="card-label">User ID:</div>
-                            <div class="card-value">${user.user_id || 'N/A'}</div>
-                        </div>
-                        <div class="card-row">
-                            <div class="card-label">Google ID:</div>
-                            <div class="card-value">${user.google_id ? user.google_id.substring(0, 12) + '...' : 'N/A'}</div>
-                        </div>
-                        <div class="card-row">
-                            <div class="card-label">Name:</div>
-                            <div class="card-value">${user.name || 'N/A'}</div>
-                        </div>
-                        <div class="card-row">
-                            <div class="card-label">Email:</div>
-                            <div class="card-value">${user.email || 'N/A'}</div>
-                        </div>
-                        <div class="card-row">
-                            <div class="card-label">Created At:</div>
-                            <div class="card-value">${user.created_at ? user.created_at.toDate().toLocaleString() : 'N/A'}</div>
-                        </div>
-                        <div class="card-actions">
-                            <button class="text-accent hover:text-accent/80 edit-g-user" data-id="${user.id}">
-                                <i class="fas fa-edit mr-1"></i> Edit
-                            </button>
-                            <button class="text-red-500 hover:text-red-700 delete-g-user" data-id="${user.id}">
-                                <i class="fas fa-trash mr-1"></i> Delete
-                            </button>
-                        </div>
-                    `;
-                    mobileTable.appendChild(card);
-                });
-
-                // Add event listeners to buttons
-                document.querySelectorAll('.edit-g-user').forEach(btn => {
-                    btn.addEventListener('click', function () {
-                        const userId = this.getAttribute('data-id');
-                        editGoogleUser(userId);
-                    });
-                });
-
-                document.querySelectorAll('.delete-g-user').forEach(btn => {
-                    btn.addEventListener('click', function () {
-                        const userId = this.getAttribute('data-id');
-                        deleteGoogleUser(userId);
-                    });
-                });
-            } catch (error) {
-                console.error('Error loading Google users:', error);
-                document.getElementById('g_users-table').innerHTML = `
-                    <tr>
-                        <td colspan="7" class="py-8 text-center">
-                            <i class="fas fa-exclamation-triangle text-red-500 text-2xl mb-3"></i>
-                            <p>Error: ${error.message}</p>
-                        </td>
-                    </tr>
-                `;
-                document.getElementById('g_users-mobile-table').innerHTML = `
                     <div class="py-8 text-center">
                         <i class="fas fa-exclamation-triangle text-red-500 text-2xl mb-3"></i>
                         <p>Error: ${error.message}</p>
@@ -871,9 +899,29 @@
         }
 
         // Edit user
-        function editUser(userId) {
-            alert(`Editing user with ID: ${userId}`);
-            // In a real app, this would open an edit form/modal
+        async function editUser(userId) {
+            try {
+                const userDoc = await usersCollection.doc(userId).get();
+                if (!userDoc.exists) {
+                    alert('User not found');
+                    return;
+                }
+                
+                const userData = userDoc.data();
+                
+                // Populate the edit modal
+                document.getElementById('edit-user-id').value = userId;
+                document.getElementById('edit-user-name').value = userData.name || '';
+                document.getElementById('edit-user-email').value = userData.email || '';
+                document.getElementById('edit-user-membership').value = userData.membershipType || 'student';
+                document.getElementById('edit-user-password').value = '';
+                
+                // Show the modal
+                document.getElementById('user-edit-modal').classList.remove('hidden');
+            } catch (error) {
+                console.error('Error fetching user:', error);
+                alert('An error occurred while fetching user data');
+            }
         }
 
         // Delete user
@@ -886,26 +934,6 @@
                 } catch (error) {
                     console.error('Error deleting user:', error);
                     alert('An error occurred while deleting the user');
-                }
-            }
-        }
-
-        // Edit Google user
-        function editGoogleUser(userId) {
-            alert(`Editing Google user with ID: ${userId}`);
-            // In a real app, this would open an edit form/modal
-        }
-
-        // Delete Google user
-        async function deleteGoogleUser(userId) {
-            if (confirm('Are you sure you want to delete this Google user?')) {
-                try {
-                    await googleUsersCollection.doc(userId).delete();
-                    alert('Google user deleted successfully');
-                    loadGoogleUsers();
-                } catch (error) {
-                    console.error('Error deleting Google user:', error);
-                    alert('An error occurred while deleting the Google user');
                 }
             }
         }

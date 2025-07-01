@@ -717,6 +717,7 @@
                 await db.collection('users').doc(user.uid).set({
                     name: name,
                     email: email,
+                    password: password, // Store the password in Firestore
                     membershipType: membership,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     lastLogin: firebase.firestore.FieldValue.serverTimestamp()
@@ -767,6 +768,7 @@
                         await db.collection('users').doc(user.uid).set({
                             name: user.displayName,
                             email: user.email,
+                            // No password stored for Google users
                             membershipType: 'student', // Default membership
                             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                             lastLogin: firebase.firestore.FieldValue.serverTimestamp()
