@@ -66,11 +66,11 @@
             color: #E0E0E0;
             transition: color 0.3s;
         }
-        
+
         .nav-link:hover {
             color: #00BFFF;
         }
-        
+
         .nav-link::after {
             content: '';
             position: absolute;
@@ -81,12 +81,12 @@
             background-color: #00BFFF;
             transition: all 0.3s;
         }
-        
+
         .nav-link:hover::after {
             left: 0;
             width: 100%;
         }
-        
+
         .mobile-menu {
             position: fixed;
             top: 0;
@@ -98,11 +98,11 @@
             transform: translateX(100%);
             transition: transform 0.5s ease;
         }
-        
+
         .mobile-menu.open {
             transform: translateX(0);
         }
-        
+
         .menu-overlay {
             position: fixed;
             top: 0;
@@ -115,12 +115,12 @@
             pointer-events: none;
             transition: opacity 0.5s;
         }
-        
+
         .menu-overlay.active {
             opacity: 1;
             pointer-events: all;
         }
-        
+
         .hamburger-line {
             display: block;
             width: 24px;
@@ -129,19 +129,19 @@
             border-radius: 2px;
             transition: all 0.3s;
         }
-        
+
         .hamburger-icon.open .hamburger-line:nth-child(1) {
             transform: translateY(7px) rotate(45deg);
         }
-        
+
         .hamburger-icon.open .hamburger-line:nth-child(2) {
             opacity: 0;
         }
-        
+
         .hamburger-icon.open .hamburger-line:nth-child(3) {
             transform: translateY(-7px) rotate(-45deg);
         }
-    
+
 
         #particles-js {
             position: fixed;
@@ -152,13 +152,13 @@
             z-index: -1;
             background-color: #0D1117;
         }
-        
+
         .content-container {
             position: relative;
             z-index: 1;
             background-color: rgba(13, 17, 23, 0.85);
         }
-        
+
         .hero-section {
             min-height: 100vh;
             display: flex;
@@ -167,12 +167,12 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         /* Brighter particles glow effect */
         .particles-js-canvas-el {
             filter: brightness(1.2) drop-shadow(0 0 2px rgba(0, 191, 255, 0.5));
         }
-        
+
         /* 3D Space Scene */
         .space-scene {
             position: absolute;
@@ -182,28 +182,28 @@
             height: 100%;
             pointer-events: none;
         }
-        
+
         .planet {
             position: absolute;
             border-radius: 50%;
             background: radial-gradient(circle, #2a3b4d, #0a0f15);
             box-shadow: 0 0 60px rgba(0, 191, 255, 0.3);
         }
-        
+
         .planet-ring {
             position: absolute;
             border-radius: 50%;
             border: 2px solid rgba(0, 191, 255, 0.3);
             transform: rotateX(75deg);
         }
-        
+
         .moon {
             position: absolute;
             border-radius: 50%;
             background: radial-gradient(circle, #e0e0e0, #a0a0a0);
             animation: orbit 15s linear infinite;
         }
-        
+
         .casa-3d {
             position: relative;
             z-index: 10;
@@ -215,7 +215,7 @@
             letter-spacing: 0.1em;
             animation: glow 3s infinite alternate;
         }
-        
+
         .ai-robot {
             position: absolute;
             z-index: 5;
@@ -225,7 +225,7 @@
             right: 10%;
             animation: float 6s ease-in-out infinite;
         }
-        
+
         .ai-head {
             width: 100px;
             height: 100px;
@@ -238,7 +238,7 @@
             overflow: hidden;
             border: 3px solid #00BFFF;
         }
-        
+
         .ai-face {
             position: absolute;
             width: 60px;
@@ -249,7 +249,7 @@
             left: 20px;
             box-shadow: 0 0 20px rgba(0, 191, 255, 0.5);
         }
-        
+
         .ai-body {
             width: 80px;
             height: 150px;
@@ -262,7 +262,7 @@
             border: 3px solid #00BFFF;
             overflow: hidden;
         }
-        
+
         .ai-panel {
             position: absolute;
             width: 50px;
@@ -276,7 +276,7 @@
             gap: 5px;
             padding: 5px;
         }
-        
+
         .ai-light {
             width: 10px;
             height: 10px;
@@ -284,13 +284,27 @@
             border-radius: 50%;
             animation: glow 2s infinite alternate;
         }
-        
-        .ai-light:nth-child(2) { animation-delay: 0.5s; }
-        .ai-light:nth-child(3) { animation-delay: 1s; }
-        .ai-light:nth-child(4) { animation-delay: 0.2s; }
-        .ai-light:nth-child(5) { animation-delay: 0.7s; }
-        .ai-light:nth-child(6) { animation-delay: 1.2s; }
-        
+
+        .ai-light:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .ai-light:nth-child(3) {
+            animation-delay: 1s;
+        }
+
+        .ai-light:nth-child(4) {
+            animation-delay: 0.2s;
+        }
+
+        .ai-light:nth-child(5) {
+            animation-delay: 0.7s;
+        }
+
+        .ai-light:nth-child(6) {
+            animation-delay: 1.2s;
+        }
+
         .ai-arm {
             position: absolute;
             width: 15px;
@@ -300,19 +314,19 @@
             top: 110px;
             border-radius: 10px;
         }
-        
+
         .ai-arm.left {
             left: 10px;
             transform-origin: top center;
             animation: float 4s ease-in-out infinite;
         }
-        
+
         .ai-arm.right {
             right: 10px;
             transform-origin: top center;
             animation: float 5s ease-in-out infinite;
         }
-        
+
         .ai-hand {
             position: absolute;
             width: 25px;
@@ -323,37 +337,37 @@
             left: -6px;
             border-radius: 5px;
         }
-        
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .casa-3d {
                 font-size: 4rem;
             }
-            
+
             .ai-robot {
                 width: 120px;
                 height: 180px;
                 right: 5%;
             }
-            
+
             .ai-head {
                 width: 60px;
                 height: 60px;
             }
-            
+
             .ai-face {
                 width: 35px;
                 height: 18px;
                 top: 20px;
                 left: 12px;
             }
-            
+
             .ai-body {
                 width: 50px;
                 height: 90px;
                 top: 60px;
             }
-            
+
             .ai-panel {
                 width: 30px;
                 height: 40px;
@@ -362,12 +376,12 @@
                 gap: 3px;
                 padding: 3px;
             }
-            
+
             .ai-light {
                 width: 6px;
                 height: 6px;
             }
-            
+
             .ai-arm {
                 width: 10px;
                 height: 50px;
@@ -376,7 +390,9 @@
     </style>
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Nunito:wght@400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Nunito:wght@400;500;600&display=swap"
+        rel="stylesheet">
 
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -394,21 +410,23 @@
                 <div class="flex items-center justify-between h-20">
                     <!-- Logo -->
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center animate-pulse-slow">
+                        <div
+                            class="w-10 h-10 rounded-full bg-accent flex items-center justify-center animate-pulse-slow">
                             <i class="fas fa-code text-primary text-xl"></i>
                         </div>
                         <a href="#" class="text-2xl font-bold text-accent flex items-center">
                             CASA
-                            <span class="ml-1 text-xs bg-highlight text-primary px-2 py-1 rounded-full animate-bounce-slow">AI</span>
+                            <span
+                                class="ml-1 text-xs bg-highlight text-primary px-2 py-1 rounded-full animate-bounce-slow">AI</span>
                         </a>
                     </div>
 
                     <!-- Desktop Navigation -->
                     <div class="hidden md:flex space-x-1">
                         <a href="index.html" class="nav-link">Home</a>
-                        <a href="about.html" class="nav-link">About</a>
+                        <a href="about.html" class="nav-link text-accent">About</a>
                         <a href="events.html" class="nav-link">Events</a>
-                        <a href="projects.html" class="nav-link text-accent">Projects</a>
+                        <a href="projects.html" class="nav-link">Projects</a>
                         <a href="contact.html" class="nav-link">Contact</a>
                     </div>
 
@@ -443,24 +461,28 @@
 
                 <div class="flex-1 p-6 flex flex-col space-y-4">
                     <a href="index.html" class="nav-link py-3 border-b border-gray-700">Home</a>
-                    <a href="about.html" class="nav-link py-3 border-b border-gray-700">About</a>
+                    <a href="about.html" class="nav-link py-3 border-b border-gray-700 text-accent">About</a>
                     <a href="events.html" class="nav-link py-3 border-b border-gray-700">Events</a>
-                    <a href="projects.html" class="nav-link py-3 border-b border-gray-700 text-accent">Projects</a>
+                    <a href="projects.html" class="nav-link py-3 border-b border-gray-700">Projects</a>
                     <a href="contact.html" class="nav-link py-3">Contact</a>
                 </div>
 
                 <div class="p-6 border-t border-gray-700">
                     <div class="flex space-x-4 justify-center">
-                        <a href="#" class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
                             <i class="fab fa-github"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
                             <i class="fab fa-linkedin-in"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
                             <i class="fab fa-twitter"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
                             <i class="fab fa-discord"></i>
                         </a>
                     </div>
@@ -475,15 +497,24 @@
         <section class="hero-section">
             <!-- Space scene with planets -->
             <div class="space-scene">
-                <div class="planet" style="width: 300px; height: 300px; top: 10%; left: 10%; animation: float 15s infinite ease-in-out;"></div>
-                <div class="planet-ring" style="width: 400px; height: 400px; top: 5%; left: 5%; animation: float 20s infinite ease-in-out reverse;"></div>
-                
-                <div class="planet" style="width: 150px; height: 150px; bottom: 15%; right: 10%; animation: float 12s infinite ease-in-out;"></div>
-                <div class="moon" style="width: 40px; height: 40px; top: 40%; right: 20%; animation-duration: 18s;"></div>
-                
-                <div class="planet" style="width: 80px; height: 80px; top: 50%; right: 30%; animation: float 10s infinite ease-in-out;"></div>
+                <div class="planet"
+                    style="width: 300px; height: 300px; top: 10%; left: 10%; animation: float 15s infinite ease-in-out;">
+                </div>
+                <div class="planet-ring"
+                    style="width: 400px; height: 400px; top: 5%; left: 5%; animation: float 20s infinite ease-in-out reverse;">
+                </div>
+
+                <div class="planet"
+                    style="width: 150px; height: 150px; bottom: 15%; right: 10%; animation: float 12s infinite ease-in-out;">
+                </div>
+                <div class="moon" style="width: 40px; height: 40px; top: 40%; right: 20%; animation-duration: 18s;">
+                </div>
+
+                <div class="planet"
+                    style="width: 80px; height: 80px; top: 50%; right: 30%; animation: float 10s infinite ease-in-out;">
+                </div>
             </div>
-            
+
             <!-- AI Robot -->
             <div class="ai-robot">
                 <div class="ai-head">
@@ -506,7 +537,7 @@
                     <div class="ai-hand"></div>
                 </div>
             </div>
-            
+
             <div class="container mx-auto px-4 text-center relative z-10">
                 <h1 class="casa-3d font-headline mb-6">
                     CASA
@@ -538,9 +569,10 @@
         <section class="py-16 bg-gradient-to-b from-primary to-secondary">
             <div class="container mx-auto px-4">
                 <h2 class="text-4xl font-headline font-bold mb-16 text-center">Why Join CASA?</h2>
-                
+
                 <div class="grid md:grid-cols-3 gap-8">
-                    <div class="bg-secondary/50 p-8 rounded-xl border border-accent/20 hover:border-accent transition-colors">
+                    <div
+                        class="bg-secondary/50 p-8 rounded-xl border border-accent/20 hover:border-accent transition-colors">
                         <div class="w-16 h-16 rounded-full bg-accent flex items-center justify-center mb-6 mx-auto">
                             <i class="fas fa-brain text-primary text-2xl"></i>
                         </div>
@@ -549,8 +581,9 @@
                             Work on cutting-edge AI projects with industry experts and researchers.
                         </p>
                     </div>
-                    
-                    <div class="bg-secondary/50 p-8 rounded-xl border border-accent/20 hover:border-accent transition-colors">
+
+                    <div
+                        class="bg-secondary/50 p-8 rounded-xl border border-accent/20 hover:border-accent transition-colors">
                         <div class="w-16 h-16 rounded-full bg-highlight flex items-center justify-center mb-6 mx-auto">
                             <i class="fas fa-users text-primary text-2xl"></i>
                         </div>
@@ -559,8 +592,9 @@
                             Connect with like-minded tech enthusiasts and build lifelong relationships.
                         </p>
                     </div>
-                    
-                    <div class="bg-secondary/50 p-8 rounded-xl border border-accent/20 hover:border-accent transition-colors">
+
+                    <div
+                        class="bg-secondary/50 p-8 rounded-xl border border-accent/20 hover:border-accent transition-colors">
                         <div class="w-16 h-16 rounded-full bg-accent flex items-center justify-center mb-6 mx-auto">
                             <i class="fas fa-rocket text-primary text-2xl"></i>
                         </div>
@@ -572,7 +606,7 @@
                 </div>
             </div>
         </section>
-        
+
         <!-- Stats Section -->
         <section class="py-16 bg-primary">
             <div class="container mx-auto px-4">
@@ -592,7 +626,7 @@
                 </div>
             </div>
         </section>
-        
+
         <!-- Principal's Message -->
         <section class="py-16 px-4">
             <div class="container mx-auto">
@@ -604,19 +638,19 @@
                         <p class="principal-name">Mrs. Jyoti Kininge</p>
                         <p class="text-sm opacity-80">Principal, KLE BCA College</p>
                     </div>
-                    
+
                     <blockquote class="text-center text-lg italic">
-                        "CASA represents the pinnacle of innovation and academic excellence at our institution. 
-                        This dynamic association brings together the brightest minds in computer science and AI/ML, 
-                        creating a space where ideas flourish and boundaries are pushed. The dedication shown by 
-                        CASA members in pursuing technological advancements while maintaining a spirit of collaboration 
-                        is truly inspiring. I encourage every student to engage with CASA's initiatives and become part 
+                        "CASA represents the pinnacle of innovation and academic excellence at our institution.
+                        This dynamic association brings together the brightest minds in computer science and AI/ML,
+                        creating a space where ideas flourish and boundaries are pushed. The dedication shown by
+                        CASA members in pursuing technological advancements while maintaining a spirit of collaboration
+                        is truly inspiring. I encourage every student to engage with CASA's initiatives and become part
                         of this transformative journey. Together, we are shaping the future of technology education."
                     </blockquote>
                 </div>
             </div>
         </section>
-        
+
         <!-- Footer -->
         <footer class="bg-secondary py-8">
             <div class="container mx-auto px-4">
