@@ -558,42 +558,6 @@
                     </div>
                 </div>
 
-                <!-- Featured Event Banner -->
-                <div class="featured-event mb-16 relative">
-                    <div class="highlight-bar"></div>
-                    <div class="featured-event-content">
-                        <div class="flex items-start">
-                            <div class="flex-1">
-                                <div class="flex items-center mb-4">
-                                    <span class="category-badge hackathon-badge">Featured</span>
-                                    <span class="category-badge workshop-badge">Limited Seats</span>
-                                </div>
-                                <h2 class="text-2xl md:text-3xl font-headline font-bold text-accent mb-3">
-                                    AI & Machine Learning Workshop
-                                </h2>
-                                <p class="text-text/80 mb-4">
-                                    Join our intensive 2-day workshop on AI and Machine Learning fundamentals. Learn from industry experts and get hands-on experience with real-world projects.
-                                </p>
-                                <div class="flex flex-wrap gap-2 mb-4">
-                                    <span class="event-date-badge">Oct 15-16, 2023</span>
-                                    <span class="event-date-badge">10:00 AM - 4:00 PM</span>
-                                    <span class="event-date-badge">Duration: 12 Hours</span>
-                                </div>
-                            </div>
-                            <div class="hidden md:block ml-6">
-                                <button class="register-btn">
-                                    Register Now <i class="fas fa-arrow-right ml-2"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="md:hidden mt-4 text-center">
-                            <button class="register-btn w-full">
-                                Register Now <i class="fas fa-arrow-right ml-2"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="events-container">
                     <!-- Events will be loaded dynamically from Firestore -->
                     <div class="text-center py-12 col-span-3">
@@ -605,78 +569,27 @@
         </section>
 
         <!-- Footer -->
-        <footer class="bg-secondary py-12 mt-12">
-            <div class="container mx-auto px-4">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                    <div>
-                        <p class="text-accent font-headline text-xl mb-4">CASA</p>
-                        <p class="text-sm text-text/80 mb-4">Computer and AI/ML Student Association</p>
-                        <div class="flex space-x-4">
-                            <a href="#" class="hover:text-accent transition-colors">
-                                <i class="fab fa-github"></i>
-                            </a>
-                            <a href="#" class="hover:text-accent transition-colors">
-                                <i class="fab fa-linkedin"></i>
-                            </a>
-                            <a href="#" class="hover:text-accent transition-colors">
-                                <i class="fab fa-twitter"></i>
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <h3 class="text-lg font-headline font-semibold mb-4 text-accent">Quick Links</h3>
-                        <ul class="space-y-2">
-                            <li><a href="index.html" class="text-text/80 hover:text-accent transition-colors">Home</a></li>
-                            <li><a href="about.html" class="text-text/80 hover:text-accent transition-colors">About Us</a></li>
-                            <li><a href="events.html" class="text-text/80 hover:text-accent transition-colors">Events</a></li>
-                            <li><a href="projects.html" class="text-text/80 hover:text-accent transition-colors">Projects</a></li>
-                            <li><a href="contact.html" class="text-text/80 hover:text-accent transition-colors">Contact</a></li>
-                        </ul>
-                    </div>
-                    
-                    <div>
-                        <h3 class="text-lg font-headline font-semibold mb-4 text-accent">Upcoming Events</h3>
-                        <ul class="space-y-3">
-                            <li class="text-text/80 hover:text-accent transition-colors">
-                                <div class="font-medium">Hack the Future</div>
-                                <div class="text-sm">Oct 28, 2023</div>
-                            </li>
-                            <li class="text-text/80 hover:text-accent transition-colors">
-                                <div class="font-medium">AI Workshop</div>
-                                <div class="text-sm">Nov 5, 2023</div>
-                            </li>
-                            <li class="text-text/80 hover:text-accent transition-colors">
-                                <div class="font-medium">Tech Conference</div>
-                                <div class="text-sm">Nov 15, 2023</div>
-                            </li>
-                        </ul>
-                    </div>
-                    
-                    <div>
-                        <h3 class="text-lg font-headline font-semibold mb-4 text-accent">Contact Us</h3>
-                        <ul class="space-y-3 text-text/80">
-                            <li class="flex items-start">
-                                <i class="fas fa-map-marker-alt mt-1 mr-3 text-accent"></i>
-                                <span>KLE Society's College of BCA, Nipani</span>
-                            </li>
-                            <li class="flex items-center">
-                                <i class="fas fa-envelope mr-3 text-accent"></i>
-                                <span>contact@casa-kle.org</span>
-                            </li>
-                            <li class="flex items-center">
-                                <i class="fas fa-phone mr-3 text-accent"></i>
-                                <span>+91 98765 43210</span>
-                            </li>
-                        </ul>
-                    </div>
+    <footer class="bg-secondary py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <p class="text-accent font-headline text-xl">CASA</p>
+                    <p class="text-sm">Computer and AI/ML Student Association</p>
                 </div>
-                
-                <div class="border-t border-gray-700 mt-8 pt-8 text-center text-text/60 text-sm">
-                    &copy; 2023 CASA - Computer and AI/ML Student Association. All rights reserved.
+                <div class="flex space-x-4">
+                    <a href="#" class="hover:text-accent transition-colors">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="#" class="hover:text-accent transition-colors">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="#" class="hover:text-accent transition-colors">
+                        <i class="fab fa-instagram"></i>
+                    </a>
                 </div>
             </div>
-        </footer>
+        </div>
+    </footer>
     </div>
 
     <!-- Particles Script -->

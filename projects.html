@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Projects & Research - CASA</title>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -124,27 +128,101 @@
             border-radius: 12px;
             overflow: hidden;
             transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(0, 191, 255, 0.1);
         }
         
         .project-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 25px rgba(0, 191, 255, 0.2);
         }
         
         .filter-btn {
             background-color: #222831;
             padding: 0.5rem 1.25rem;
             border-radius: 8px;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
+            border: 1px solid rgba(0, 191, 255, 0.2);
         }
         
         .filter-btn:hover {
             background-color: rgba(0, 191, 255, 0.1);
+            transform: translateY(-2px);
         }
         
         .filter-btn.active {
-            background-color: #00BFFF;
+            background: linear-gradient(to right, #00BFFF, #2575fc);
             color: #0D1117;
+            border: none;
+        }
+        
+        .creator-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 191, 255, 0.1);
+            border-radius: 20px;
+            padding: 4px 10px;
+            font-size: 0.85rem;
+        }
+        
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-in-progress {
+            background: rgba(255, 184, 0, 0.15);
+            color: #FFB800;
+        }
+        
+        .status-completed {
+            background: rgba(40, 167, 69, 0.15);
+            color: #28a745;
+        }
+        
+        .status-prototype {
+            background: rgba(134, 65, 244, 0.15);
+            color: #8641F4;
+        }
+        
+        .tech-tag {
+            padding: 4px 10px;
+            background: rgba(0, 191, 255, 0.1);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: #00BFFF;
+        }
+        
+        .skeleton-loader {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            background-color: #2d3748;
+            border-radius: 8px;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .gradient-header {
+            background: linear-gradient(135deg, #00BFFF, #2575fc);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        
+        .project-gradient {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #2575fc);
+            background-size: 200% 200%;
+            animation: gradientAnimation 8s ease infinite;
+        }
+        
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
     </style>
 
@@ -162,12 +240,12 @@
             <div class="flex items-center justify-between h-20">
                 <!-- Logo -->
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center animate-pulse-slow">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-r from-accent to-cyan-500 flex items-center justify-center animate-pulse">
                         <i class="fas fa-code text-primary text-xl"></i>
                     </div>
                     <a href="#" class="text-2xl font-bold text-accent flex items-center">
                         CASA
-                        <span class="ml-1 text-xs bg-highlight text-primary px-2 py-1 rounded-full animate-bounce-slow">AI</span>
+                        <span class="ml-1 text-xs bg-highlight text-primary px-2 py-1 rounded-full animate-bounce">AI</span>
                     </a>
                 </div>
 
@@ -199,7 +277,7 @@
         <div class="h-full flex flex-col">
             <div class="p-6 border-b border-gray-700 flex justify-between items-center">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-r from-accent to-cyan-500 flex items-center justify-center">
                         <i class="fas fa-code text-primary text-xl"></i>
                     </div>
                     <span class="text-xl font-bold text-accent">CASA</span>
@@ -246,7 +324,9 @@
     <!-- Main Content -->
     <main class="container mx-auto px-4 py-24">
         <section class="py-16">
-            <h1 class="text-4xl md:text-5xl font-headline font-bold mb-8 text-center">Projects & Research Vault</h1>
+            <h1 class="text-4xl md:text-5xl font-headline font-bold mb-8 text-center gradient-header">
+                Projects & Research Vault
+            </h1>
             <p class="text-lg md:text-xl text-center mb-12 max-w-3xl mx-auto">
                 Here you will find some of the exciting, innovative projects that CASA members are currently working on.
                 Feel free to collaborate, contribute, and get involved in our open-source journey.
@@ -257,177 +337,79 @@
                 <button class="filter-btn active" data-filter="all">
                     All Projects
                 </button>
-                <button class="filter-btn" data-filter="ai">
+                <button class="filter-btn" data-filter="AI/ML">
                     AI/ML
                 </button>
-                <button class="filter-btn" data-filter="web">
-                    Web Development
+                <button class="filter-btn" data-filter="Web Application">
+                    Web Application
                 </button>
-                <button class="filter-btn" data-filter="app">
-                    App Development
+                <button class="filter-btn" data-filter="Mobile App">
+                    Mobile App
                 </button>
-                <button class="filter-btn" data-filter="blockchain">
-                    Blockchain
-                </button>
-                <button class="filter-btn" data-filter="research">
-                    Research
+                <button class="filter-btn" data-filter="IoT Project">
+                    IoT Project
                 </button>
             </div>
 
             <!-- Projects Grid -->
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="projects-container">
-                <!-- Project 1 -->
+                <!-- Skeleton loaders while loading -->
                 <div class="project-card">
-                    <div class="h-48 bg-gradient-to-r from-accent to-highlight flex items-center justify-center">
-                        <i class="fas fa-robot text-6xl text-primary"></i>
-                    </div>
+                    <div class="h-48 project-gradient skeleton-loader"></div>
                     <div class="p-6">
                         <div class="flex justify-between items-center mb-4">
-                            <span class="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">AI/ML</span>
-                            <span class="text-gray-400 text-sm">In Progress</span>
+                            <div class="skeleton-loader h-6 w-24 rounded-full"></div>
+                            <div class="skeleton-loader h-6 w-20 rounded-full"></div>
                         </div>
-                        <h3 class="text-xl font-headline font-semibold mb-2">Intelligent Tutor System</h3>
-                        <p class="text-gray-400 mb-4">
-                            An AI-powered system that adapts to student learning patterns to provide personalized educational content.
-                        </p>
+                        <div class="skeleton-loader h-6 w-3/4 mb-3"></div>
+                        <div class="skeleton-loader h-4 w-full mb-2"></div>
+                        <div class="skeleton-loader h-4 w-5/6 mb-4"></div>
                         <div class="flex justify-between">
                             <div class="flex space-x-2">
-                                <span class="px-2 py-1 rounded bg-primary text-xs">Python</span>
-                                <span class="px-2 py-1 rounded bg-primary text-xs">TensorFlow</span>
+                                <div class="skeleton-loader h-6 w-16 rounded-full"></div>
+                                <div class="skeleton-loader h-6 w-16 rounded-full"></div>
                             </div>
-                            <a href="#" class="text-accent hover:text-highlight">
-                                <i class="fab fa-github"></i>
-                            </a>
+                            <div class="skeleton-loader h-6 w-6 rounded-full"></div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Project 2 -->
-                <div class="project-card">
-                    <div class="h-48 bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
-                        <i class="fas fa-wallet text-6xl text-white"></i>
-                    </div>
+                <div class="project-card hidden md:block">
+                    <div class="h-48 project-gradient skeleton-loader"></div>
                     <div class="p-6">
                         <div class="flex justify-between items-center mb-4">
-                            <span class="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">Blockchain</span>
-                            <span class="text-gray-400 text-sm">Completed</span>
+                            <div class="skeleton-loader h-6 w-24 rounded-full"></div>
+                            <div class="skeleton-loader h-6 w-20 rounded-full"></div>
                         </div>
-                        <h3 class="text-xl font-headline font-semibold mb-2">Campus Crypto Wallet</h3>
-                        <p class="text-gray-400 mb-4">
-                            A secure cryptocurrency wallet designed specifically for university students with built-in campus payment features.
-                        </p>
+                        <div class="skeleton-loader h-6 w-3/4 mb-3"></div>
+                        <div class="skeleton-loader h-4 w-full mb-2"></div>
+                        <div class="skeleton-loader h-4 w-5/6 mb-4"></div>
                         <div class="flex justify-between">
                             <div class="flex space-x-2">
-                                <span class="px-2 py-1 rounded bg-primary text-xs">Solidity</span>
-                                <span class="px-2 py-1 rounded bg-primary text-xs">React</span>
+                                <div class="skeleton-loader h-6 w-16 rounded-full"></div>
+                                <div class="skeleton-loader h-6 w-16 rounded-full"></div>
                             </div>
-                            <a href="#" class="text-accent hover:text-highlight">
-                                <i class="fab fa-github"></i>
-                            </a>
+                            <div class="skeleton-loader h-6 w-6 rounded-full"></div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Project 3 -->
-                <div class="project-card">
-                    <div class="h-48 bg-gradient-to-r from-green-500 to-teal-500 flex items-center justify-center">
-                        <i class="fas fa-mobile-alt text-6xl text-white"></i>
-                    </div>
+                <div class="project-card hidden lg:block">
+                    <div class="h-48 project-gradient skeleton-loader"></div>
                     <div class="p-6">
                         <div class="flex justify-between items-center mb-4">
-                            <span class="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">App</span>
-                            <span class="text-gray-400 text-sm">In Progress</span>
+                            <div class="skeleton-loader h-6 w-24 rounded-full"></div>
+                            <div class="skeleton-loader h-6 w-20 rounded-full"></div>
                         </div>
-                        <h3 class="text-xl font-headline font-semibold mb-2">Campus Navigator</h3>
-                        <p class="text-gray-400 mb-4">
-                            An indoor navigation app with AR features to help students find classrooms and campus facilities.
-                        </p>
+                        <div class="skeleton-loader h-6 w-3/4 mb-3"></div>
+                        <div class="skeleton-loader h-4 w-full mb-2"></div>
+                        <div class="skeleton-loader h-4 w-5/6 mb-4"></div>
                         <div class="flex justify-between">
                             <div class="flex space-x-2">
-                                <span class="px-2 py-1 rounded bg-primary text-xs">Flutter</span>
-                                <span class="px-2 py-1 rounded bg-primary text-xs">ARCore</span>
+                                <div class="skeleton-loader h-6 w-16 rounded-full"></div>
+                                <div class="skeleton-loader h-6 w-16 rounded-full"></div>
                             </div>
-                            <a href="#" class="text-accent hover:text-highlight">
-                                <i class="fab fa-github"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Project 4 -->
-                <div class="project-card">
-                    <div class="h-48 bg-gradient-to-r from-yellow-500 to-orange-500 flex items-center justify-center">
-                        <i class="fas fa-globe text-6xl text-white"></i>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex justify-between items-center mb-4">
-                            <span class="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">Web</span>
-                            <span class="text-gray-400 text-sm">Completed</span>
-                        </div>
-                        <h3 class="text-xl font-headline font-semibold mb-2">Eco Marketplace</h3>
-                        <p class="text-gray-400 mb-4">
-                            A sustainable marketplace connecting eco-conscious consumers with local green businesses.
-                        </p>
-                        <div class="flex justify-between">
-                            <div class="flex space-x-2">
-                                <span class="px-2 py-1 rounded bg-primary text-xs">Vue.js</span>
-                                <span class="px-2 py-1 rounded bg-primary text-xs">Node.js</span>
-                            </div>
-                            <a href="#" class="text-accent hover:text-highlight">
-                                <i class="fab fa-github"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Project 5 -->
-                <div class="project-card">
-                    <div class="h-48 bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
-                        <i class="fas fa-brain text-6xl text-white"></i>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex justify-between items-center mb-4">
-                            <span class="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">AI/ML</span>
-                            <span class="text-gray-400 text-sm">In Progress</span>
-                        </div>
-                        <h3 class="text-xl font-headline font-semibold mb-2">Mental Health Assistant</h3>
-                        <p class="text-gray-400 mb-4">
-                            An AI chatbot that provides mental health support and resources for college students.
-                        </p>
-                        <div class="flex justify-between">
-                            <div class="flex space-x-2">
-                                <span class="px-2 py-1 rounded bg-primary text-xs">Python</span>
-                                <span class="px-2 py-1 rounded bg-primary text-xs">NLP</span>
-                            </div>
-                            <a href="#" class="text-accent hover:text-highlight">
-                                <i class="fab fa-github"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Project 6 -->
-                <div class="project-card">
-                    <div class="h-48 bg-gradient-to-r from-red-500 to-orange-500 flex items-center justify-center">
-                        <i class="fas fa-vr-cardboard text-6xl text-white"></i>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex justify-between items-center mb-4">
-                            <span class="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">Research</span>
-                            <span class="text-gray-400 text-sm">Prototype</span>
-                        </div>
-                        <h3 class="text-xl font-headline font-semibold mb-2">VR Learning Environments</h3>
-                        <p class="text-gray-400 mb-4">
-                            Research on the effectiveness of VR technology in creating immersive learning experiences.
-                        </p>
-                        <div class="flex justify-between">
-                            <div class="flex space-x-2">
-                                <span class="px-2 py-1 rounded bg-primary text-xs">Unity</span>
-                                <span class="px-2 py-1 rounded bg-primary text-xs">VR</span>
-                            </div>
-                            <a href="#" class="text-accent hover:text-highlight">
-                                <i class="fas fa-book"></i>
-                            </a>
+                            <div class="skeleton-loader h-6 w-6 rounded-full"></div>
                         </div>
                     </div>
                 </div>
@@ -435,43 +417,34 @@
 
             <!-- Research Papers Section -->
             <div class="mt-16">
-                <h2 class="text-3xl font-headline font-bold mb-8">Research Papers</h2>
-                <div class="grid md:grid-cols-2 gap-8">
-                    <!-- Research Paper 1 -->
+                <h2 class="text-3xl font-headline font-bold mb-8 gradient-header">Research Papers</h2>
+                <div class="grid md:grid-cols-2 gap-8" id="research-container">
+                    <!-- Skeleton loaders while loading -->
                     <div class="project-card">
                         <div class="flex items-center justify-between mb-4">
-                            <span class="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">AI/ML</span>
-                            <span class="text-gray-400 text-sm">2024</span>
+                            <div class="skeleton-loader h-6 w-24 rounded-full"></div>
+                            <div class="skeleton-loader h-6 w-16 rounded-full"></div>
                         </div>
-                        <h3 class="text-xl font-headline font-semibold mb-2">Deep Learning in Computer Vision</h3>
-                        <p class="text-gray-400 mb-4">
-                            A comprehensive study on the applications of deep learning in computer vision and its impact
-                            on modern technology.
-                        </p>
+                        <div class="skeleton-loader h-6 w-3/4 mb-3"></div>
+                        <div class="skeleton-loader h-4 w-full mb-2"></div>
+                        <div class="skeleton-loader h-4 w-5/6 mb-4"></div>
                         <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-400">By: John Doe</span>
-                            <a href="#" class="text-accent hover:text-highlight transition-colors">
-                                Read Paper <i class="fas fa-arrow-right ml-1"></i>
-                            </a>
+                            <div class="skeleton-loader h-5 w-24"></div>
+                            <div class="skeleton-loader h-5 w-24"></div>
                         </div>
                     </div>
-
-                    <!-- Research Paper 2 -->
+                    
                     <div class="project-card">
                         <div class="flex items-center justify-between mb-4">
-                            <span class="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">Blockchain</span>
-                            <span class="text-gray-400 text-sm">2024</span>
+                            <div class="skeleton-loader h-6 w-24 rounded-full"></div>
+                            <div class="skeleton-loader h-6 w-16 rounded-full"></div>
                         </div>
-                        <h3 class="text-xl font-headline font-semibold mb-2">Smart Contracts Security</h3>
-                        <p class="text-gray-400 mb-4">
-                            An analysis of security vulnerabilities in smart contracts and best practices for secure
-                            development.
-                        </p>
+                        <div class="skeleton-loader h-6 w-3/4 mb-3"></div>
+                        <div class="skeleton-loader h-4 w-full mb-2"></div>
+                        <div class="skeleton-loader h-4 w-5/6 mb-4"></div>
                         <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-400">By: Jane Smith</span>
-                            <a href="#" class="text-accent hover:text-highlight transition-colors">
-                                Read Paper <i class="fas fa-arrow-right ml-1"></i>
-                            </a>
+                            <div class="skeleton-loader h-5 w-24"></div>
+                            <div class="skeleton-loader h-5 w-24"></div>
                         </div>
                     </div>
                 </div>
@@ -504,6 +477,21 @@
 
     <!-- Scripts -->
     <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBmNvVdB_GeYrl1UNMkOGubuN_i6__jM-w",
+            authDomain: "casa-8f0ba.firebaseapp.com",
+            projectId: "casa-8f0ba",
+            storageBucket: "casa-8f0ba.appspot.com",
+            messagingSenderId: "637059274531",
+            appId: "1:637059274531:web:4cee4a8c6953b4497c9e96",
+            measurementId: "G-MZXKS10HWJ"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
         // Mobile menu functionality
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const closeMenuButton = document.getElementById('close-menu');
@@ -529,24 +517,278 @@
         closeMenuButton.addEventListener('click', closeMobileMenu);
         overlay.addEventListener('click', closeMobileMenu);
 
-        // Filter Projects
-        document.querySelectorAll('.filter-btn').forEach(button => {
-            button.addEventListener('click', () => {
-                // Remove active class from all buttons
-                document.querySelectorAll('.filter-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                
-                // Add active class to clicked button
-                button.classList.add('active');
-            });
-        });
-
         // Close mobile menu when clicking on a link
         document.querySelectorAll('#mobile-menu .nav-link').forEach(link => {
             link.addEventListener('click', closeMobileMenu);
         });
+
+        // Fetch projects and research papers from Firestore
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fetch projects
+            fetchProjects();
+            
+            // Fetch research papers
+            fetchResearchPapers();
+            
+            // Set up filter buttons
+            setupProjectFilters();
+        });
+
+        // Fetch projects from Firestore
+        async function fetchProjects() {
+            const projectsContainer = document.getElementById('projects-container');
+            
+            try {
+                // Get projects collection
+                const projectsSnapshot = await db.collection('projects').get();
+                
+                if (projectsSnapshot.empty) {
+                    projectsContainer.innerHTML = `
+                        <div class="col-span-3 text-center py-12">
+                            <i class="fas fa-box-open text-accent text-4xl mb-4"></i>
+                            <h3 class="text-2xl font-headline font-bold mb-2">No Projects Found</h3>
+                            <p class="text-text/80">Check back later for exciting projects!</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Clear skeleton loaders
+                projectsContainer.innerHTML = '';
+                
+                // Process each project
+                for (const doc of projectsSnapshot.docs) {
+                    const projectData = doc.data();
+                    
+                    // Get creator details
+                    let creatorName = "Unknown";
+                    let creatorAvatar = "https://ui-avatars.com/api/?name=Creator&background=0D8ABC&color=fff";
+                    
+                    try {
+                        const userDoc = await db.collection('users').doc(projectData.userId).get();
+                        if (userDoc.exists) {
+                            const userData = userDoc.data();
+                            creatorName = userData.name || "Unknown";
+                            // For demo, using initials if no avatar
+                            if (!userData.avatar) {
+                                const initials = creatorName.split(' ').map(n => n[0]).join('');
+                                creatorAvatar = `https://ui-avatars.com/api/?name=${initials}&background=0D8ABC&color=fff`;
+                            } else {
+                                creatorAvatar = userData.avatar;
+                            }
+                        }
+                    } catch (error) {
+                        console.error("Error fetching creator:", error);
+                    }
+                    
+                    // Create project card
+                    const projectCard = createProjectCard(projectData, creatorName, creatorAvatar);
+                    projectsContainer.appendChild(projectCard);
+                }
+            } catch (error) {
+                console.error("Error fetching projects:", error);
+                projectsContainer.innerHTML = `
+                    <div class="col-span-3 text-center py-12">
+                        <i class="fas fa-exclamation-triangle text-red-500 text-4xl mb-4"></i>
+                        <h3 class="text-2xl font-headline font-bold mb-2">Error Loading Projects</h3>
+                        <p class="text-text/80">${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Create project card element
+        function createProjectCard(project, creatorName, creatorAvatar) {
+            // Status badge styling
+            let statusClass = "status-in-progress";
+            let statusText = "In Progress";
+            
+            if (project.status === "completed") {
+                statusClass = "status-completed";
+                statusText = "Completed";
+            } else if (project.status === "prototype") {
+                statusClass = "status-prototype";
+                statusText = "Prototype";
+            }
+            
+            // Gradient colors based on category
+            let gradientFrom = "from-accent";
+            let gradientTo = "to-cyan-500";
+            
+            if (project.category === "AI/ML") {
+                gradientFrom = "from-purple-500";
+                gradientTo = "to-pink-500";
+            } else if (project.category === "Web Application") {
+                gradientFrom = "from-yellow-500";
+                gradientTo = "to-orange-500";
+            } else if (project.category === "Mobile App") {
+                gradientFrom = "from-green-500";
+                gradientTo = "to-teal-500";
+            } else if (project.category === "IoT Project") {
+                gradientFrom = "from-red-500";
+                gradientTo = "to-orange-500";
+            }
+            
+            const card = document.createElement('div');
+            card.className = 'project-card';
+            card.dataset.category = project.category;
+            
+            card.innerHTML = `
+                <div class="h-48 bg-gradient-to-r ${gradientFrom} ${gradientTo} flex items-center justify-center">
+                    <i class="${project.icon || 'fas fa-code'} text-6xl text-white"></i>
+                </div>
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">${project.category || 'Project'}</span>
+                        <span class="${statusClass}">${statusText}</span>
+                    </div>
+                    <h3 class="text-xl font-headline font-semibold mb-2">${project.title}</h3>
+                    <p class="text-gray-400 mb-4">
+                        ${project.description || 'An innovative project developed by CASA members.'}
+                    </p>
+                    
+                    <div class="flex items-center mb-4">
+                        <div class="creator-badge">
+                            <img src="${creatorAvatar}" alt="${creatorName}" class="w-6 h-6 rounded-full">
+                            <span>${creatorName}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <div class="flex flex-wrap gap-2">
+                            ${project.technologies ? project.technologies.map(tech => 
+                                `<span class="tech-tag">${tech}</span>`
+                            ).join('') : ''}
+                        </div>
+                        <a href="${project.githubUrl || '#'}" class="text-accent hover:text-highlight text-xl">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // Fetch research papers from Firestore
+        async function fetchResearchPapers() {
+            const researchContainer = document.getElementById('research-container');
+            
+            try {
+                // Get research collection
+                const researchSnapshot = await db.collection('research').get();
+                
+                if (researchSnapshot.empty) {
+                    researchContainer.innerHTML = `
+                        <div class="col-span-2 text-center py-8">
+                            <i class="fas fa-book-open text-accent text-4xl mb-4"></i>
+                            <h3 class="text-xl font-headline font-bold mb-2">No Research Papers</h3>
+                            <p class="text-text/80">Check back later for research publications.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Clear skeleton loaders
+                researchContainer.innerHTML = '';
+                
+                // Process each research paper
+                for (const doc of researchSnapshot.docs) {
+                    const researchData = doc.data();
+                    
+                    // Get author details
+                    let authorName = "Unknown";
+                    
+                    try {
+                        const userDoc = await db.collection('users').doc(researchData.userId).get();
+                        if (userDoc.exists) {
+                            const userData = userDoc.data();
+                            authorName = userData.name || "Unknown";
+                        }
+                    } catch (error) {
+                        console.error("Error fetching author:", error);
+                    }
+                    
+                    // Create research card
+                    const researchCard = createResearchCard(researchData, authorName);
+                    researchContainer.appendChild(researchCard);
+                }
+            } catch (error) {
+                console.error("Error fetching research papers:", error);
+                researchContainer.innerHTML = `
+                    <div class="col-span-2 text-center py-8">
+                        <i class="fas fa-exclamation-triangle text-red-500 text-4xl mb-4"></i>
+                        <h3 class="text-xl font-headline font-bold mb-2">Error Loading Research</h3>
+                        <p class="text-text/80">${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Create research card element
+        function createResearchCard(research, authorName) {
+            const card = document.createElement('div');
+            card.className = 'project-card';
+            
+            card.innerHTML = `
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">${research.category || 'Research'}</span>
+                    <span class="text-gray-400 text-sm">${research.year || '2024'}</span>
+                </div>
+                <h3 class="text-xl font-headline font-semibold mb-2">${research.title}</h3>
+                <p class="text-gray-400 mb-4">
+                    ${research.description || 'A research paper published by CASA members.'}
+                </p>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-400">By: ${authorName}</span>
+                    <a href="${research.paperUrl || '#'}" class="text-accent hover:text-highlight transition-colors">
+                        Read Paper <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // Set up project filtering
+        function setupProjectFilters() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked button
+                    button.classList.add('active');
+                    
+                    // Get the filter value
+                    const filterValue = button.getAttribute('data-filter');
+                    
+                    // Filter projects
+                    filterProjects(filterValue);
+                });
+            });
+        }
+        
+        // Filter projects by category
+        function filterProjects(category) {
+            const projectCards = document.querySelectorAll('.project-card');
+            
+            projectCards.forEach(card => {
+                if (category === 'all') {
+                    card.style.display = 'block';
+                } else {
+                    if (card.dataset.category === category) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                }
+            });
+        }
     </script>
 </body>
-
 </html>
