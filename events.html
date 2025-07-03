@@ -23,6 +23,9 @@
                         highlight: '#FEE440',
                         secondary: '#222831',
                         text: '#E0E0E0',
+                        gradient1: '#1a2a6c',
+                        gradient2: '#b21f1f',
+                        gradient3: '#2575fc'
                     },
                     fontFamily: {
                         'headline': ['Poppins', 'Montserrat', 'sans-serif'],
@@ -227,13 +230,191 @@
             top: 0;
             left: 0;
             z-index: -1;
-            background-color: #0D1117;
+            background: linear-gradient(135deg, #0d1117 0%, #1a2639 100%);
         }
         
         .content-container {
             position: relative;
             z-index: 1;
             background-color: rgba(13, 17, 23, 0.85);
+        }
+        
+        .event-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(0, 191, 255, 0.1);
+        }
+        
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 191, 255, 0.2);
+        }
+        
+        .countdown-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .countdown-item {
+            background: rgba(34, 40, 49, 0.7);
+            border-radius: 10px;
+            padding: 15px 10px;
+            min-width: 70px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .countdown-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #00BFFF;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .countdown-label {
+            font-size: 0.8rem;
+            color: #E0E0E0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #2575fc);
+            background-size: 200% 200%;
+            animation: gradientAnimation 8s ease infinite;
+        }
+        
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .section-header {
+            position: relative;
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .section-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(to right, #00BFFF, #2575fc);
+            border-radius: 2px;
+        }
+        
+        .glow-text {
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.7);
+        }
+        
+        .featured-event {
+            background: linear-gradient(to right, rgba(34, 40, 49, 0.8), rgba(13, 17, 23, 0.8));
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .featured-event-content {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .highlight-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 5px;
+            background: linear-gradient(to bottom, #00BFFF, #2575fc);
+        }
+        
+        .category-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .hackathon-badge {
+            background: rgba(134, 65, 244, 0.2);
+            color: #8641F4;
+            border: 1px solid #8641F4;
+        }
+        
+        .workshop-badge {
+            background: rgba(69, 181, 255, 0.2);
+            color: #45B5FF;
+            border: 1px solid #45B5FF;
+        }
+        
+        .event-badge {
+            background: rgba(255, 184, 0, 0.2);
+            color: #FFB800;
+            border: 1px solid #FFB800;
+        }
+        
+        .duration-badge {
+            background: rgba(0, 191, 255, 0.2);
+            color: #00BFFF;
+            border: 1px solid #00BFFF;
+        }
+        
+        .flip-card {
+            transition: transform 0.3s;
+        }
+        
+        .flip-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .register-btn {
+            background: linear-gradient(to right, #00BFFF, #2575fc);
+            color: #0D1117;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 191, 255, 0.3);
+        }
+        
+        .register-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 191, 255, 0.5);
+        }
+        
+        @media (max-width: 768px) {
+            .flip-card {
+                height: 420px;
+            }
+            
+            .countdown-item {
+                min-width: 60px;
+                padding: 10px 5px;
+            }
+            
+            .countdown-value {
+                font-size: 1.5rem;
+            }
+            
+            .featured-event-content {
+                padding: 20px;
+            }
         }
     </style>
     
@@ -254,13 +435,13 @@
                     <!-- Logo -->
                     <div class="flex items-center space-x-3">
                         <div
-                            class="w-10 h-10 rounded-full bg-accent flex items-center justify-center animate-pulse-slow">
+                            class="w-10 h-10 rounded-full bg-gradient-to-r from-accent to-cyan-500 flex items-center justify-center animate-pulse">
                             <i class="fas fa-code text-primary text-xl"></i>
                         </div>
                         <a href="#" class="text-2xl font-bold text-accent flex items-center">
                             CASA
                             <span
-                                class="ml-1 text-xs bg-highlight text-primary px-2 py-1 rounded-full animate-bounce-slow">AI</span>
+                                class="ml-1 text-xs bg-highlight text-primary px-2 py-1 rounded-full animate-bounce">AI</span>
                         </a>
                     </div>
 
@@ -292,7 +473,7 @@
             <div class="h-full flex flex-col">
                 <div class="p-6 border-b border-gray-700 flex justify-between items-center">
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-accent to-cyan-500 flex items-center justify-center">
                             <i class="fas fa-code text-primary text-xl"></i>
                         </div>
                         <span class="text-xl font-bold text-accent">CASA</span>
@@ -340,7 +521,7 @@
         <section class="py-16 pt-32">
             <div class="container mx-auto px-4">
                 <div class="text-center mb-16">
-                    <h1 class="text-4xl md:text-5xl font-headline font-bold text-accent mb-4">
+                    <h1 class="text-4xl md:text-5xl font-headline font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent to-cyan-500 mb-4 glow-text">
                         Upcoming Events
                     </h1>
                     <p class="text-lg text-text/80 max-w-2xl mx-auto">
@@ -348,13 +529,68 @@
                         for technology.
                     </p>
                     
+                    <!-- Countdown Timer -->
+                    <div class="countdown-container mt-10">
+                        <div class="countdown-item">
+                            <div class="countdown-value" id="days">00</div>
+                            <div class="countdown-label">Days</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-value" id="hours">00</div>
+                            <div class="countdown-label">Hours</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-value" id="minutes">00</div>
+                            <div class="countdown-label">Minutes</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-value" id="seconds">00</div>
+                            <div class="countdown-label">Seconds</div>
+                        </div>
+                    </div>
+                    
                     <!-- Event Filters -->
                     <div class="flex flex-wrap justify-center mt-8 mb-6">
-                        <button class="filter-btn active" data-filter="all">All Events</button>
-                        <button class="filter-btn" data-filter="hackathon">Hackathons</button>
-                        <button class="filter-btn" data-filter="workshop">Workshops</button>
-                        <button class="filter-btn" data-filter="conference">Conferences</button>
-                        <button class="filter-btn" data-filter="social">Social Events</button>
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="Hackathon">Hackathon</button>
+                        <button class="filter-btn" data-filter="Workshop">Workshop</button>
+                        <button class="filter-btn" data-filter="Event">Event</button>
+                    </div>
+                </div>
+
+                <!-- Featured Event Banner -->
+                <div class="featured-event mb-16 relative">
+                    <div class="highlight-bar"></div>
+                    <div class="featured-event-content">
+                        <div class="flex items-start">
+                            <div class="flex-1">
+                                <div class="flex items-center mb-4">
+                                    <span class="category-badge hackathon-badge">Featured</span>
+                                    <span class="category-badge workshop-badge">Limited Seats</span>
+                                </div>
+                                <h2 class="text-2xl md:text-3xl font-headline font-bold text-accent mb-3">
+                                    AI & Machine Learning Workshop
+                                </h2>
+                                <p class="text-text/80 mb-4">
+                                    Join our intensive 2-day workshop on AI and Machine Learning fundamentals. Learn from industry experts and get hands-on experience with real-world projects.
+                                </p>
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <span class="event-date-badge">Oct 15-16, 2023</span>
+                                    <span class="event-date-badge">10:00 AM - 4:00 PM</span>
+                                    <span class="event-date-badge">Duration: 12 Hours</span>
+                                </div>
+                            </div>
+                            <div class="hidden md:block ml-6">
+                                <button class="register-btn">
+                                    Register Now <i class="fas fa-arrow-right ml-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="md:hidden mt-4 text-center">
+                            <button class="register-btn w-full">
+                                Register Now <i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -369,24 +605,75 @@
         </section>
 
         <!-- Footer -->
-        <footer class="bg-secondary py-8 mt-12">
+        <footer class="bg-secondary py-12 mt-12">
             <div class="container mx-auto px-4">
-                <div class="flex flex-col md:flex-row justify-between items-center">
-                    <div class="mb-4 md:mb-0">
-                        <p class="text-accent font-headline text-xl">CASA</p>
-                        <p class="text-sm">Computer and AI/ML Student Association</p>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <div>
+                        <p class="text-accent font-headline text-xl mb-4">CASA</p>
+                        <p class="text-sm text-text/80 mb-4">Computer and AI/ML Student Association</p>
+                        <div class="flex space-x-4">
+                            <a href="#" class="hover:text-accent transition-colors">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="#" class="hover:text-accent transition-colors">
+                                <i class="fab fa-linkedin"></i>
+                            </a>
+                            <a href="#" class="hover:text-accent transition-colors">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                        </div>
                     </div>
-                    <div class="flex space-x-4">
-                        <a href="#" class="hover:text-accent transition-colors">
-                            <i class="fab fa-github"></i>
-                        </a>
-                        <a href="#" class="hover:text-accent transition-colors">
-                            <i class="fab fa-linkedin"></i>
-                        </a>
-                        <a href="#" class="hover:text-accent transition-colors">
-                            <i class="fab fa-twitter"></i>
-                        </a>
+                    
+                    <div>
+                        <h3 class="text-lg font-headline font-semibold mb-4 text-accent">Quick Links</h3>
+                        <ul class="space-y-2">
+                            <li><a href="index.html" class="text-text/80 hover:text-accent transition-colors">Home</a></li>
+                            <li><a href="about.html" class="text-text/80 hover:text-accent transition-colors">About Us</a></li>
+                            <li><a href="events.html" class="text-text/80 hover:text-accent transition-colors">Events</a></li>
+                            <li><a href="projects.html" class="text-text/80 hover:text-accent transition-colors">Projects</a></li>
+                            <li><a href="contact.html" class="text-text/80 hover:text-accent transition-colors">Contact</a></li>
+                        </ul>
                     </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-headline font-semibold mb-4 text-accent">Upcoming Events</h3>
+                        <ul class="space-y-3">
+                            <li class="text-text/80 hover:text-accent transition-colors">
+                                <div class="font-medium">Hack the Future</div>
+                                <div class="text-sm">Oct 28, 2023</div>
+                            </li>
+                            <li class="text-text/80 hover:text-accent transition-colors">
+                                <div class="font-medium">AI Workshop</div>
+                                <div class="text-sm">Nov 5, 2023</div>
+                            </li>
+                            <li class="text-text/80 hover:text-accent transition-colors">
+                                <div class="font-medium">Tech Conference</div>
+                                <div class="text-sm">Nov 15, 2023</div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-headline font-semibold mb-4 text-accent">Contact Us</h3>
+                        <ul class="space-y-3 text-text/80">
+                            <li class="flex items-start">
+                                <i class="fas fa-map-marker-alt mt-1 mr-3 text-accent"></i>
+                                <span>KLE Society's College of BCA, Nipani</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-envelope mr-3 text-accent"></i>
+                                <span>contact@casa-kle.org</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-phone mr-3 text-accent"></i>
+                                <span>+91 98765 43210</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="border-t border-gray-700 mt-8 pt-8 text-center text-text/60 text-sm">
+                    &copy; 2023 CASA - Computer and AI/ML Student Association. All rights reserved.
                 </div>
             </div>
         </footer>
@@ -417,20 +704,24 @@
             particlesJS('particles-js', {
                 particles: {
                     number: {
-                        value: 100,
+                        value: 150,
                         density: {
                             enable: true,
                             value_area: 800
                         }
                     },
                     color: {
-                        value: '#F5F7FC'
+                        value: '#00BFFF'
                     },
                     shape: {
-                        type: 'circle'
+                        type: 'circle',
+                        stroke: {
+                            width: 1,
+                            color: '#00BFFF'
+                        }
                     },
                     opacity: {
-                        value: 0.8,
+                        value: 0.9,
                         random: true
                     },
                     size: {
@@ -440,16 +731,17 @@
                     line_linked: {
                         enable: true,
                         distance: 150,
-                        color: '#FFFFFF',
-                        opacity: 0.4,
+                        color: '#00BFFF',
+                        opacity: 0.6,
                         width: 1
                     },
                     move: {
                         enable: true,
-                        speed: 3,
+                        speed: 4,
                         direction: 'none',
                         random: true,
-                        straight: false
+                        straight: false,
+                        out_mode: 'out'
                     }
                 },
                 interactivity: {
@@ -491,6 +783,8 @@
                 .get()
                 .then((querySnapshot) => {
                     const events = [];
+                    let nextEvent = null;
+                    const now = new Date();
                     
                     if (querySnapshot.empty) {
                         container.innerHTML = `
@@ -505,13 +799,37 @@
                     
                     querySnapshot.forEach((doc) => {
                         const eventData = doc.data();
+                        
+                        // Create combined date/time object
+                        const eventDate = eventData.date ? new Date(eventData.date) : new Date();
+                        const timeString = eventData.time || "10:00";
+                        const timeParts = timeString.split(':');
+                        let hours = parseInt(timeParts[0]);
+                        const minutes = timeParts[1] || "00";
+                        eventDate.setHours(hours);
+                        eventDate.setMinutes(minutes);
+                        
+                        // Check if this is the next upcoming event
+                        if (eventDate > now) {
+                            if (!nextEvent || eventDate < nextEvent.datetime) {
+                                nextEvent = {
+                                    datetime: eventDate,
+                                    title: eventData.title
+                                };
+                            }
+                        }
+                        
                         events.push({
                             id: doc.id,
                             ...eventData,
-                            // Convert Firestore Timestamp to JavaScript Date
-                            date: eventData.date ? new Date(eventData.date) : new Date()
+                            datetime: eventDate
                         });
                     });
+                    
+                    // Set countdown to next event
+                    if (nextEvent) {
+                        setupCountdown(nextEvent.datetime);
+                    }
                     
                     // Render events
                     renderEvents(events);
@@ -528,6 +846,51 @@
                 });
         }
         
+        // Set up countdown timer to next event
+        function setupCountdown(eventDate) {
+            // Update the count down every 1 second
+            const countdownFunction = setInterval(function() {
+                // Get today's date and time
+                const now = new Date().getTime();
+                
+                // Find the distance between now and the event date
+                const distance = eventDate.getTime() - now;
+                
+                // Time calculations for days, hours, minutes and seconds
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                // Output the result in elements
+                document.getElementById("days").innerHTML = days.toString().padStart(2, '0');
+                document.getElementById("hours").innerHTML = hours.toString().padStart(2, '0');
+                document.getElementById("minutes").innerHTML = minutes.toString().padStart(2, '0');
+                document.getElementById("seconds").innerHTML = seconds.toString().padStart(2, '0');
+                
+                // If the count down is over, clear interval
+                if (distance < 0) {
+                    clearInterval(countdownFunction);
+                    document.getElementById("days").innerHTML = "00";
+                    document.getElementById("hours").innerHTML = "00";
+                    document.getElementById("minutes").innerHTML = "00";
+                    document.getElementById("seconds").innerHTML = "00";
+                    
+                    // After 1 day, delete the event from Firestore
+                    setTimeout(() => {
+                        deleteEvent(eventDate);
+                    }, 86400000); // 1 day = 86400000 ms
+                }
+            }, 1000);
+        }
+        
+        // Delete event after 1 day (simulated for demo)
+        function deleteEvent(eventDate) {
+            console.log(`Event on ${eventDate.toDateString()} would be deleted from Firestore`);
+            // In a real app, you would delete the event from Firestore here
+            // db.collection("events").doc(eventId).delete();
+        }
+
         // Render events to the page with flip animation
         function renderEvents(events) {
             const container = document.getElementById('events-container');
@@ -546,26 +909,35 @@
             
             events.forEach(event => {
                 // Format date properly
-                const formattedDate = event.date.toLocaleDateString('en-US', {
+                const formattedDate = event.datetime.toLocaleDateString('en-US', {
                     month: 'short',
                     day: 'numeric',
                     year: 'numeric'
                 });
                 
                 // Format time properly
-                const timeString = event.time || "10:00";
-                const timeParts = timeString.split(':');
-                let hours = parseInt(timeParts[0]);
-                const minutes = timeParts[1];
+                const hours = event.datetime.getHours();
+                const minutes = event.datetime.getMinutes().toString().padStart(2, '0');
                 const ampm = hours >= 12 ? 'PM' : 'AM';
-                hours = hours % 12 || 12;
-                const formattedTime = `${hours}:${minutes} ${ampm}`;
+                const formattedHours = hours % 12 || 12;
+                const formattedTime = `${formattedHours}:${minutes} ${ampm}`;
+                
+                // Get duration from Firestore or use default
+                const duration = event.duration ? `${event.duration} Hours` : "8 Hours";
                 
                 // Default image if none is provided
                 const imageUrl = event.image || 'https://img.freepik.com/free-vector/hackathon-doodle-handdrawing-team-programmers-web-developers-managers-graphic-designers-deve_88138-1348.jpg';
                 
+                // Determine category badge class
+                let categoryClass = 'event-badge';
+                if (event.category) {
+                    const categoryLower = event.category.toLowerCase();
+                    if (categoryLower.includes('hackathon')) categoryClass = 'hackathon-badge';
+                    else if (categoryLower.includes('workshop')) categoryClass = 'workshop-badge';
+                }
+                
                 const eventHTML = `
-                    <div class="flip-card fade-in" data-category="${event.category || 'hackathon'}">
+                    <div class="flip-card fade-in event-card" data-category="${event.category || 'Event'}">
                         <div class="flip-card-inner">
                             <div class="flip-card-front">
                                 <div class="h-48 overflow-hidden">
@@ -589,12 +961,12 @@
                                         <span>${event.location || 'KLE Society\'s College of BCA Nipani'}</span>
                                     </div>
                                     
-                                    <div class="mb-3">
-                                        <span class="event-tag">
-                                            ${event.category || 'Hackathon'}
+                                    <div class="mb-3 flex flex-wrap">
+                                        <span class="category-badge ${categoryClass}">
+                                            ${event.category || 'Event'}
                                         </span>
-                                        <span class="event-tag">
-                                            8 Hours
+                                        <span class="category-badge duration-badge">
+                                            ${duration}
                                         </span>
                                     </div>
                                     
@@ -625,17 +997,17 @@
                                         </div>
                                         <div class="flex items-center text-text/80 mb-2">
                                             <i class="fas fa-tag mr-2"></i>
-                                            <span>${event.category || 'Hackathon'}</span>
+                                            <span>${event.category || 'Event'}</span>
                                         </div>
                                         <div class="flex items-center text-text/80">
                                             <i class="fas fa-hourglass mr-2"></i>
-                                            <span>Duration: 8 Hours</span>
+                                            <span>Duration: ${duration}</span>
                                         </div>
                                     </div>
                                 </div>
                                 
                                 <div class="mt-auto">
-                                    <a href="${event.register_link || 'https://klebcanipani.com/'}" target="_blank" class="block bg-accent text-primary px-4 py-2 rounded-lg font-medium hover:bg-accent/90 transition-colors text-center">
+                                    <a href="${event.register_link || 'https://klebcanipani.com/'}" target="_blank" class="block register-btn">
                                         Register Now
                                     </a>
                                 </div>
@@ -677,7 +1049,8 @@
                 if (category === 'all') {
                     card.style.display = 'block';
                 } else {
-                    if (card.getAttribute('data-category') === category) {
+                    const eventCategory = card.getAttribute('data-category');
+                    if (eventCategory.toLowerCase().includes(category.toLowerCase())) {
                         card.style.display = 'block';
                     } else {
                         card.style.display = 'none';
@@ -710,7 +1083,6 @@
         mobileMenuButton.addEventListener('click', openMobileMenu);
         closeMenuButton.addEventListener('click', closeMobileMenu);
         overlay.addEventListener('click', closeMobileMenu);
-
 
         // Close mobile menu when clicking on a link
         document.querySelectorAll('#mobile-menu .nav-link').forEach(link => {
