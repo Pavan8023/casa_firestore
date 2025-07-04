@@ -9,7 +9,7 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-    
+
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth-compat.js"></script>
@@ -427,7 +427,8 @@
 
                                 <div class="mb-5 form-group">
                                     <label class="block mb-2">Password</label>
-                                    <input type="password" name="password" id="loginPassword" class="w-full form-input" required>
+                                    <input type="password" name="password" id="loginPassword" class="w-full form-input"
+                                        required>
                                     <div class="text-right mt-1">
                                         <a href="#" class="text-sm text-accent hover:underline">Forgot password?</a>
                                     </div>
@@ -441,113 +442,107 @@
                             </form>
 
                             <div class="mt-8 text-center form-group">
-                                <p class="text-text/70">Or sign in with</p>
-                                <div class="flex justify-center space-x-4 mt-3">
-                                    <button id="googleLoginBtn"
-                                        class="p-2 rounded-full border border-text/30 hover:border-accent hover:text-accent transition-colors">
-                                        <i class="fab fa-google"></i>
-                                    </button>
-                                    <button
-                                        class="p-2 rounded-full border border-text/30 hover:border-accent hover:text-accent transition-colors">
-                                        <i class="fab fa-github"></i>
-                                    </button>
-                                    <button
-                                        class="p-2 rounded-full border border-text/30 hover:border-accent hover:text-accent transition-colors">
-                                        <i class="fab fa-microsoft"></i>
-                                    </button>
-                                </div>
+                                <p class="text-text/70">Or sign in with</p><br>
+                                <button id="googleLoginBtn"
+                                    class="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-lg border border-gray-300 bg-white hover:shadow-md transition-all duration-200">
+                                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                                        alt="Google logo" class="w-5 h-5">
+                                    <span class="text-sm font-medium text-gray-700">Continue with Google</span>
+                                </button>
+
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Back: Sign Up Form -->
-                        <div class="back">
-                            <button class="flip-btn" onclick="flipCard()">
-                                Back to Login <i class="fas fa-arrow-left ml-1"></i>
-                            </button>
-                            <h3 class="text-2xl font-headline font-bold mb-6 text-center">Create Account</h3>
+                    <!-- Back: Sign Up Form -->
+                    <div class="back">
+                        <button class="flip-btn" onclick="flipCard()">
+                            Back to Login <i class="fas fa-arrow-left ml-1"></i>
+                        </button>
+                        <h3 class="text-2xl font-headline font-bold mb-6 text-center">Create Account</h3>
 
-                            <form id="signupForm">
-                                <div class="mb-5 form-group">
-                                    <label class="block mb-2">Full Name</label>
-                                    <input type="text" name="name" id="signupName" class="w-full form-input" required>
-                                </div>
+                        <form id="signupForm">
+                            <div class="mb-5 form-group">
+                                <label class="block mb-2">Full Name</label>
+                                <input type="text" name="name" id="signupName" class="w-full form-input" required>
+                            </div>
 
-                                <div class="mb-5 form-group">
-                                    <label class="block mb-2">Email Address</label>
-                                    <input type="email" name="email" id="signupEmail" class="w-full form-input" required>
-                                </div>
+                            <div class="mb-5 form-group">
+                                <label class="block mb-2">Email Address</label>
+                                <input type="email" name="email" id="signupEmail" class="w-full form-input" required>
+                            </div>
 
-                                <div class="grid grid-cols-2 gap-4 mb-5">
-                                    <div class="form-group">
-                                        <label class="block mb-2">Password</label>
-                                        <input type="password" id="signupPassword" name="password" class="w-full form-input"
-                                            required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="block mb-2">Confirm Password</label>
-                                        <input type="password" id="confirmPassword" name="confirm_password"
-                                            class="w-full form-input" required>
-                                        <small id="passwordError" style="color:red; display:none;">Passwords do not
-                                            match.</small>
-                                    </div>
-                                </div>
-
-                                <div class="mb-5 form-group">
-                                    <label class="block mb-2">Membership Type</label>
-                                    <select name="membership" id="membershipType" class="w-full form-input">
-                                        <option value="student">Student Member</option>
-                                        <option value="alumni">Alumni Member</option>
-                                        <option value="faculty">Faculty Member</option>
-                                    </select>
-                                </div>
-
-                                <div class="flex items-center mb-6 form-group">
-                                    <input type="checkbox" id="terms" class="mr-2" required>
-                                    <label for="terms" class="text-sm text-text/80">
-                                        I agree to the <a href="#" class="text-accent hover:underline">Terms of
-                                            Service</a> and <a href="#" class="text-accent hover:underline">Privacy
-                                            Policy</a>
-                                    </label>
-                                </div>
-
+                            <div class="grid grid-cols-2 gap-4 mb-5">
                                 <div class="form-group">
-                                    <button type="submit" class="w-full btn-primary mb-4">Create Account</button>
+                                    <label class="block mb-2">Password</label>
+                                    <input type="password" id="signupPassword" name="password" class="w-full form-input"
+                                        required>
                                 </div>
+                                <div class="form-group">
+                                    <label class="block mb-2">Confirm Password</label>
+                                    <input type="password" id="confirmPassword" name="confirm_password"
+                                        class="w-full form-input" required>
+                                    <small id="passwordError" style="color:red; display:none;">Passwords do not
+                                        match.</small>
+                                </div>
+                            </div>
 
-                                <div id="signupMessage" class="mt-4 form-group"></div>
-                            </form>
-                        </div>
+                            <div class="mb-5 form-group">
+                                <label class="block mb-2">Membership Type</label>
+                                <select name="membership" id="membershipType" class="w-full form-input">
+                                    <option value="student">Student Member</option>
+                                    <option value="alumni">Alumni Member</option>
+                                    <option value="faculty">Faculty Member</option>
+                                </select>
+                            </div>
+
+                            <div class="flex items-center mb-6 form-group">
+                                <input type="checkbox" id="terms" class="mr-2" required>
+                                <label for="terms" class="text-sm text-text/80">
+                                    I agree to the <a href="#" class="text-accent hover:underline">Terms of
+                                        Service</a> and <a href="#" class="text-accent hover:underline">Privacy
+                                        Policy</a>
+                                </label>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" class="w-full btn-primary mb-4">Create Account</button>
+                            </div>
+
+                            <div id="signupMessage" class="mt-4 form-group"></div>
+                        </form>
                     </div>
                 </div>
             </div>
-        </main>
-        <!-- Footer -->
-        <footer class="bg-secondary py-8 mt-20">
-            <div class="container mx-auto px-4">
-                <div class="flex flex-col md:flex-row justify-between items-center">
-                    <div class="mb-4 md:mb-0">
-                        <p class="text-accent font-headline text-xl">CASA</p>
-                        <p class="text-sm">© 2024 Computer Applications Student Association</p>
-                    </div>
-                    <div class="flex space-x-4">
-                        <a href="#" class="hover:text-accent transition-colors">
-                            <i class="fab fa-github"></i>
-                        </a>
-                        <a href="#" class="hover:text-accent transition-colors">
-                            <i class="fab fa-linkedin"></i>
-                        </a>
-                        <a href="#" class="hover:text-accent transition-colors">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                    </div>
+    </div>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-secondary py-8 mt-20">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <p class="text-accent font-headline text-xl">CASA</p>
+                    <p class="text-sm">© 2024 Computer Applications Student Association</p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="#" class="hover:text-accent transition-colors">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="#" class="hover:text-accent transition-colors">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="#" class="hover:text-accent transition-colors">
+                        <i class="fab fa-twitter"></i>
+                    </a>
                 </div>
             </div>
-        </footer>
+        </div>
+    </footer>
     </div>
 
     <!-- Enhanced Particles Script -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    
+
     <script>
         // Firebase configuration
         const firebaseConfig = {
@@ -564,10 +559,10 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-        
+
         // Initialize Google Auth Provider
         const googleProvider = new firebase.auth.GoogleAuthProvider();
-        
+
         // Flip card functionality
         function flipCard() {
             const container = document.getElementById('flipContainer');
@@ -576,13 +571,13 @@
             document.getElementById('signupMessage').innerHTML = '';
             animateFormElements();
         }
-        
+
         // Password validation
         function validatePasswordMatch() {
             const pwd = document.getElementById("signupPassword").value;
             const cpwd = document.getElementById("confirmPassword").value;
             const errorMsg = document.getElementById("passwordError");
-            
+
             if (pwd !== cpwd) {
                 errorMsg.style.display = "block";
                 return false;
@@ -591,9 +586,9 @@
                 return true;
             }
         }
-        
+
         // Particles initialization
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             particlesJS('particles-js', {
                 particles: {
                     number: { value: 100, density: { enable: true, value_area: 800 } },
@@ -619,10 +614,10 @@
                 },
                 retina_detect: true
             });
-            
+
             setTimeout(animateFormElements, 300);
         });
-        
+
         // Function to animate form elements
         function animateFormElements() {
             const formGroups = document.querySelectorAll('.form-group');
@@ -634,44 +629,44 @@
                 }, index * 100);
             });
         }
-        
+
         // Mobile menu functionality
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const closeMenuButton = document.getElementById('close-menu');
         const mobileMenu = document.getElementById('mobile-menu');
         const overlay = document.getElementById('overlay');
         const hamburgerIcon = document.getElementById('hamburger-icon');
-        
+
         function openMobileMenu() {
             mobileMenu.classList.add('open');
             overlay.classList.add('active');
             hamburgerIcon.classList.add('open');
             document.body.classList.add('overflow-hidden');
         }
-        
+
         function closeMobileMenu() {
             mobileMenu.classList.remove('open');
             overlay.classList.remove('active');
             hamburgerIcon.classList.remove('open');
             document.body.classList.remove('overflow-hidden');
         }
-        
+
         mobileMenuButton.addEventListener('click', openMobileMenu);
         closeMenuButton.addEventListener('click', closeMobileMenu);
         overlay.addEventListener('click', closeMobileMenu);
-        
+
         // Login form submission
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        document.getElementById('loginForm').addEventListener('submit', async function (e) {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
             const messageDiv = document.getElementById('loginMessage');
             messageDiv.innerHTML = '<p class="success-message">Signing you in...</p>';
-            
+
             try {
                 const userCredential = await auth.signInWithEmailAndPassword(email, password);
                 const user = userCredential.user;
-                
+
                 messageDiv.innerHTML = `<p class="success-message">Login successful! Redirecting...</p>`;
                 setTimeout(() => {
                     window.location.href = 'user/main.html';
@@ -692,27 +687,27 @@
                 messageDiv.innerHTML = `<p class="error-message">${message}</p>`;
             }
         });
-        
+
         // Signup form submission
-        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+        document.getElementById('signupForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-            
+
             // Validate passwords match
             if (!validatePasswordMatch()) return;
-            
+
             const name = document.getElementById('signupName').value;
             const email = document.getElementById('signupEmail').value;
             const password = document.getElementById('signupPassword').value;
             const membership = document.getElementById('membershipType').value;
             const messageDiv = document.getElementById('signupMessage');
-            
+
             messageDiv.innerHTML = '<p class="success-message">Creating your account...</p>';
-            
+
             try {
                 // Create user in Firebase Authentication
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                 const user = userCredential.user;
-                
+
                 // Save additional user data in Firestore
                 await db.collection('users').doc(user.uid).set({
                     name: name,
@@ -722,7 +717,7 @@
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     lastLogin: firebase.firestore.FieldValue.serverTimestamp()
                 });
-                
+
                 messageDiv.innerHTML = `
                     <div class="success-message p-4 rounded-lg bg-green-900/30">
                         <p class="font-bold">Account created successfully!</p>
@@ -730,7 +725,7 @@
                         <p class="mt-2">You can now log in to your account.</p>
                     </div>
                 `;
-                
+
                 // Clear form and flip back to login after 3 seconds
                 this.reset();
                 setTimeout(() => {
@@ -753,16 +748,16 @@
                 messageDiv.innerHTML = `<p class="error-message">${message}</p>`;
             }
         });
-        
+
         // Google login
         document.getElementById('googleLoginBtn').addEventListener('click', () => {
             auth.signInWithPopup(googleProvider)
                 .then(async (result) => {
                     const user = result.user;
-                    
+
                     // Check if user exists in Firestore
                     const userDoc = await db.collection('users').doc(user.uid).get();
-                    
+
                     if (!userDoc.exists) {
                         // Save user data to Firestore if new user
                         await db.collection('users').doc(user.uid).set({
@@ -774,17 +769,17 @@
                             lastLogin: firebase.firestore.FieldValue.serverTimestamp()
                         });
                     }
-                    
+
                     // Redirect to dashboard
                     window.location.href = 'user/main.html';
                 })
                 .catch((error) => {
                     console.error('Google login error:', error);
-                    document.getElementById('loginMessage').innerHTML = 
+                    document.getElementById('loginMessage').innerHTML =
                         `<p class="error-message">Google login failed: ${error.message}</p>`;
                 });
         });
-        
+
         // Listen for auth state changes
         auth.onAuthStateChanged((user) => {
             if (user) {
