@@ -153,6 +153,8 @@
             transition: 0.8s;
             transform-style: preserve-3d;
             position: relative;
+            width: 100%;
+            height: 100%;
         }
 
         .front,
@@ -174,23 +176,19 @@
             z-index: 2;
             transform: rotateY(0deg);
             visibility: visible;
-            /* Ensure front is visible */
         }
 
         .back {
             transform: rotateY(180deg);
             visibility: hidden;
-            /* Ensure back is hidden */
         }
 
         .flip-container.flipped .front {
             visibility: hidden;
-            /* Hide front when flipped */
         }
 
         .flip-container.flipped .back {
             visibility: visible;
-            /* Show back when flipped */
         }
 
         .flip-btn {
@@ -202,6 +200,12 @@
             color: #00BFFF;
             cursor: pointer;
             font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .flip-btn:hover {
+            color: #FEE440;
+            transform: translateX(5px);
         }
 
         .form-input {
@@ -289,6 +293,58 @@
         .form-group {
             opacity: 0;
             transform: translateY(10px);
+        }
+        
+        .password-container {
+            position: relative;
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 40px;
+            cursor: pointer;
+            color: #aaa;
+        }
+        
+        .toggle-password:hover {
+            color: #00BFFF;
+        }
+        
+        /* Loading spinner */
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid #00BFFF;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Improved form layout */
+        .form-title {
+            position: relative;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .form-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #00BFFF, transparent);
         }
     </style>
 
@@ -417,7 +473,7 @@
                             <button class="flip-btn" onclick="flipCard()">
                                 Create Account <i class="fas fa-arrow-right ml-1"></i>
                             </button>
-                            <h3 class="text-2xl font-headline font-bold mb-6 text-center">Sign In</h3>
+                            <h3 class="text-2xl font-headline font-bold mb-6 text-center form-title">Sign In</h3>
 
                             <form id="loginForm">
                                 <div class="mb-5 form-group">
@@ -425,119 +481,132 @@
                                     <input type="email" name="email" id="loginEmail" class="w-full form-input" required>
                                 </div>
 
-                                <div class="mb-5 form-group">
+                                <div class="mb-5 form-group password-container">
                                     <label class="block mb-2">Password</label>
                                     <input type="password" name="password" id="loginPassword" class="w-full form-input"
                                         required>
+                                    <span class="toggle-password" onclick="togglePassword('loginPassword', this)">
+                                        <i class="fas fa-eye"></i>
+                                    </span>
                                     <div class="text-right mt-1">
                                         <a href="#" class="text-sm text-accent hover:underline">Forgot password?</a>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <button type="submit" class="w-full btn-primary mb-4">Sign In</button>
+                                    <button type="submit" class="w-full btn-primary mb-4" id="loginButton">
+                                        <span id="loginButtonText">Sign In</span>
+                                        <span id="loginSpinner" class="spinner hidden"></span>
+                                    </button>
                                 </div>
 
                                 <div id="loginMessage" class="mt-4 form-group"></div>
                             </form>
 
                             <div class="mt-8 text-center form-group">
-                                <p class="text-text/70">Or sign in with</p><br>
+                                <p class="text-text/70 mb-3">Or sign in with</p>
                                 <button id="googleLoginBtn"
                                     class="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-lg border border-gray-300 bg-white hover:shadow-md transition-all duration-200">
                                     <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
                                         alt="Google logo" class="w-5 h-5">
                                     <span class="text-sm font-medium text-gray-700">Continue with Google</span>
                                 </button>
-
                             </div>
                         </div>
-                    </div>
+                        
+                        <!-- Back: Sign Up Form -->
+                        <div class="back">
+                            <button class="flip-btn" onclick="flipCard()">
+                                Back to Login <i class="fas fa-arrow-left ml-1"></i>
+                            </button>
+                            <h3 class="text-2xl font-headline font-bold mb-6 text-center form-title">Create Account</h3>
 
-                    <!-- Back: Sign Up Form -->
-                    <div class="back">
-                        <button class="flip-btn" onclick="flipCard()">
-                            Back to Login <i class="fas fa-arrow-left ml-1"></i>
-                        </button>
-                        <h3 class="text-2xl font-headline font-bold mb-6 text-center">Create Account</h3>
-
-                        <form id="signupForm">
-                            <div class="mb-5 form-group">
-                                <label class="block mb-2">Full Name</label>
-                                <input type="text" name="name" id="signupName" class="w-full form-input" required>
-                            </div>
-
-                            <div class="mb-5 form-group">
-                                <label class="block mb-2">Email Address</label>
-                                <input type="email" name="email" id="signupEmail" class="w-full form-input" required>
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-4 mb-5">
-                                <div class="form-group">
-                                    <label class="block mb-2">Password</label>
-                                    <input type="password" id="signupPassword" name="password" class="w-full form-input"
-                                        required>
+                            <form id="signupForm">
+                                <div class="mb-5 form-group">
+                                    <label class="block mb-2">Full Name</label>
+                                    <input type="text" name="name" id="signupName" class="w-full form-input" required>
                                 </div>
-                                <div class="form-group">
-                                    <label class="block mb-2">Confirm Password</label>
-                                    <input type="password" id="confirmPassword" name="confirm_password"
-                                        class="w-full form-input" required>
-                                    <small id="passwordError" style="color:red; display:none;">Passwords do not
-                                        match.</small>
+
+                                <div class="mb-5 form-group">
+                                    <label class="block mb-2">Email Address</label>
+                                    <input type="email" name="email" id="signupEmail" class="w-full form-input" required>
                                 </div>
-                            </div>
 
-                            <div class="mb-5 form-group">
-                                <label class="block mb-2">Membership Type</label>
-                                <select name="membership" id="membershipType" class="w-full form-input">
-                                    <option value="student">Student Member</option>
-                                    <option value="alumni">Alumni Member</option>
-                                    <option value="faculty">Faculty Member</option>
-                                </select>
-                            </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+                                    <div class="form-group password-container">
+                                        <label class="block mb-2">Password</label>
+                                        <input type="password" id="signupPassword" name="password" class="w-full form-input"
+                                            required>
+                                        <span class="toggle-password" onclick="togglePassword('signupPassword', this)">
+                                            <i class="fas fa-eye"></i>
+                                        </span>
+                                    </div>
+                                    <div class="form-group password-container">
+                                        <label class="block mb-2">Confirm Password</label>
+                                        <input type="password" id="confirmPassword" name="confirm_password"
+                                            class="w-full form-input" required>
+                                        <span class="toggle-password" onclick="togglePassword('confirmPassword', this)">
+                                            <i class="fas fa-eye"></i>
+                                        </span>
+                                        <small id="passwordError" class="error-message" style="display:none;">Passwords do not match.</small>
+                                    </div>
+                                </div>
 
-                            <div class="flex items-center mb-6 form-group">
-                                <input type="checkbox" id="terms" class="mr-2" required>
-                                <label for="terms" class="text-sm text-text/80">
-                                    I agree to the <a href="#" class="text-accent hover:underline">Terms of
-                                        Service</a> and <a href="#" class="text-accent hover:underline">Privacy
-                                        Policy</a>
-                                </label>
-                            </div>
+                                <div class="mb-5 form-group">
+                                    <label class="block mb-2">Membership Type</label>
+                                    <select name="membership" id="membershipType" class="w-full form-input">
+                                        <option value="student">Student Member</option>
+                                        <option value="alumni">Alumni Member</option>
+                                        <option value="faculty">Faculty Member</option>
+                                    </select>
+                                </div>
 
-                            <div class="form-group">
-                                <button type="submit" class="w-full btn-primary mb-4">Create Account</button>
-                            </div>
+                                <div class="flex items-center mb-6 form-group">
+                                    <input type="checkbox" id="terms" class="mr-2" required>
+                                    <label for="terms" class="text-sm text-text/80">
+                                        I agree to the <a href="#" class="text-accent hover:underline">Terms of
+                                            Service</a> and <a href="#" class="text-accent hover:underline">Privacy
+                                            Policy</a>
+                                    </label>
+                                </div>
 
-                            <div id="signupMessage" class="mt-4 form-group"></div>
-                        </form>
+                                <div class="form-group">
+                                    <button type="submit" class="w-full btn-primary mb-4" id="signupButton">
+                                        <span id="signupButtonText">Create Account</span>
+                                        <span id="signupSpinner" class="spinner hidden"></span>
+                                    </button>
+                                </div>
+
+                                <div id="signupMessage" class="mt-4 form-group"></div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-    </div>
-    </main>
-    <!-- Footer -->
-    <footer class="bg-secondary py-8 mt-20">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-4 md:mb-0">
-                    <p class="text-accent font-headline text-xl">CASA</p>
-                    <p class="text-sm">© 2024 Computer Applications Student Association</p>
-                </div>
-                <div class="flex space-x-4">
-                    <a href="#" class="hover:text-accent transition-colors">
-                        <i class="fab fa-github"></i>
-                    </a>
-                    <a href="#" class="hover:text-accent transition-colors">
-                        <i class="fab fa-linkedin"></i>
-                    </a>
-                    <a href="#" class="hover:text-accent transition-colors">
-                        <i class="fab fa-twitter"></i>
-                    </a>
+        </main>
+        
+        <!-- Footer -->
+        <footer class="bg-secondary py-8 mt-20">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="mb-4 md:mb-0">
+                        <p class="text-accent font-headline text-xl">CASA</p>
+                        <p class="text-sm">© 2024 Computer Applications Student Association</p>
+                    </div>
+                    <div class="flex space-x-4">
+                        <a href="#" class="hover:text-accent transition-colors">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="#" class="hover:text-accent transition-colors">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="#" class="hover:text-accent transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </footer>
+        </footer>
     </div>
 
     <!-- Enhanced Particles Script -->
@@ -584,6 +653,20 @@
             } else {
                 errorMsg.style.display = "none";
                 return true;
+            }
+        }
+
+        // Toggle password visibility
+        function togglePassword(fieldId, toggleElement) {
+            const passwordField = document.getElementById(fieldId);
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            
+            // Toggle eye icon
+            if (type === 'password') {
+                toggleElement.innerHTML = '<i class="fas fa-eye"></i>';
+            } else {
+                toggleElement.innerHTML = '<i class="fas fa-eye-slash"></i>';
             }
         }
 
@@ -661,6 +744,15 @@
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
             const messageDiv = document.getElementById('loginMessage');
+            
+            // Show loading state
+            const loginButton = document.getElementById('loginButton');
+            const loginButtonText = document.getElementById('loginButtonText');
+            const loginSpinner = document.getElementById('loginSpinner');
+            loginButton.disabled = true;
+            loginButtonText.textContent = 'Signing in...';
+            loginSpinner.classList.remove('hidden');
+            
             messageDiv.innerHTML = '<p class="success-message">Signing you in...</p>';
 
             try {
@@ -668,6 +760,12 @@
                 const user = userCredential.user;
 
                 messageDiv.innerHTML = `<p class="success-message">Login successful! Redirecting...</p>`;
+                
+                // Reset button state
+                loginButton.disabled = false;
+                loginButtonText.textContent = 'Sign In';
+                loginSpinner.classList.add('hidden');
+                
                 setTimeout(() => {
                     window.location.href = 'user/main.html';
                 }, 1500);
@@ -685,6 +783,11 @@
                         message = 'Login failed. Please try again later.';
                 }
                 messageDiv.innerHTML = `<p class="error-message">${message}</p>`;
+                
+                // Reset button state
+                loginButton.disabled = false;
+                loginButtonText.textContent = 'Sign In';
+                loginSpinner.classList.add('hidden');
             }
         });
 
@@ -700,6 +803,14 @@
             const password = document.getElementById('signupPassword').value;
             const membership = document.getElementById('membershipType').value;
             const messageDiv = document.getElementById('signupMessage');
+            
+            // Show loading state
+            const signupButton = document.getElementById('signupButton');
+            const signupButtonText = document.getElementById('signupButtonText');
+            const signupSpinner = document.getElementById('signupSpinner');
+            signupButton.disabled = true;
+            signupButtonText.textContent = 'Creating account...';
+            signupSpinner.classList.remove('hidden');
 
             messageDiv.innerHTML = '<p class="success-message">Creating your account...</p>';
 
@@ -726,6 +837,11 @@
                     </div>
                 `;
 
+                // Reset button state
+                signupButton.disabled = false;
+                signupButtonText.textContent = 'Create Account';
+                signupSpinner.classList.add('hidden');
+
                 // Clear form and flip back to login after 3 seconds
                 this.reset();
                 setTimeout(() => {
@@ -746,6 +862,11 @@
                         message = 'Account creation failed. Please try again.';
                 }
                 messageDiv.innerHTML = `<p class="error-message">${message}</p>`;
+                
+                // Reset button state
+                signupButton.disabled = false;
+                signupButtonText.textContent = 'Create Account';
+                signupSpinner.classList.add('hidden');
             }
         });
 
@@ -792,6 +913,9 @@
                 console.log('User is logged out');
             }
         });
+        
+        // Initialize form animations
+        animateFormElements();
     </script>
 </body>
 
