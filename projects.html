@@ -225,17 +225,14 @@
             100% { background-position: 0% 50%; }
         }
         
-        /* Project image styles */
         .project-image {
             height: 200px;
-            width: 100%;
             object-fit: cover;
-            background-color: #1a2a6c;
-        }
-        
-        .default-icon {
-            font-size: 4rem;
-            color: rgba(255, 255, 255, 0.8);
+            width: 100%;
+            background-color: #0D1117;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 
@@ -350,16 +347,16 @@
                 <button class="filter-btn active" data-filter="all">
                     All Projects
                 </button>
-                <button class="filter-btn" data-filter="AI/ML Project">
+                <button class="filter-btn" data-filter="ai">
                     AI/ML Project
                 </button>
-                <button class="filter-btn" data-filter="Web Application">
+                <button class="filter-btn" data-filter="web">
                     Web Application
                 </button>
-                <button class="filter-btn" data-filter="Mobile App">
+                <button class="filter-btn" data-filter="mobile">
                     Mobile App
                 </button>
-                <button class="filter-btn" data-filter="IoT Project">
+                <button class="filter-btn" data-filter="iot">
                     IoT Project
                 </button>
             </div>
@@ -624,63 +621,73 @@
                 statusText = "Prototype";
             }
             
-            // Get project type (category)
-            const projectType = project.type || "Project";
-            
-            // Default icons based on project type
-            let defaultIcon = "fas fa-code";
-            let defaultBackground = "bg-gradient-to-r from-accent to-cyan-500";
-            
-            if (projectType === "ai") {
-                defaultIcon = "fas fa-brain";
-                defaultBackground = "bg-gradient-to-r from-purple-500 to-pink-500";
-            } else if (projectType === "web") {
-                defaultIcon = "fas fa-globe";
-                defaultBackground = "bg-gradient-to-r from-yellow-500 to-orange-500";
-            } else if (projectType === "mobile") {
-                defaultIcon = "fas fa-mobile-alt";
-                defaultBackground = "bg-gradient-to-r from-green-500 to-teal-500";
-            } else if (projectType === "iot") {
-                defaultIcon = "fas fa-microchip";
-                defaultBackground = "bg-gradient-to-r from-red-500 to-orange-500";
+            // Get project category display name
+            let categoryDisplay = "Project";
+            switch(project.type) {
+                case "ai":
+                    categoryDisplay = "AI/ML Project";
+                    break;
+                case "web":
+                    categoryDisplay = "Web Application";
+                    break;
+                case "mobile":
+                    categoryDisplay = "Mobile App";
+                    break;
+                case "iot":
+                    categoryDisplay = "IoT Project";
+                    break;
+                default:
+                    categoryDisplay = project.type || "Project";
             }
             
-            // Create card element
+            // Get project icon
+            let projectIcon = "fas fa-code";
+            switch(project.type) {
+                case "ai":
+                    projectIcon = "fas fa-brain";
+                    break;
+                case "web":
+                    projectIcon = "fas fa-globe";
+                    break;
+                case "mobile":
+                    projectIcon = "fas fa-mobile-alt";
+                    break;
+                case "iot":
+                    projectIcon = "fas fa-microchip";
+                    break;
+            }
+            
+            // Get placeholder image based on project type
+            let placeholderImage = "https://via.placeholder.com/400x200?text=CASA+Project";
+            switch(project.type) {
+                case "ai":
+                    placeholderImage = "https://via.placeholder.com/400x200?text=AI%2FML+Project";
+                    break;
+                case "web":
+                    placeholderImage = "https://via.placeholder.com/400x200?text=Web+Application";
+                    break;
+                case "mobile":
+                    placeholderImage = "https://via.placeholder.com/400x200?text=Mobile+App";
+                    break;
+                case "iot":
+                    placeholderImage = "https://via.placeholder.com/400x200?text=IoT+Project";
+                    break;
+            }
+            
             const card = document.createElement('div');
             card.className = 'project-card';
-            card.dataset.category = projectType;
-            
-            // Add click event to open deployed link or GitHub link
-            if (project.deployed) {
-                card.addEventListener('click', () => {
-                    window.open(project.deployed, '_blank');
-                });
-                card.style.cursor = 'pointer';
-            } else if (project.github) {
-                card.addEventListener('click', () => {
-                    window.open(project.github, '_blank');
-                });
-                card.style.cursor = 'pointer';
-            }
+            card.dataset.category = project.type || 'other';
             
             card.innerHTML = `
-                <div class="h-48 ${defaultBackground} flex items-center justify-center relative">
-                    ${project.deployed ? `
-                        <!-- If deployed link exists, show website preview -->
-                        <div class="absolute inset-0 bg-gray-800 flex items-center justify-center">
-                            <img src="https://api.screenshotone.com/take?access_key=YOUR_API_KEY&url=${encodeURIComponent(project.deployed)}&viewport_width=1200&viewport_height=630&device_scale_factor=1&format=jpg&quality=80" 
-                                 alt="${project.title}" 
-                                 class="project-image"
-                                 onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'${defaultIcon} default-icon\'></i>';">
-                        </div>
-                    ` : `
-                        <!-- Otherwise show default icon -->
-                        <i class="${defaultIcon} default-icon"></i>
-                    `}
+                <div class="project-image">
+                    <img src="${project.deployed ? getScreenshotUrl(project.deployed) : placeholderImage}" 
+                         alt="${project.title}" 
+                         class="w-full h-full object-cover"
+                         onerror="this.onerror=null; this.src='${placeholderImage}'">
                 </div>
                 <div class="p-6">
                     <div class="flex justify-between items-center mb-4">
-                        <span class="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">${projectType}</span>
+                        <span class="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">${categoryDisplay}</span>
                         <span class="${statusClass}">${statusText}</span>
                     </div>
                     <h3 class="text-xl font-headline font-semibold mb-2">${project.title}</h3>
@@ -695,20 +702,46 @@
                         </div>
                     </div>
                     
-                    <div class="flex justify-between">
+                    <div class="flex justify-between items-center">
                         <div class="flex flex-wrap gap-2">
                             ${project.technologies ? project.technologies.map(tech => 
                                 `<span class="tech-tag">${tech}</span>`
                             ).join('') : ''}
                         </div>
-                        <a href="${project.github || '#'}" class="text-accent hover:text-highlight text-xl" onclick="event.stopPropagation()">
-                            <i class="fab fa-github"></i>
-                        </a>
+                        <div class="flex space-x-2">
+                            ${project.github ? `
+                                <a href="${project.github}" target="_blank" 
+                                   class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors"
+                                   title="View on GitHub">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            ` : ''}
+                            
+                            ${project.deployed ? `
+                                <a href="${project.deployed}" target="_blank" 
+                                   class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors"
+                                   title="Visit Project">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            ` : ''}
+                        </div>
                     </div>
                 </div>
             `;
             
             return card;
+        }
+        
+        // Function to get screenshot URL (using placeholder service for demo)
+        function getScreenshotUrl(url) {
+            // In a real application, you would use a screenshot service API
+            // For demo purposes, we'll use a placeholder that shows the domain
+            try {
+                const domain = new URL(url).hostname;
+                return `https://via.placeholder.com/400x200?text=${encodeURIComponent(domain)}`;
+            } catch (e) {
+                return "https://via.placeholder.com/400x200?text=Project+Preview";
+            }
         }
 
         // Fetch research papers from Firestore
