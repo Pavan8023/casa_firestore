@@ -47,11 +47,11 @@
             color: #E0E0E0;
             transition: color 0.3s;
         }
-        
+
         .nav-link:hover {
             color: #00BFFF;
         }
-        
+
         .nav-link::after {
             content: '';
             position: absolute;
@@ -62,12 +62,12 @@
             background-color: #00BFFF;
             transition: all 0.3s;
         }
-        
+
         .nav-link:hover::after {
             left: 0;
             width: 100%;
         }
-        
+
         .mobile-menu {
             position: fixed;
             top: 0;
@@ -79,11 +79,11 @@
             transform: translateX(100%);
             transition: transform 0.5s ease;
         }
-        
+
         .mobile-menu.open {
             transform: translateX(0);
         }
-        
+
         .menu-overlay {
             position: fixed;
             top: 0;
@@ -96,12 +96,12 @@
             pointer-events: none;
             transition: opacity 0.5s;
         }
-        
+
         .menu-overlay.active {
             opacity: 1;
             pointer-events: all;
         }
-        
+
         .hamburger-line {
             display: block;
             width: 24px;
@@ -110,19 +110,19 @@
             border-radius: 2px;
             transition: all 0.3s;
         }
-        
+
         .hamburger-icon.open .hamburger-line:nth-child(1) {
             transform: translateY(7px) rotate(45deg);
         }
-        
+
         .hamburger-icon.open .hamburger-line:nth-child(2) {
             opacity: 0;
         }
-        
+
         .hamburger-icon.open .hamburger-line:nth-child(3) {
             transform: translateY(-7px) rotate(-45deg);
         }
-        
+
         .project-card {
             background-color: #222831;
             border-radius: 12px;
@@ -130,12 +130,12 @@
             transition: transform 0.3s, box-shadow 0.3s;
             border: 1px solid rgba(0, 191, 255, 0.1);
         }
-        
+
         .project-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 10px 25px rgba(0, 191, 255, 0.2);
         }
-        
+
         .filter-btn {
             background-color: #222831;
             padding: 0.5rem 1.25rem;
@@ -143,18 +143,18 @@
             transition: all 0.3s;
             border: 1px solid rgba(0, 191, 255, 0.2);
         }
-        
+
         .filter-btn:hover {
             background-color: rgba(0, 191, 255, 0.1);
             transform: translateY(-2px);
         }
-        
+
         .filter-btn.active {
             background: linear-gradient(to right, #00BFFF, #2575fc);
             color: #0D1117;
             border: none;
         }
-        
+
         .creator-badge {
             display: flex;
             align-items: center;
@@ -164,29 +164,29 @@
             padding: 4px 10px;
             font-size: 0.85rem;
         }
-        
+
         .status-badge {
             padding: 4px 10px;
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 500;
         }
-        
+
         .status-in-progress {
             background: rgba(255, 184, 0, 0.15);
             color: #FFB800;
         }
-        
+
         .status-completed {
             background: rgba(40, 167, 69, 0.15);
             color: #28a745;
         }
-        
+
         .status-prototype {
             background: rgba(134, 65, 244, 0.15);
             color: #8641F4;
         }
-        
+
         .tech-tag {
             padding: 4px 10px;
             background: rgba(0, 191, 255, 0.1);
@@ -194,37 +194,52 @@
             font-size: 0.75rem;
             color: #00BFFF;
         }
-        
+
         .skeleton-loader {
             animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
             background-color: #2d3748;
             border-radius: 8px;
         }
-        
+
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
         }
-        
+
         .gradient-header {
             background: linear-gradient(135deg, #00BFFF, #2575fc);
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
         }
-        
+
         .project-gradient {
             background: linear-gradient(135deg, #1a2a6c, #b21f1f, #2575fc);
             background-size: 200% 200%;
             animation: gradientAnimation 8s ease infinite;
         }
-        
+
         @keyframes gradientAnimation {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
-        
+
         .project-image {
             height: 200px;
             object-fit: cover;
@@ -234,10 +249,27 @@
             align-items: center;
             justify-content: center;
         }
+
+        .screenshot-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0D1117, #222831);
+        }
+
+        .screenshot-placeholder i {
+            font-size: 3rem;
+            color: #00BFFF;
+            opacity: 0.3;
+        }
     </style>
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Nunito:wght@400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Nunito:wght@400;500;600&display=swap"
+        rel="stylesheet">
 
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -250,12 +282,14 @@
             <div class="flex items-center justify-between h-20">
                 <!-- Logo -->
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-r from-accent to-cyan-500 flex items-center justify-center animate-pulse">
+                    <div
+                        class="w-10 h-10 rounded-full bg-gradient-to-r from-accent to-cyan-500 flex items-center justify-center animate-pulse">
                         <i class="fas fa-code text-primary text-xl"></i>
                     </div>
                     <a href="#" class="text-2xl font-bold text-accent flex items-center">
                         CASA
-                        <span class="ml-1 text-xs bg-highlight text-primary px-2 py-1 rounded-full animate-bounce">AI</span>
+                        <span
+                            class="ml-1 text-xs bg-highlight text-primary px-2 py-1 rounded-full animate-bounce">AI</span>
                     </a>
                 </div>
 
@@ -287,7 +321,8 @@
         <div class="h-full flex flex-col">
             <div class="p-6 border-b border-gray-700 flex justify-between items-center">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-r from-accent to-cyan-500 flex items-center justify-center">
+                    <div
+                        class="w-10 h-10 rounded-full bg-gradient-to-r from-accent to-cyan-500 flex items-center justify-center">
                         <i class="fas fa-code text-primary text-xl"></i>
                     </div>
                     <span class="text-xl font-bold text-accent">CASA</span>
@@ -327,7 +362,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Overlay for mobile menu -->
     <div id="overlay" class="menu-overlay"></div>
 
@@ -383,7 +418,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="project-card hidden md:block">
                     <div class="h-48 project-gradient skeleton-loader"></div>
                     <div class="p-6">
@@ -403,7 +438,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="project-card hidden lg:block">
                     <div class="h-48 project-gradient skeleton-loader"></div>
                     <div class="p-6">
@@ -443,7 +478,7 @@
                             <div class="skeleton-loader h-5 w-24"></div>
                         </div>
                     </div>
-                    
+
                     <div class="project-card">
                         <div class="flex items-center justify-between mb-4">
                             <div class="skeleton-loader h-6 w-24 rounded-full"></div>
@@ -533,25 +568,32 @@
         });
 
         // Fetch projects and research papers from Firestore
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Fetch projects
             fetchProjects();
-            
+
             // Fetch research papers
             fetchResearchPapers();
-            
+
             // Set up filter buttons
             setupProjectFilters();
         });
 
+        // Function to get website screenshot
+        function getScreenshotUrl(url) {
+            // Using a screenshot service API
+            const encodedUrl = encodeURIComponent(url);
+            return `https://api.screenshotone.com/take?access_key=K0cS4sH5pQ1xV2d&url=${encodedUrl}&viewport_width=1280&viewport_height=720&device_scale_factor=1&format=jpg&quality=80&block_ads=true&block_cookie_banners=true&block_trackers=true`;
+        }
+
         // Fetch projects from Firestore
         async function fetchProjects() {
             const projectsContainer = document.getElementById('projects-container');
-            
+
             try {
                 // Get projects collection
                 const projectsSnapshot = await db.collection('projects').get();
-                
+
                 if (projectsSnapshot.empty) {
                     projectsContainer.innerHTML = `
                         <div class="col-span-3 text-center py-12">
@@ -562,18 +604,18 @@
                     `;
                     return;
                 }
-                
+
                 // Clear skeleton loaders
                 projectsContainer.innerHTML = '';
-                
+
                 // Process each project
                 for (const doc of projectsSnapshot.docs) {
                     const projectData = doc.data();
-                    
+
                     // Get creator details
                     let creatorName = "Unknown";
                     let creatorAvatar = "https://ui-avatars.com/api/?name=Creator&background=0D8ABC&color=fff";
-                    
+
                     try {
                         const userDoc = await db.collection('users').doc(projectData.userId).get();
                         if (userDoc.exists) {
@@ -590,7 +632,7 @@
                     } catch (error) {
                         console.error("Error fetching creator:", error);
                     }
-                    
+
                     // Create project card
                     const projectCard = createProjectCard(projectData, creatorName, creatorAvatar);
                     projectsContainer.appendChild(projectCard);
@@ -612,7 +654,7 @@
             // Status badge styling
             let statusClass = "status-in-progress";
             let statusText = "In Progress";
-            
+
             if (project.status === "completed") {
                 statusClass = "status-completed";
                 statusText = "Completed";
@@ -620,70 +662,58 @@
                 statusClass = "status-prototype";
                 statusText = "Prototype";
             }
-            
+
             // Get project category display name
             let categoryDisplay = "Project";
-            switch(project.type) {
+            let projectIcon = "fas fa-code";
+            let placeholderImage = "https://via.placeholder.com/400x200?text=CASA+Project";
+
+            switch (project.type) {
                 case "ai":
                     categoryDisplay = "AI/ML Project";
-                    break;
-                case "web":
-                    categoryDisplay = "Web Application";
-                    break;
-                case "mobile":
-                    categoryDisplay = "Mobile App";
-                    break;
-                case "iot":
-                    categoryDisplay = "IoT Project";
-                    break;
-                default:
-                    categoryDisplay = project.type || "Project";
-            }
-            
-            // Get project icon
-            let projectIcon = "fas fa-code";
-            switch(project.type) {
-                case "ai":
                     projectIcon = "fas fa-brain";
-                    break;
-                case "web":
-                    projectIcon = "fas fa-globe";
-                    break;
-                case "mobile":
-                    projectIcon = "fas fa-mobile-alt";
-                    break;
-                case "iot":
-                    projectIcon = "fas fa-microchip";
-                    break;
-            }
-            
-            // Get placeholder image based on project type
-            let placeholderImage = "https://via.placeholder.com/400x200?text=CASA+Project";
-            switch(project.type) {
-                case "ai":
                     placeholderImage = "https://via.placeholder.com/400x200?text=AI%2FML+Project";
                     break;
                 case "web":
+                    categoryDisplay = "Web Application";
+                    projectIcon = "fas fa-globe";
                     placeholderImage = "https://via.placeholder.com/400x200?text=Web+Application";
                     break;
                 case "mobile":
+                    categoryDisplay = "Mobile App";
+                    projectIcon = "fas fa-mobile-alt";
                     placeholderImage = "https://via.placeholder.com/400x200?text=Mobile+App";
                     break;
                 case "iot":
+                    categoryDisplay = "IoT Project";
+                    projectIcon = "fas fa-microchip";
                     placeholderImage = "https://via.placeholder.com/400x200?text=IoT+Project";
                     break;
             }
-            
+
+            // Determine the image to display
+            let imageContent = `
+                <div class="screenshot-placeholder">
+                    <i class="${projectIcon}"></i>
+                </div>
+            `;
+
+            if (project.deployed) {
+                imageContent = `
+                    <img src="${getScreenshotUrl(project.deployed)}" 
+                         alt="${project.title}" 
+                         class="w-full h-full object-cover"
+                         onerror="this.onerror=null; this.parentElement.innerHTML = '<div class=\\'screenshot-placeholder\\'><i class=\\'${projectIcon}\\'></i></div>'">
+                `;
+            }
+
             const card = document.createElement('div');
             card.className = 'project-card';
             card.dataset.category = project.type || 'other';
-            
+
             card.innerHTML = `
                 <div class="project-image">
-                    <img src="${project.deployed ? getScreenshotUrl(project.deployed) : placeholderImage}" 
-                         alt="${project.title}" 
-                         class="w-full h-full object-cover"
-                         onerror="this.onerror=null; this.src='${placeholderImage}'">
+                    ${imageContent}
                 </div>
                 <div class="p-6">
                     <div class="flex justify-between items-center mb-4">
@@ -704,9 +734,9 @@
                     
                     <div class="flex justify-between items-center">
                         <div class="flex flex-wrap gap-2">
-                            ${project.technologies ? project.technologies.map(tech => 
-                                `<span class="tech-tag">${tech}</span>`
-                            ).join('') : ''}
+                            ${project.technologies ? project.technologies.map(tech =>
+                `<span class="tech-tag">${tech}</span>`
+            ).join('') : ''}
                         </div>
                         <div class="flex space-x-2">
                             ${project.github ? `
@@ -728,30 +758,18 @@
                     </div>
                 </div>
             `;
-            
+
             return card;
-        }
-        
-        // Function to get screenshot URL (using placeholder service for demo)
-        function getScreenshotUrl(url) {
-            // In a real application, you would use a screenshot service API
-            // For demo purposes, we'll use a placeholder that shows the domain
-            try {
-                const domain = new URL(url).hostname;
-                return `https://via.placeholder.com/400x200?text=${encodeURIComponent(domain)}`;
-            } catch (e) {
-                return "https://via.placeholder.com/400x200?text=Project+Preview";
-            }
         }
 
         // Fetch research papers from Firestore
         async function fetchResearchPapers() {
             const researchContainer = document.getElementById('research-container');
-            
+
             try {
                 // Get research collection
                 const researchSnapshot = await db.collection('research').get();
-                
+
                 if (researchSnapshot.empty) {
                     researchContainer.innerHTML = `
                         <div class="col-span-2 text-center py-8">
@@ -762,17 +780,17 @@
                     `;
                     return;
                 }
-                
+
                 // Clear skeleton loaders
                 researchContainer.innerHTML = '';
-                
+
                 // Process each research paper
                 for (const doc of researchSnapshot.docs) {
                     const researchData = doc.data();
-                    
+
                     // Get author details
                     let authorName = "Unknown";
-                    
+
                     try {
                         const userDoc = await db.collection('users').doc(researchData.userId).get();
                         if (userDoc.exists) {
@@ -782,7 +800,7 @@
                     } catch (error) {
                         console.error("Error fetching author:", error);
                     }
-                    
+
                     // Create research card
                     const researchCard = createResearchCard(researchData, authorName);
                     researchContainer.appendChild(researchCard);
@@ -803,7 +821,7 @@
         function createResearchCard(research, authorName) {
             const card = document.createElement('div');
             card.className = 'project-card';
-            
+
             card.innerHTML = `
                 <div class="flex items-center justify-between mb-4">
                     <span class="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">${research.category || 'Research'}</span>
@@ -820,37 +838,37 @@
                     </a>
                 </div>
             `;
-            
+
             return card;
         }
 
         // Set up project filtering
         function setupProjectFilters() {
             const filterButtons = document.querySelectorAll('.filter-btn');
-            
+
             filterButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     // Remove active class from all buttons
                     filterButtons.forEach(btn => {
                         btn.classList.remove('active');
                     });
-                    
+
                     // Add active class to clicked button
                     button.classList.add('active');
-                    
+
                     // Get the filter value
                     const filterValue = button.getAttribute('data-filter');
-                    
+
                     // Filter projects
                     filterProjects(filterValue);
                 });
             });
         }
-        
+
         // Filter projects by category
         function filterProjects(category) {
             const projectCards = document.querySelectorAll('.project-card');
-            
+
             projectCards.forEach(card => {
                 if (category === 'all') {
                     card.style.display = 'block';
@@ -865,4 +883,5 @@
         }
     </script>
 </body>
+
 </html>
