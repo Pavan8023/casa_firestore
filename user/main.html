@@ -284,6 +284,14 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+        
+        /* New styles for back button */
+        .back-btn-container {
+            position: absolute;
+            top: 90px;
+            right: 30px;
+            z-index: 10;
+        }
     </style>
 
     <!-- Fonts -->
@@ -334,6 +342,17 @@
                 <div class="mb-4">
                     <label class="block mb-2">Description</label>
                     <textarea id="projectDescription" rows="3" class="form-input" required></textarea>
+                </div>
+                
+                <!-- Added GitHub and Deployed Link Fields -->
+                <div class="mb-4">
+                    <label class="block mb-2">GitHub Link <span class="text-red-500">*</span></label>
+                    <input type="url" id="projectGithub" class="form-input" required>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block mb-2">Deployed Link (optional)</label>
+                    <input type="url" id="projectDeployed" class="form-input">
                 </div>
                 
                 <div class="flex justify-end space-x-3">
@@ -450,6 +469,13 @@
 
         <!-- Main Content -->
         <main class="container mx-auto px-4 py-24">
+            <!-- Back to Dashboard Button Container -->
+            <div class="back-btn-container hidden" id="backButtonContainer">
+                <button class="btn-secondary back-to-dashboard">
+                    <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+                </button>
+            </div>
+            
             <!-- Dashboard Section (default) -->
             <div id="dashboardSection" class="active-section">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -852,6 +878,10 @@
         let currentUser = null;
         let isGoogleUser = false;
         
+        // Global arrays for projects and research
+        let currentProjects = [];
+        let currentResearch = [];
+        
         // Initialize particles
         document.addEventListener('DOMContentLoaded', function() {
             particlesJS('particles-js', {
@@ -1017,6 +1047,11 @@
                     saveSetting('theme', theme);
                 });
             });
+            
+            // Back to dashboard button
+            document.querySelectorAll('.back-to-dashboard').forEach(btn => {
+                btn.addEventListener('click', () => showSection('dashboard'));
+            });
         }
         
         // Show specific section
@@ -1032,6 +1067,14 @@
             if (section) {
                 section.classList.remove('hidden-section');
                 section.classList.add('active-section');
+                
+                // Show/hide back button
+                const backButton = document.getElementById('backButtonContainer');
+                if (sectionId === 'dashboard') {
+                    backButton.classList.add('hidden');
+                } else {
+                    backButton.classList.remove('hidden');
+                }
             }
         }
         
@@ -1049,6 +1092,8 @@
                 document.getElementById('projectType').value = project.type;
                 document.getElementById('projectStatus').value = project.status;
                 document.getElementById('projectDescription').value = project.description;
+                document.getElementById('projectGithub').value = project.github || '';
+                document.getElementById('projectDeployed').value = project.deployed || '';
             } else {
                 // Add new project
                 title.innerHTML = '<i class="fas fa-plus-circle mr-2"></i>Add New Project';
@@ -1100,6 +1145,8 @@
                 type: document.getElementById('projectType').value,
                 status: document.getElementById('projectStatus').value,
                 description: document.getElementById('projectDescription').value,
+                github: document.getElementById('projectGithub').value, // Added GitHub link
+                deployed: document.getElementById('projectDeployed').value || '', // Added deployed link
                 userId: currentUser.uid,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -1191,17 +1238,19 @@
                     projectsList.innerHTML = '';
                     projectsListFull.innerHTML = '';
                     
+                    currentProjects = []; // Reset global array
+                    
                     if (querySnapshot.empty) {
                         projectsList.innerHTML = '<p class="text-center py-4 text-text/70">No projects found</p>';
                         projectsListFull.innerHTML = '<p class="text-center py-8 text-text/70">No projects found</p>';
+                        updateStats();
                         return;
                     }
                     
                     // Convert to array and sort by createdAt manually
-                    const projects = [];
                     querySnapshot.forEach(doc => {
                         const projectData = doc.data();
-                        projects.push({
+                        currentProjects.push({
                             id: doc.id,
                             ...projectData,
                             // Convert Firestore Timestamp to JavaScript Date if needed
@@ -1211,9 +1260,9 @@
                     });
                     
                     // Sort by creation date (newest first)
-                    projects.sort((a, b) => b.createdAt - a.createdAt);
+                    currentProjects.sort((a, b) => b.createdAt - a.createdAt);
                     
-                    projects.forEach(project => {
+                    currentProjects.forEach(project => {
                         const projectHTML = `
                             <div class="project-item">
                                 <div class="flex justify-between items-start">
@@ -1294,17 +1343,19 @@
                     researchList.innerHTML = '';
                     researchListFull.innerHTML = '';
                     
+                    currentResearch = []; // Reset global array
+                    
                     if (querySnapshot.empty) {
                         researchList.innerHTML = '<p class="text-center py-4 text-text/70">No research papers found</p>';
                         researchListFull.innerHTML = '<p class="text-center py-8 text-text/70">No research papers found</p>';
+                        updateStats();
                         return;
                     }
                     
                     // Convert to array and sort by createdAt manually
-                    const researchPapers = [];
                     querySnapshot.forEach(doc => {
                         const researchData = doc.data();
-                        researchPapers.push({
+                        currentResearch.push({
                             id: doc.id,
                             ...researchData,
                             // Convert Firestore Timestamp to JavaScript Date if needed
@@ -1314,9 +1365,9 @@
                     });
                     
                     // Sort by creation date (newest first)
-                    researchPapers.sort((a, b) => b.createdAt - a.createdAt);
+                    currentResearch.sort((a, b) => b.createdAt - a.createdAt);
                     
-                    researchPapers.forEach(research => {
+                    currentResearch.forEach(research => {
                         const formattedDate = research.date ? new Date(research.date).toLocaleDateString() : 'Unknown date';
                         const researchHTML = `
                             <div class="research-item">
@@ -1379,12 +1430,21 @@
         
         // Update dashboard stats
         function updateStats() {
-            const projectItems = document.querySelectorAll('.project-item').length;
-            const researchItems = document.querySelectorAll('.research-item').length;
+            // Calculate pending/in-progress projects
+            const pendingProjects = currentProjects.filter(
+                project => project.status === 'planned' || project.status === 'in_progress'
+            ).length;
             
-            document.getElementById('projectsCount').textContent = projectItems;
-            document.getElementById('researchCount').textContent = researchItems;
-            document.getElementById('tasksCount').textContent = projectItems * 2; // Sample calculation
+            // Calculate total projects and research papers
+            const totalProjects = currentProjects.length;
+            const totalResearch = currentResearch.length;
+            
+            // Pending tasks = pending/in-progress projects + all research papers
+            const pendingTasks = pendingProjects + totalResearch;
+            
+            document.getElementById('projectsCount').textContent = totalProjects;
+            document.getElementById('researchCount').textContent = totalResearch;
+            document.getElementById('tasksCount').textContent = pendingTasks;
         }
         
         // Handle profile update

@@ -224,6 +224,19 @@
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
+        
+        /* Project image styles */
+        .project-image {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+            background-color: #1a2a6c;
+        }
+        
+        .default-icon {
+            font-size: 4rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
     </style>
 
     <!-- Fonts -->
@@ -254,7 +267,7 @@
                     <a href="index.html" class="nav-link">Home</a>
                     <a href="about.html" class="nav-link">About</a>
                     <a href="events.html" class="nav-link">Events</a>
-                    <a href="projects.html" class="nav-link text-accent">Projects</a>
+                    <a href="projects.html" class="nav-link">Projects</a>
                     <a href="contact.html" class="nav-link">Contact</a>
                 </div>
 
@@ -291,7 +304,7 @@
                 <a href="index.html" class="nav-link py-3 border-b border-gray-700">Home</a>
                 <a href="about.html" class="nav-link py-3 border-b border-gray-700">About</a>
                 <a href="events.html" class="nav-link py-3 border-b border-gray-700">Events</a>
-                <a href="projects.html" class="nav-link py-3 border-b border-gray-700 text-accent">Projects</a>
+                <a href="projects.html" class="nav-link py-3 border-b border-gray-700">Projects</a>
                 <a href="contact.html" class="nav-link py-3">Contact</a>
             </div>
 
@@ -337,8 +350,8 @@
                 <button class="filter-btn active" data-filter="all">
                     All Projects
                 </button>
-                <button class="filter-btn" data-filter="AI/ML">
-                    AI/ML
+                <button class="filter-btn" data-filter="AI/ML Project">
+                    AI/ML Project
                 </button>
                 <button class="filter-btn" data-filter="Web Application">
                     Web Application
@@ -611,35 +624,63 @@
                 statusText = "Prototype";
             }
             
-            // Gradient colors based on category
-            let gradientFrom = "from-accent";
-            let gradientTo = "to-cyan-500";
+            // Get project type (category)
+            const projectType = project.type || "Project";
             
-            if (project.category === "AI/ML") {
-                gradientFrom = "from-purple-500";
-                gradientTo = "to-pink-500";
-            } else if (project.category === "Web Application") {
-                gradientFrom = "from-yellow-500";
-                gradientTo = "to-orange-500";
-            } else if (project.category === "Mobile App") {
-                gradientFrom = "from-green-500";
-                gradientTo = "to-teal-500";
-            } else if (project.category === "IoT Project") {
-                gradientFrom = "from-red-500";
-                gradientTo = "to-orange-500";
+            // Default icons based on project type
+            let defaultIcon = "fas fa-code";
+            let defaultBackground = "bg-gradient-to-r from-accent to-cyan-500";
+            
+            if (projectType === "ai") {
+                defaultIcon = "fas fa-brain";
+                defaultBackground = "bg-gradient-to-r from-purple-500 to-pink-500";
+            } else if (projectType === "web") {
+                defaultIcon = "fas fa-globe";
+                defaultBackground = "bg-gradient-to-r from-yellow-500 to-orange-500";
+            } else if (projectType === "mobile") {
+                defaultIcon = "fas fa-mobile-alt";
+                defaultBackground = "bg-gradient-to-r from-green-500 to-teal-500";
+            } else if (projectType === "iot") {
+                defaultIcon = "fas fa-microchip";
+                defaultBackground = "bg-gradient-to-r from-red-500 to-orange-500";
             }
             
+            // Create card element
             const card = document.createElement('div');
             card.className = 'project-card';
-            card.dataset.category = project.category;
+            card.dataset.category = projectType;
+            
+            // Add click event to open deployed link or GitHub link
+            if (project.deployed) {
+                card.addEventListener('click', () => {
+                    window.open(project.deployed, '_blank');
+                });
+                card.style.cursor = 'pointer';
+            } else if (project.github) {
+                card.addEventListener('click', () => {
+                    window.open(project.github, '_blank');
+                });
+                card.style.cursor = 'pointer';
+            }
             
             card.innerHTML = `
-                <div class="h-48 bg-gradient-to-r ${gradientFrom} ${gradientTo} flex items-center justify-center">
-                    <i class="${project.icon || 'fas fa-code'} text-6xl text-white"></i>
+                <div class="h-48 ${defaultBackground} flex items-center justify-center relative">
+                    ${project.deployed ? `
+                        <!-- If deployed link exists, show website preview -->
+                        <div class="absolute inset-0 bg-gray-800 flex items-center justify-center">
+                            <img src="https://api.screenshotone.com/take?access_key=YOUR_API_KEY&url=${encodeURIComponent(project.deployed)}&viewport_width=1200&viewport_height=630&device_scale_factor=1&format=jpg&quality=80" 
+                                 alt="${project.title}" 
+                                 class="project-image"
+                                 onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'${defaultIcon} default-icon\'></i>';">
+                        </div>
+                    ` : `
+                        <!-- Otherwise show default icon -->
+                        <i class="${defaultIcon} default-icon"></i>
+                    `}
                 </div>
                 <div class="p-6">
                     <div class="flex justify-between items-center mb-4">
-                        <span class="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">${project.category || 'Project'}</span>
+                        <span class="px-3 py-1 rounded-full bg-accent/20 text-accent text-sm">${projectType}</span>
                         <span class="${statusClass}">${statusText}</span>
                     </div>
                     <h3 class="text-xl font-headline font-semibold mb-2">${project.title}</h3>
@@ -660,7 +701,7 @@
                                 `<span class="tech-tag">${tech}</span>`
                             ).join('') : ''}
                         </div>
-                        <a href="${project.githubUrl || '#'}" class="text-accent hover:text-highlight text-xl">
+                        <a href="${project.github || '#'}" class="text-accent hover:text-highlight text-xl" onclick="event.stopPropagation()">
                             <i class="fab fa-github"></i>
                         </a>
                     </div>
