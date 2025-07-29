@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +10,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -40,7 +41,7 @@
         .admin-panel {
             min-height: 100vh;
         }
-        
+
         .tab-button {
             padding: 10px 20px;
             border-radius: 8px;
@@ -48,21 +49,28 @@
             transition: all 0.3s;
             white-space: nowrap;
         }
-        
+
         .tab-button.active {
             background-color: rgba(0, 191, 255, 0.2);
             color: #00BFFF;
         }
-        
+
         .fade-in {
             animation: fadeIn 0.5s ease-in forwards;
         }
-        
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        
+
         .login-form-container {
             max-width: 400px;
             margin: 0 auto;
@@ -73,7 +81,7 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(0, 191, 255, 0.2);
         }
-        
+
         .form-input {
             background: rgba(13, 17, 23, 0.6);
             border: 1px solid rgba(0, 191, 255, 0.3);
@@ -83,13 +91,13 @@
             margin-bottom: 20px;
             transition: all 0.3s;
         }
-        
+
         .form-input:focus {
             border-color: #00BFFF;
             box-shadow: 0 0 0 2px rgba(0, 191, 255, 0.3);
             outline: none;
         }
-        
+
         .btn-primary {
             background: #00BFFF;
             color: #0D1117;
@@ -100,25 +108,25 @@
             border: none;
             cursor: pointer;
         }
-        
+
         .btn-primary:hover {
             background: #0099CC;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0, 191, 255, 0.4);
         }
-        
+
         .error-message {
             color: #FF6B6B;
             margin-top: 5px;
             font-size: 14px;
         }
-        
+
         .success-message {
             color: #4CAF50;
             margin-top: 5px;
             font-size: 14px;
         }
-        
+
         /* Mobile table card styles */
         .mobile-table-card {
             background: rgba(34, 40, 49, 0.5);
@@ -127,30 +135,30 @@
             margin-bottom: 16px;
             border: 1px solid rgba(0, 191, 255, 0.2);
         }
-        
+
         .mobile-table-card .card-row {
             display: flex;
             justify-content: space-between;
             padding: 8px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
+
         .mobile-table-card .card-row:last-child {
             border-bottom: none;
         }
-        
+
         .mobile-table-card .card-label {
             font-weight: 600;
             color: #00BFFF;
             min-width: 120px;
         }
-        
+
         .mobile-table-card .card-value {
             text-align: right;
             flex-grow: 1;
             padding-left: 15px;
         }
-        
+
         .mobile-table-card .card-actions {
             display: flex;
             justify-content: flex-end;
@@ -159,7 +167,7 @@
             padding-top: 12px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
+
         /* Modal styles */
         .modal-overlay {
             position: fixed;
@@ -173,7 +181,7 @@
             justify-content: center;
             z-index: 1000;
         }
-        
+
         .modal-content {
             background: rgba(34, 40, 49, 0.95);
             border-radius: 12px;
@@ -183,7 +191,7 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(10px);
         }
-        
+
         .modal-header {
             display: flex;
             justify-content: space-between;
@@ -192,7 +200,7 @@
             border-bottom: 1px solid rgba(0, 191, 255, 0.3);
             padding-bottom: 15px;
         }
-        
+
         .close-modal {
             background: none;
             border: none;
@@ -200,12 +208,12 @@
             font-size: 1.5rem;
             cursor: pointer;
         }
-        
+
         /* Password visibility toggle */
         .password-container {
             position: relative;
         }
-        
+
         .toggle-password {
             position: absolute;
             right: 10px;
@@ -216,7 +224,7 @@
             color: #00BFFF;
             cursor: pointer;
         }
-        
+
         /* Event category badge */
         .category-badge {
             display: inline-block;
@@ -226,81 +234,81 @@
             font-weight: 600;
             margin-right: 6px;
         }
-        
+
         .category-hackathon {
             background: rgba(86, 61, 124, 0.3);
             color: #9678d3;
             border: 1px solid #6f42c1;
         }
-        
+
         .category-event {
             background: rgba(40, 167, 69, 0.2);
             color: #28a745;
             border: 1px solid #28a745;
         }
-        
+
         .category-other {
             background: rgba(253, 126, 20, 0.2);
             color: #fd7e14;
             border: 1px solid #fd7e14;
         }
-        
+
         /* Gradient background for admin login */
         .gradient-bg {
             background: linear-gradient(135deg, #0d1117 0%, #1a2639 100%);
         }
-        
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .login-form-container {
                 padding: 30px 20px;
             }
-            
+
             .admin-panel .container {
                 padding: 0 15px;
             }
-            
+
             .tabs-container {
                 flex-wrap: wrap;
                 gap: 8px;
             }
-            
+
             .tab-button {
                 padding: 8px 15px;
                 font-size: 14px;
             }
-            
+
             .desktop-table {
                 display: none;
             }
-            
+
             .mobile-table {
                 display: block;
             }
-            
+
             #create-event-form .grid-cols-2 {
                 grid-template-columns: 1fr;
             }
-            
+
             .modal-content {
                 width: 95%;
                 padding: 20px;
             }
-            
+
             .event-form-grid {
                 grid-template-columns: 1fr;
             }
         }
-        
+
         @media (min-width: 769px) {
             .desktop-table {
                 display: table;
             }
-            
+
             .mobile-table {
                 display: none;
             }
-            
+
             .event-form-grid {
                 grid-template-columns: 1fr 1fr;
             }
@@ -308,7 +316,9 @@
     </style>
 
     <!-- Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Nunito:wght@400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Nunito:wght@400;500;600&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
@@ -318,10 +328,12 @@
         <div class="container mx-auto px-4">
             <div class="login-form-container transform transition-all duration-500 hover:scale-[1.02]">
                 <div class="text-center mb-8">
-                    <div class="w-20 h-20 rounded-full bg-gradient-to-r from-accent to-cyan-500 flex items-center justify-center mx-auto mb-4">
+                    <div
+                        class="w-20 h-20 rounded-full bg-gradient-to-r from-accent to-cyan-500 flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-lock text-primary text-3xl"></i>
                     </div>
-                    <h2 class="text-3xl font-headline font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent to-cyan-500 mb-2">
+                    <h2
+                        class="text-3xl font-headline font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent to-cyan-500 mb-2">
                         Admin Portal
                     </h2>
                     <p class="text-text/80">
@@ -345,7 +357,8 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="w-full btn-primary mb-4 transform hover:scale-[1.02] transition-transform">Login</button>
+                    <button type="submit"
+                        class="w-full btn-primary mb-4 transform hover:scale-[1.02] transition-transform">Login</button>
 
                     <div id="admin-login-message" class="mt-4"></div>
                 </form>
@@ -358,10 +371,13 @@
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
                 <div class="flex items-center">
-                    <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-r from-accent to-cyan-500 flex items-center justify-center mr-3 md:mr-4">
+                    <div
+                        class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-r from-accent to-cyan-500 flex items-center justify-center mr-3 md:mr-4">
                         <i class="fas fa-user-shield text-primary text-lg md:text-xl"></i>
                     </div>
-                    <h1 class="text-2xl md:text-3xl font-headline font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent to-cyan-500">Admin Dashboard</h1>
+                    <h1
+                        class="text-2xl md:text-3xl font-headline font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent to-cyan-500">
+                        Admin Dashboard</h1>
                 </div>
                 <div>
                     <button id="logout-btn"
@@ -372,7 +388,8 @@
             </div>
 
             <!-- Admin Tabs -->
-            <div class="flex tabs-container space-x-0 md:space-x-4 mb-6 md:mb-8 border-b border-gray-700 pb-4 overflow-x-auto">
+            <div
+                class="flex tabs-container space-x-0 md:space-x-4 mb-6 md:mb-8 border-b border-gray-700 pb-4 overflow-x-auto">
                 <button class="tab-button active" data-tab="users">User Management</button>
                 <button class="tab-button" data-tab="events">Event Management</button>
             </div>
@@ -440,12 +457,13 @@
                                     <input type="time" name="time" class="w-full form-input" required>
                                 </div>
                             </div>
-                            
+
                             <!-- Duration Field -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
                                 <div>
                                     <label class="block mb-2">Duration (hours)</label>
-                                    <input type="number" name="duration" min="0.5" step="0.5" class="w-full form-input" placeholder="e.g. 2.5" required>
+                                    <input type="number" name="duration" min="0.5" step="0.5" class="w-full form-input"
+                                        placeholder="e.g. 2.5" required>
                                 </div>
                                 <div>
                                     <label class="block mb-2">Category</label>
@@ -457,11 +475,12 @@
                                     </select>
                                 </div>
                             </div>
-                            
+
                             <!-- Custom Category Field (Initially Hidden) -->
                             <div id="custom-category-container" class="mb-5 hidden">
                                 <label class="block mb-2">Custom Category Name</label>
-                                <input type="text" name="custom_category" class="w-full form-input" placeholder="Enter custom category">
+                                <input type="text" name="custom_category" class="w-full form-input"
+                                    placeholder="Enter custom category">
                             </div>
 
                             <div class="mb-5">
@@ -510,7 +529,7 @@
             </div>
         </div>
     </section>
-    
+
     <!-- User Edit Modal -->
     <div id="user-edit-modal" class="modal-overlay hidden">
         <div class="modal-content">
@@ -520,17 +539,17 @@
             </div>
             <form id="user-edit-form">
                 <input type="hidden" id="edit-user-id">
-                
+
                 <div class="mb-5">
                     <label class="block mb-2">Name</label>
                     <input type="text" id="edit-user-name" class="w-full form-input" required>
                 </div>
-                
+
                 <div class="mb-5">
                     <label class="block mb-2">Email</label>
                     <input type="email" id="edit-user-email" class="w-full form-input" required>
                 </div>
-                
+
                 <div class="mb-5">
                     <label class="block mb-2">Membership Type</label>
                     <select id="edit-user-membership" class="w-full form-input">
@@ -539,7 +558,7 @@
                         <option value="faculty">Faculty Member</option>
                     </select>
                 </div>
-                
+
                 <div class="mb-5">
                     <label class="block mb-2">Password</label>
                     <div class="password-container">
@@ -549,88 +568,177 @@
                         </button>
                     </div>
                 </div>
-                
+
                 <button type="submit" class="w-full btn-primary transform hover:scale-[1.02]">Save Changes</button>
-                
+
                 <div id="user-edit-message" class="mt-4"></div>
             </form>
         </div>
     </div>
-    
-    <!-- Event Edit Modal -->
-    <div id="event-edit-modal" class="modal-overlay hidden">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="text-xl font-headline font-semibold text-accent">Edit Event</h3>
-                <button class="close-modal">&times;</button>
-            </div>
-            <form id="event-edit-form">
-                <input type="hidden" id="edit-event-id">
-                
-                <div class="mb-5">
-                    <label class="block mb-2">Event Title</label>
-                    <input type="text" id="edit-event-title" class="w-full form-input" required>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
-                    <div>
-                        <label class="block mb-2">Date</label>
-                        <input type="date" id="edit-event-date" class="w-full form-input" required>
-                    </div>
-                    <div>
-                        <label class="block mb-2">Time</label>
-                        <input type="time" id="edit-event-time" class="w-full form-input" required>
-                    </div>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
-                    <div>
-                        <label class="block mb-2">Duration (hours)</label>
-                        <input type="number" id="edit-event-duration" min="0.5" step="0.5" class="w-full form-input" placeholder="e.g. 2.5" required>
-                    </div>
-                    <div>
-                        <label class="block mb-2">Category</label>
-                        <select id="edit-event-category" class="w-full form-input" required>
-                            <option value="hackathon">Hackathon</option>
-                            <option value="event">Event</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div id="edit-custom-category-container" class="mb-5 hidden">
-                    <label class="block mb-2">Custom Category Name</label>
-                    <input type="text" id="edit-event-custom-category" class="w-full form-input" placeholder="Enter custom category">
-                </div>
 
-                <div class="mb-5">
-                    <label class="block mb-2">Location</label>
-                    <input type="text" id="edit-event-location" class="w-full form-input" required>
-                </div>
+    <!-- Event Edit Modal (Dark Theme) -->
+<div
+  id="event-edit-modal"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 overflow-auto p-4 hidden"
+>
+  <div
+    class="relative bg-gray-900 rounded-2xl shadow-xl w-full max-w-3xl overflow-y-auto max-h-[90vh] p-6"
+  >
+    <!-- Close button -->
+    <button
+      class="absolute top-4 right-4 text-gray-400 hover:text-gray-200"
+      onclick="document.getElementById('event-edit-modal').classList.add('hidden')"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg"
+           class="h-6 w-6"
+           fill="none"
+           viewBox="0 0 24 24"
+           stroke="currentColor"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
 
-                <div class="mb-5">
-                    <label class="block mb-2">Description</label>
-                    <textarea id="edit-event-description" rows="4" class="w-full form-input" required></textarea>
-                </div>
-
-                <div class="mb-5">
-                    <label class="block mb-2">Image URL</label>
-                    <input type="text" id="edit-event-image" class="w-full form-input"
-                        placeholder="https://example.com/image.jpg" required>
-                </div>
-
-                <div class="mb-5">
-                    <label class="block mb-2">Registration Link</label>
-                    <input type="url" id="edit-event-register_link" class="w-full form-input"
-                        placeholder="https://forms.google.com/..." required>
-                </div>
-                
-                <button type="submit" class="w-full btn-primary transform hover:scale-[1.02]">Save Changes</button>
-                
-                <div id="event-edit-message" class="mt-4"></div>
-            </form>
-        </div>
+    <!-- Modal header -->
+    <div class="mb-6">
+      <h3 class="text-xl font-headline font-semibold text-gray-100">Edit Event</h3>
     </div>
+
+    <!-- Form -->
+    <form id="event-edit-form" class="space-y-5">
+      <input type="hidden" id="edit-event-id">
+
+      <!-- Title -->
+      <div>
+        <label class="block mb-2 text-gray-100">Event Title</label>
+        <input
+          type="text"
+          id="edit-event-title"
+          class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 placeholder-gray-400 focus:outline-none focus:border-teal-400"
+          required
+        >
+      </div>
+
+      <!-- Date + Time -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block mb-2 text-gray-100">Date</label>
+          <input
+            type="date"
+            id="edit-event-date"
+            class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 placeholder-gray-400 focus:outline-none focus:border-teal-400"
+            required
+          >
+        </div>
+        <div>
+          <label class="block mb-2 text-gray-100">Time</label>
+          <input
+            type="time"
+            id="edit-event-time"
+            class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 placeholder-gray-400 focus:outline-none focus:border-teal-400"
+            required
+          >
+        </div>
+      </div>
+
+      <!-- Duration + Category -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block mb-2 text-gray-100">Duration (hours)</label>
+          <input
+            type="number"
+            id="edit-event-duration"
+            min="0.5"
+            step="0.5"
+            placeholder="e.g. 2.5"
+            class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 placeholder-gray-400 focus:outline-none focus:border-teal-400"
+            required
+          >
+        </div>
+        <div>
+          <label class="block mb-2 text-gray-100">Category</label>
+          <select
+            id="edit-event-category"
+            class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 focus:outline-none focus:border-teal-400"
+            required
+          >
+            <option value="hackathon">Hackathon</option>
+            <option value="event">Event</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Custom Category -->
+      <div id="edit-custom-category-container" class="hidden">
+        <label class="block mb-2 text-gray-100">Custom Category Name</label>
+        <input
+          type="text"
+          id="edit-event-custom-category"
+          class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 placeholder-gray-400 focus:outline-none focus:border-teal-400"
+          placeholder="Enter custom category"
+        >
+      </div>
+
+      <!-- Location -->
+      <div>
+        <label class="block mb-2 text-gray-100">Location</label>
+        <input
+          type="text"
+          id="edit-event-location"
+          class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 placeholder-gray-400 focus:outline-none focus:border-teal-400"
+          required
+        >
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label class="block mb-2 text-gray-100">Description</label>
+        <textarea
+          id="edit-event-description"
+          rows="4"
+          class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 placeholder-gray-400 focus:outline-none focus:border-teal-400"
+          required
+        ></textarea>
+      </div>
+
+      <!-- Image URL -->
+      <div>
+        <label class="block mb-2 text-gray-100">Image URL</label>
+        <input
+          type="text"
+          id="edit-event-image"
+          placeholder="https://example.com/image.jpg"
+          class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 placeholder-gray-400 focus:outline-none focus:border-teal-400"
+          required
+        >
+      </div>
+
+      <!-- Registration Link -->
+      <div>
+        <label class="block mb-2 text-gray-100">Registration Link</label>
+        <input
+          type="url"
+          id="edit-event-register_link"
+          placeholder="https://forms.google.com/..."
+          class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 placeholder-gray-400 focus:outline-none focus:border-teal-400"
+          required
+        >
+      </div>
+
+      <!-- Save Button -->
+      <button
+        type="submit"
+        class="w-full btn-primary transform hover:scale-[1.02]"
+      >
+        Save Changes
+      </button>
+
+      <div id="event-edit-message" class="mt-4 text-gray-200"></div>
+    </form>
+  </div>
+</div>
 
     <!-- Script -->
     <script>
@@ -676,7 +784,7 @@
             });
 
             // Password visibility toggle for login form
-            document.querySelector('#admin-login-form .toggle-password').addEventListener('click', function() {
+            document.querySelector('#admin-login-form .toggle-password').addEventListener('click', function () {
                 const passwordInput = document.querySelector('#admin-login-form input[name="password"]');
                 const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
                 passwordInput.setAttribute('type', type);
@@ -721,7 +829,7 @@
                     // Get category value
                     const category = formData.get('category');
                     let finalCategory = category;
-                    
+
                     // If category is "other", use the custom category value
                     if (category === 'other') {
                         const customCategory = formData.get('custom_category');
@@ -748,10 +856,10 @@
 
                     // Add to Firestore
                     await eventsCollection.add(eventData);
-                    
+
                     messageDiv.innerHTML = '<p class="success-message">Event created successfully!</p>';
                     form.reset();
-                    
+
                     // Reset custom category visibility
                     document.getElementById('custom-category-container').classList.add('hidden');
 
@@ -765,9 +873,9 @@
                     messageDiv.innerHTML = `<p class="error-message">Error: ${error.message}</p>`;
                 }
             });
-            
+
             // Category dropdown change handler
-            document.getElementById('event-category').addEventListener('change', function() {
+            document.getElementById('event-category').addEventListener('change', function () {
                 const customContainer = document.getElementById('custom-category-container');
                 if (this.value === 'other') {
                     customContainer.classList.remove('hidden');
@@ -775,12 +883,12 @@
                     customContainer.classList.add('hidden');
                 }
             });
-            
+
             // Modal functionality
             const userEditModal = document.getElementById('user-edit-modal');
             const eventEditModal = document.getElementById('event-edit-modal');
             const closeModalBtns = document.querySelectorAll('.close-modal');
-            
+
             // Close modals when clicking X
             closeModalBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -788,7 +896,7 @@
                     eventEditModal.classList.add('hidden');
                 });
             });
-            
+
             // Close modals when clicking outside
             window.addEventListener('click', (e) => {
                 if (e.target === userEditModal) {
@@ -798,37 +906,37 @@
                     eventEditModal.classList.add('hidden');
                 }
             });
-            
+
             // Password visibility toggle for edit modal
-            document.querySelector('#user-edit-form .toggle-password').addEventListener('click', function() {
+            document.querySelector('#user-edit-form .toggle-password').addEventListener('click', function () {
                 const passwordInput = document.getElementById('edit-user-password');
                 const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
                 passwordInput.setAttribute('type', type);
                 this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
             });
-            
+
             // User edit form submission
-            document.getElementById('user-edit-form').addEventListener('submit', async function(e) {
+            document.getElementById('user-edit-form').addEventListener('submit', async function (e) {
                 e.preventDefault();
                 const userId = document.getElementById('edit-user-id').value;
                 const messageDiv = document.getElementById('user-edit-message');
-                
+
                 const updatedData = {
                     name: document.getElementById('edit-user-name').value,
                     email: document.getElementById('edit-user-email').value,
                     membershipType: document.getElementById('edit-user-membership').value
                 };
-                
+
                 // Only update password if it's provided
                 const newPassword = document.getElementById('edit-user-password').value;
                 if (newPassword && newPassword.length >= 6) {
                     updatedData.password = newPassword;
                 }
-                
+
                 try {
                     await usersCollection.doc(userId).update(updatedData);
                     messageDiv.innerHTML = '<p class="success-message">User updated successfully!</p>';
-                    
+
                     // Refresh user list after a delay
                     setTimeout(() => {
                         messageDiv.innerHTML = '';
@@ -840,17 +948,17 @@
                     messageDiv.innerHTML = `<p class="error-message">Error: ${error.message}</p>`;
                 }
             });
-            
+
             // Event edit form submission
-            document.getElementById('event-edit-form').addEventListener('submit', async function(e) {
+            document.getElementById('event-edit-form').addEventListener('submit', async function (e) {
                 e.preventDefault();
                 const eventId = document.getElementById('edit-event-id').value;
                 const messageDiv = document.getElementById('event-edit-message');
-                
+
                 // Get category value
                 const category = document.getElementById('edit-event-category').value;
                 let finalCategory = category;
-                
+
                 // If category is "other", use the custom category value
                 if (category === 'other') {
                     const customCategory = document.getElementById('edit-event-custom-category').value;
@@ -874,11 +982,11 @@
                     register_link: document.getElementById('edit-event-register_link').value,
                     updated_at: firebase.firestore.FieldValue.serverTimestamp()
                 };
-                
+
                 try {
                     await eventsCollection.doc(eventId).update(updatedData);
                     messageDiv.innerHTML = '<p class="success-message">Event updated successfully!</p>';
-                    
+
                     // Refresh event list after a delay
                     setTimeout(() => {
                         messageDiv.innerHTML = '';
@@ -890,9 +998,9 @@
                     messageDiv.innerHTML = `<p class="error-message">Error: ${error.message}</p>`;
                 }
             });
-            
+
             // Edit event category change handler
-            document.getElementById('edit-event-category').addEventListener('change', function() {
+            document.getElementById('edit-event-category').addEventListener('change', function () {
                 const customContainer = document.getElementById('edit-custom-category-container');
                 if (this.value === 'other') {
                     customContainer.classList.remove('hidden');
@@ -907,7 +1015,7 @@
             try {
                 const snapshot = await usersCollection.get();
                 const users = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                
+
                 const table = document.getElementById('users-table');
                 const mobileTable = document.getElementById('users-mobile-table');
                 table.innerHTML = '';
@@ -1018,13 +1126,13 @@
                         deleteUser(userId);
                     });
                 });
-                
+
                 // Password visibility toggle
                 document.querySelectorAll('.toggle-password').forEach(btn => {
-                    btn.addEventListener('click', function() {
+                    btn.addEventListener('click', function () {
                         const password = this.getAttribute('data-password');
                         const passwordValue = this.parentElement.querySelector('.password-value');
-                        
+
                         if (passwordValue.textContent === '•'.repeat(8)) {
                             passwordValue.textContent = password;
                             this.innerHTML = '<i class="fas fa-eye-slash"></i>';
@@ -1058,7 +1166,7 @@
             try {
                 const snapshot = await eventsCollection.orderBy('created_at', 'desc').get();
                 const events = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                
+
                 const container = document.getElementById('admin-events-container');
                 container.innerHTML = '';
 
@@ -1089,7 +1197,7 @@
                     const ampm = hours >= 12 ? 'PM' : 'AM';
                     hours = hours % 12 || 12;
                     const formattedTime = `${hours}:${minutes} ${ampm}`;
-                    
+
                     // Determine category badge class
                     let categoryClass = 'category-other';
                     if (event.category.toLowerCase() === 'hackathon') {
@@ -1173,16 +1281,16 @@
                     alert('User not found');
                     return;
                 }
-                
+
                 const userData = userDoc.data();
-                
+
                 // Populate the edit modal
                 document.getElementById('edit-user-id').value = userId;
                 document.getElementById('edit-user-name').value = userData.name || '';
                 document.getElementById('edit-user-email').value = userData.email || '';
                 document.getElementById('edit-user-membership').value = userData.membershipType || 'student';
                 document.getElementById('edit-user-password').value = '';
-                
+
                 // Show the modal
                 document.getElementById('user-edit-modal').classList.remove('hidden');
             } catch (error) {
@@ -1213,9 +1321,9 @@
                     alert('Event not found');
                     return;
                 }
-                
+
                 const eventData = eventDoc.data();
-                
+
                 // Populate the edit modal
                 document.getElementById('edit-event-id').value = eventId;
                 document.getElementById('edit-event-title').value = eventData.title || '';
@@ -1226,12 +1334,12 @@
                 document.getElementById('edit-event-description').value = eventData.description || '';
                 document.getElementById('edit-event-image').value = eventData.image || '';
                 document.getElementById('edit-event-register_link').value = eventData.register_link || '';
-                
+
                 // Handle category
                 const categorySelect = document.getElementById('edit-event-category');
                 const customContainer = document.getElementById('edit-custom-category-container');
                 const customCategoryInput = document.getElementById('edit-event-custom-category');
-                
+
                 // Check if category is one of the predefined ones
                 if (eventData.category === 'hackathon' || eventData.category === 'event') {
                     categorySelect.value = eventData.category;
@@ -1241,7 +1349,7 @@
                     customContainer.classList.remove('hidden');
                     customCategoryInput.value = eventData.category;
                 }
-                
+
                 // Show the modal
                 document.getElementById('event-edit-modal').classList.remove('hidden');
             } catch (error) {
@@ -1265,4 +1373,5 @@
         }
     </script>
 </body>
+
 </html>
