@@ -9,6 +9,7 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -556,6 +557,81 @@
             </form>
         </div>
     </div>
+    
+    <!-- Event Edit Modal -->
+    <div id="event-edit-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="text-xl font-headline font-semibold text-accent">Edit Event</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="event-edit-form">
+                <input type="hidden" id="edit-event-id">
+                
+                <div class="mb-5">
+                    <label class="block mb-2">Event Title</label>
+                    <input type="text" id="edit-event-title" class="w-full form-input" required>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+                    <div>
+                        <label class="block mb-2">Date</label>
+                        <input type="date" id="edit-event-date" class="w-full form-input" required>
+                    </div>
+                    <div>
+                        <label class="block mb-2">Time</label>
+                        <input type="time" id="edit-event-time" class="w-full form-input" required>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+                    <div>
+                        <label class="block mb-2">Duration (hours)</label>
+                        <input type="number" id="edit-event-duration" min="0.5" step="0.5" class="w-full form-input" placeholder="e.g. 2.5" required>
+                    </div>
+                    <div>
+                        <label class="block mb-2">Category</label>
+                        <select id="edit-event-category" class="w-full form-input" required>
+                            <option value="hackathon">Hackathon</option>
+                            <option value="event">Event</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="edit-custom-category-container" class="mb-5 hidden">
+                    <label class="block mb-2">Custom Category Name</label>
+                    <input type="text" id="edit-event-custom-category" class="w-full form-input" placeholder="Enter custom category">
+                </div>
+
+                <div class="mb-5">
+                    <label class="block mb-2">Location</label>
+                    <input type="text" id="edit-event-location" class="w-full form-input" required>
+                </div>
+
+                <div class="mb-5">
+                    <label class="block mb-2">Description</label>
+                    <textarea id="edit-event-description" rows="4" class="w-full form-input" required></textarea>
+                </div>
+
+                <div class="mb-5">
+                    <label class="block mb-2">Image URL</label>
+                    <input type="text" id="edit-event-image" class="w-full form-input"
+                        placeholder="https://example.com/image.jpg" required>
+                </div>
+
+                <div class="mb-5">
+                    <label class="block mb-2">Registration Link</label>
+                    <input type="url" id="edit-event-register_link" class="w-full form-input"
+                        placeholder="https://forms.google.com/..." required>
+                </div>
+                
+                <button type="submit" class="w-full btn-primary transform hover:scale-[1.02]">Save Changes</button>
+                
+                <div id="event-edit-message" class="mt-4"></div>
+            </form>
+        </div>
+    </div>
 
     <!-- Script -->
     <script>
@@ -703,16 +779,24 @@
             
             // Modal functionality
             const userEditModal = document.getElementById('user-edit-modal');
-            const closeModalBtn = document.querySelector('.close-modal');
+            const eventEditModal = document.getElementById('event-edit-modal');
+            const closeModalBtns = document.querySelectorAll('.close-modal');
             
-            // Close modal when clicking X or outside
-            closeModalBtn.addEventListener('click', () => {
-                userEditModal.classList.add('hidden');
+            // Close modals when clicking X
+            closeModalBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    userEditModal.classList.add('hidden');
+                    eventEditModal.classList.add('hidden');
+                });
             });
             
+            // Close modals when clicking outside
             window.addEventListener('click', (e) => {
                 if (e.target === userEditModal) {
                     userEditModal.classList.add('hidden');
+                }
+                if (e.target === eventEditModal) {
+                    eventEditModal.classList.add('hidden');
                 }
             });
             
@@ -755,6 +839,66 @@
                 } catch (error) {
                     console.error('Error updating user:', error);
                     messageDiv.innerHTML = `<p class="error-message">Error: ${error.message}</p>`;
+                }
+            });
+            
+            // Event edit form submission
+            document.getElementById('event-edit-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const eventId = document.getElementById('edit-event-id').value;
+                const messageDiv = document.getElementById('event-edit-message');
+                
+                // Get category value
+                const category = document.getElementById('edit-event-category').value;
+                let finalCategory = category;
+                
+                // If category is "other", use the custom category value
+                if (category === 'other') {
+                    const customCategory = document.getElementById('edit-event-custom-category').value;
+                    if (customCategory && customCategory.trim() !== '') {
+                        finalCategory = customCategory.trim();
+                    } else {
+                        messageDiv.innerHTML = '<p class="error-message">Please enter a custom category name</p>';
+                        return;
+                    }
+                }
+
+                const updatedData = {
+                    title: document.getElementById('edit-event-title').value,
+                    date: document.getElementById('edit-event-date').value,
+                    time: document.getElementById('edit-event-time').value,
+                    duration: parseFloat(document.getElementById('edit-event-duration').value),
+                    category: finalCategory,
+                    location: document.getElementById('edit-event-location').value,
+                    description: document.getElementById('edit-event-description').value,
+                    image: document.getElementById('edit-event-image').value,
+                    register_link: document.getElementById('edit-event-register_link').value,
+                    updated_at: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                try {
+                    await eventsCollection.doc(eventId).update(updatedData);
+                    messageDiv.innerHTML = '<p class="success-message">Event updated successfully!</p>';
+                    
+                    // Refresh event list after a delay
+                    setTimeout(() => {
+                        messageDiv.innerHTML = '';
+                        eventEditModal.classList.add('hidden');
+                        loadAdminEvents();
+                    }, 1500);
+                } catch (error) {
+                    console.error('Error updating event:', error);
+                    messageDiv.innerHTML = `<p class="error-message">Error: ${error.message}</p>`;
+                }
+            });
+            
+            // Edit event category change handler
+            document.getElementById('edit-event-category').addEventListener('change', function() {
+                const customContainer = document.getElementById('edit-custom-category-container');
+                if (this.value === 'other') {
+                    customContainer.classList.remove('hidden');
+                } else {
+                    customContainer.classList.add('hidden');
                 }
             });
         });
@@ -1063,9 +1207,48 @@
         }
 
         // Edit event
-        function editEvent(eventId) {
-            alert(`Editing event with ID: ${eventId}`);
-            // In a real app, this would open an edit form/modal
+        async function editEvent(eventId) {
+            try {
+                const eventDoc = await eventsCollection.doc(eventId).get();
+                if (!eventDoc.exists) {
+                    alert('Event not found');
+                    return;
+                }
+                
+                const eventData = eventDoc.data();
+                
+                // Populate the edit modal
+                document.getElementById('edit-event-id').value = eventId;
+                document.getElementById('edit-event-title').value = eventData.title || '';
+                document.getElementById('edit-event-date').value = eventData.date || '';
+                document.getElementById('edit-event-time').value = eventData.time || '';
+                document.getElementById('edit-event-duration').value = eventData.duration || '';
+                document.getElementById('edit-event-location').value = eventData.location || '';
+                document.getElementById('edit-event-description').value = eventData.description || '';
+                document.getElementById('edit-event-image').value = eventData.image || '';
+                document.getElementById('edit-event-register_link').value = eventData.register_link || '';
+                
+                // Handle category
+                const categorySelect = document.getElementById('edit-event-category');
+                const customContainer = document.getElementById('edit-custom-category-container');
+                const customCategoryInput = document.getElementById('edit-event-custom-category');
+                
+                // Check if category is one of the predefined ones
+                if (eventData.category === 'hackathon' || eventData.category === 'event') {
+                    categorySelect.value = eventData.category;
+                    customContainer.classList.add('hidden');
+                } else {
+                    categorySelect.value = 'other';
+                    customContainer.classList.remove('hidden');
+                    customCategoryInput.value = eventData.category;
+                }
+                
+                // Show the modal
+                document.getElementById('event-edit-modal').classList.remove('hidden');
+            } catch (error) {
+                console.error('Error fetching event:', error);
+                alert('An error occurred while fetching event data');
+            }
         }
 
         // Delete event
