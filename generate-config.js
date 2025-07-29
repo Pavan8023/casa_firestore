@@ -1,5 +1,13 @@
 import fs from "fs";
+import path from "path";
 
+// Ensure public folder exists
+const dir = "./public";
+if (!fs.existsSync(dir)) {
+  fs.mkdirSync(dir, { recursive: true });
+}
+
+// Generate config.js from Netlify environment variables
 const configContent = `window.env = {
   FIREBASE_API_KEY: "${process.env.FIREBASE_API_KEY}",
   FIREBASE_AUTH_DOMAIN: "${process.env.FIREBASE_AUTH_DOMAIN}",
@@ -10,5 +18,5 @@ const configContent = `window.env = {
   FIREBASE_MEASUREMENT_ID: "${process.env.FIREBASE_MEASUREMENT_ID}"
 };`;
 
-fs.writeFileSync("./public/config.js", configContent);
+fs.writeFileSync(path.join(dir, "config.js"), configContent);
 console.log("config.js generated successfully");
