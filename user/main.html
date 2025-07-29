@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,7 @@
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth-compat.js"></script>
@@ -92,7 +93,7 @@
             background: rgba(0, 191, 255, 0.1);
             color: #00BFFF;
         }
-        
+
         .login-badge {
             position: absolute;
             bottom: -8px;
@@ -108,7 +109,7 @@
             font-size: 12px;
             border: 2px solid #0D1117;
         }
-        
+
         .form-input {
             background: rgba(13, 17, 23, 0.6);
             border: 1px solid rgba(0, 191, 255, 0.3);
@@ -157,7 +158,7 @@
         .btn-secondary:hover {
             background: rgba(0, 191, 255, 0.1);
         }
-        
+
         .modal {
             display: none;
             position: fixed;
@@ -170,7 +171,7 @@
             align-items: center;
             justify-content: center;
         }
-        
+
         .modal-content {
             background: rgba(34, 40, 49, 0.95);
             border-radius: 16px;
@@ -180,8 +181,9 @@
             max-height: 90vh;
             overflow-y: auto;
         }
-        
-        .project-item, .research-item {
+
+        .project-item,
+        .research-item {
             background: rgba(13, 17, 23, 0.5);
             border-radius: 10px;
             padding: 15px;
@@ -189,50 +191,59 @@
             border-left: 4px solid #00BFFF;
             transition: all 0.3s;
         }
-        
-        .project-item:hover, .research-item:hover {
+
+        .project-item:hover,
+        .research-item:hover {
             transform: translateX(5px);
         }
-        
-        .project-actions, .research-actions {
+
+        .project-actions,
+        .research-actions {
             display: flex;
             gap: 10px;
             margin-top: 10px;
         }
-        
+
         .action-btn {
             padding: 5px 10px;
             border-radius: 5px;
             font-size: 0.9rem;
             cursor: pointer;
         }
-        
+
         .edit-btn {
             background: rgba(0, 191, 255, 0.2);
             color: #00BFFF;
             border: 1px solid #00BFFF;
         }
-        
+
         .delete-btn {
             background: rgba(255, 107, 107, 0.2);
             color: #FF6B6B;
             border: 1px solid #FF6B6B;
         }
-        
+
         .hidden-section {
             display: none;
         }
-        
+
         .active-section {
             display: block;
             animation: fadeIn 0.5s;
         }
-        
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        
+
         .theme-option {
             display: flex;
             align-items: center;
@@ -242,35 +253,35 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-        
+
         .theme-option:hover {
             background: rgba(0, 191, 255, 0.1);
         }
-        
+
         .theme-preview {
             width: 40px;
             height: 40px;
             border-radius: 50%;
             margin-right: 15px;
         }
-        
+
         .dark-preview {
             background: linear-gradient(135deg, #0D1117 50%, #222831 50%);
         }
-        
+
         .light-preview {
             background: linear-gradient(135deg, #f0f0f0 50%, #ffffff 50%);
         }
-        
+
         .blue-preview {
             background: linear-gradient(135deg, #0D1117 50%, #0047AB 50%);
         }
-        
+
         .loading-indicator {
             text-align: center;
             padding: 20px;
         }
-        
+
         .loading-spinner {
             display: inline-block;
             width: 40px;
@@ -280,11 +291,13 @@
             border-top-color: #00BFFF;
             animation: spin 1s ease-in-out infinite;
         }
-        
+
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
-        
+
         /* New styles for back button */
         .back-btn-container {
             position: absolute;
@@ -304,7 +317,7 @@
 <body class="text-text font-body">
     <!-- Particles Background -->
     <div id="particles-js"></div>
-    
+
     <!-- Modals -->
     <div id="projectModal" class="modal">
         <div class="modal-content">
@@ -317,7 +330,7 @@
                     <label class="block mb-2">Project Title</label>
                     <input type="text" id="projectTitle" class="form-input" required>
                 </div>
-                
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div>
                         <label class="block mb-2">Project Type</label>
@@ -338,23 +351,23 @@
                         </select>
                     </div>
                 </div>
-                
+
                 <div class="mb-4">
                     <label class="block mb-2">Description</label>
                     <textarea id="projectDescription" rows="3" class="form-input" required></textarea>
                 </div>
-                
+
                 <!-- Added GitHub and Deployed Link Fields -->
                 <div class="mb-4">
                     <label class="block mb-2">GitHub Link <span class="text-red-500">*</span></label>
                     <input type="url" id="projectGithub" class="form-input" required>
                 </div>
-                
+
                 <div class="mb-4">
                     <label class="block mb-2">Deployed Link (optional)</label>
                     <input type="url" id="projectDeployed" class="form-input">
                 </div>
-                
+
                 <div class="flex justify-end space-x-3">
                     <button type="button" id="cancelProjectBtn" class="btn-secondary px-4 py-2">Cancel</button>
                     <button type="submit" class="btn-primary px-4 py-2">Save Project</button>
@@ -362,7 +375,7 @@
             </form>
         </div>
     </div>
-    
+
     <div id="researchModal" class="modal">
         <div class="modal-content">
             <h2 id="researchModalTitle" class="text-2xl font-bold mb-6 text-highlight">
@@ -374,7 +387,7 @@
                     <label class="block mb-2">Research Title</label>
                     <input type="text" id="researchTitle" class="form-input" required>
                 </div>
-                
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div>
                         <label class="block mb-2">Research Area</label>
@@ -385,17 +398,17 @@
                         <input type="date" id="researchDate" class="form-input" required>
                     </div>
                 </div>
-                
+
                 <div class="mb-4">
                     <label class="block mb-2">Abstract</label>
                     <textarea id="researchAbstract" rows="4" class="form-input" required></textarea>
                 </div>
-                
+
                 <div class="mb-4">
                     <label class="block mb-2">Link to Paper (optional)</label>
                     <input type="url" id="researchLink" class="form-input">
                 </div>
-                
+
                 <div class="flex justify-end space-x-3">
                     <button type="button" id="cancelResearchBtn" class="btn-secondary px-4 py-2">Cancel</button>
                     <button type="submit" class="btn-primary px-4 py-2">Save Research</button>
@@ -429,14 +442,15 @@
                                 <p id="userEmail" class="text-sm text-text/80">user@example.com</p>
                             </div>
                             <div class="relative">
-                                <img id="userProfilePic" src="https://via.placeholder.com/40" alt="Profile" class="w-10 h-10 rounded-full border-2 border-accent">
+                                <img id="userProfilePic" src="https://via.placeholder.com/40" alt="Profile"
+                                    class="w-10 h-10 rounded-full border-2 border-accent">
                                 <div id="loginBadge" class="login-badge hidden">
                                     G
                                 </div>
                             </div>
                             <i class="fas fa-chevron-down text-sm ml-1"></i>
                         </button>
-                        
+
                         <!-- Dropdown Menu -->
                         <div class="dropdown-content">
                             <div class="p-4 border-b border-gray-700">
@@ -475,7 +489,7 @@
                     <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
                 </button>
             </div>
-            
+
             <!-- Dashboard Section (default) -->
             <div id="dashboardSection" class="active-section">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -484,8 +498,10 @@
                         <div class="dashboard-card user-profile">
                             <div class="text-center mb-6">
                                 <div class="relative inline-block">
-                                    <img id="mainProfilePic" src="https://via.placeholder.com/40" alt="Profile" class="w-32 h-32 rounded-full mx-auto border-4 border-accent">
-                                    <div id="mainLoginBadge" class="login-badge hidden" style="width: 32px; height: 32px; font-size: 14px; bottom: -12px; right: -12px;">
+                                    <img id="mainProfilePic" src="https://via.placeholder.com/40" alt="Profile"
+                                        class="w-32 h-32 rounded-full mx-auto border-4 border-accent">
+                                    <div id="mainLoginBadge" class="login-badge hidden"
+                                        style="width: 32px; height: 32px; font-size: 14px; bottom: -12px; right: -12px;">
                                         <i class="fab fa-google"></i>
                                     </div>
                                 </div>
@@ -496,18 +512,20 @@
                                     Student Member
                                 </p>
                             </div>
-                            
+
                             <div class="mt-6">
                                 <h3 class="text-lg font-bold mb-3">Quick Actions</h3>
-                                <button id="addProjectBtn" class="w-full mb-3 py-2 bg-accent text-primary font-bold rounded-lg hover:bg-[#0099CC] transition-colors">
+                                <button id="addProjectBtn"
+                                    class="w-full mb-3 py-2 bg-accent text-primary font-bold rounded-lg hover:bg-[#0099CC] transition-colors">
                                     <i class="fas fa-plus mr-2"></i>Add Project
                                 </button>
-                                <button id="addResearchBtn" class="w-full py-2 bg-secondary text-accent border border-accent font-bold rounded-lg hover:bg-primary/20 transition-colors">
+                                <button id="addResearchBtn"
+                                    class="w-full py-2 bg-secondary text-accent border border-accent font-bold rounded-lg hover:bg-primary/20 transition-colors">
                                     <i class="fas fa-file-alt mr-2"></i>Add Research
                                 </button>
                             </div>
                         </div>
-                        
+
                         <!-- My Projects Section -->
                         <div class="dashboard-card mt-8">
                             <h3 class="text-xl font-bold mb-4 flex items-center">
@@ -528,23 +546,26 @@
                             <h1 class="text-3xl font-bold mb-6 text-accent">
                                 <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
                             </h1>
-                            
+
                             <!-- Stats -->
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                                <div class="bg-primary/50 p-4 rounded-lg text-center transition-transform hover:scale-[1.03]">
+                                <div
+                                    class="bg-primary/50 p-4 rounded-lg text-center transition-transform hover:scale-[1.03]">
                                     <p class="text-2xl font-bold" id="projectsCount">0</p>
                                     <p class="text-text/80">Active Projects</p>
                                 </div>
-                                <div class="bg-primary/50 p-4 rounded-lg text-center transition-transform hover:scale-[1.03]">
+                                <div
+                                    class="bg-primary/50 p-4 rounded-lg text-center transition-transform hover:scale-[1.03]">
                                     <p class="text-2xl font-bold" id="researchCount">0</p>
                                     <p class="text-text/80">Research Papers</p>
                                 </div>
-                                <div class="bg-primary/50 p-4 rounded-lg text-center transition-transform hover:scale-[1.03]">
+                                <div
+                                    class="bg-primary/50 p-4 rounded-lg text-center transition-transform hover:scale-[1.03]">
                                     <p class="text-2xl font-bold" id="tasksCount">0</p>
                                     <p class="text-text/80">Pending Tasks</p>
                                 </div>
                             </div>
-                            
+
                             <!-- Recent Activity -->
                             <h2 class="text-2xl font-bold mb-4">
                                 <i class="fas fa-history mr-2"></i>Recent Activity
@@ -559,7 +580,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Research Papers Section -->
                         <div class="dashboard-card mt-8">
                             <h2 class="text-2xl font-bold mb-4">
@@ -571,31 +592,34 @@
                                     <p>Loading research papers...</p>
                                 </div>
                             </div>
-                            
-                            <button id="addResearchBtn2" class="mt-6 w-full py-3 bg-secondary text-accent border-2 border-dashed border-accent rounded-lg font-bold hover:bg-primary/20 transition-colors">
+
+                            <button id="addResearchBtn2"
+                                class="mt-6 w-full py-3 bg-secondary text-accent border-2 border-dashed border-accent rounded-lg font-bold hover:bg-primary/20 transition-colors">
                                 <i class="fas fa-plus mr-2"></i>Add Research Paper
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
-            
+
             <!-- Profile Section -->
             <div id="profileSection" class="hidden-section">
                 <div class="dashboard-card">
                     <h1 class="text-3xl font-bold mb-6 text-accent">
                         <i class="fas fa-user mr-2"></i>My Profile
                     </h1>
-                    
+
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                         <div class="md:col-span-1 text-center">
                             <div class="relative inline-block mb-6">
-                                <img id="profilePic" src="https://via.placeholder.com/150" alt="Profile" class="w-40 h-40 rounded-full mx-auto border-4 border-accent">
-                                <button id="changePhotoBtn" class="absolute bottom-2 right-2 bg-accent text-primary rounded-full w-10 h-10 flex items-center justify-center">
+                                <img id="profilePic" src="https://via.placeholder.com/150" alt="Profile"
+                                    class="w-40 h-40 rounded-full mx-auto border-4 border-accent">
+                                <button id="changePhotoBtn"
+                                    class="absolute bottom-2 right-2 bg-accent text-primary rounded-full w-10 h-10 flex items-center justify-center">
                                     <i class="fas fa-camera"></i>
                                 </button>
                             </div>
-                            
+
                             <h2 id="profileUserName" class="text-2xl font-bold mb-2">User Name</h2>
                             <p id="profileUserEmail" class="text-text/80 mb-4">user@example.com</p>
                             <p id="profileMembership" class="px-3 py-1 bg-primary/50 rounded-full inline-block">
@@ -603,7 +627,7 @@
                                 Student Member
                             </p>
                         </div>
-                        
+
                         <div class="md:col-span-2">
                             <h3 class="text-xl font-bold mb-4">Personal Information</h3>
                             <form id="profileForm">
@@ -617,7 +641,7 @@
                                         <input type="email" id="profileEmail" class="form-input" required>
                                     </div>
                                 </div>
-                                
+
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                     <div>
                                         <label class="block mb-2">Phone Number</label>
@@ -632,17 +656,17 @@
                                         </select>
                                     </div>
                                 </div>
-                                
+
                                 <div class="mb-6">
                                     <label class="block mb-2">Bio</label>
                                     <textarea id="bio" rows="3" class="form-input"></textarea>
                                 </div>
-                                
+
                                 <div class="flex justify-end">
                                     <button type="submit" class="btn-primary px-6 py-2">Update Profile</button>
                                 </div>
                             </form>
-                            
+
                             <div class="mt-8 pt-6 border-t border-gray-700">
                                 <h3 class="text-xl font-bold mb-4">Change Password</h3>
                                 <form id="passwordForm">
@@ -650,7 +674,7 @@
                                         <label class="block mb-2">Current Password</label>
                                         <input type="password" id="currentPassword" class="form-input" required>
                                     </div>
-                                    
+
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                         <div>
                                             <label class="block mb-2">New Password</label>
@@ -661,11 +685,11 @@
                                             <input type="password" id="confirmPassword" class="form-input" required>
                                         </div>
                                     </div>
-                                    
+
                                     <div id="passwordError" class="text-red-500 mb-4 hidden">
                                         Passwords do not match
                                     </div>
-                                    
+
                                     <div class="flex justify-end">
                                         <button type="submit" class="btn-primary px-6 py-2">Change Password</button>
                                     </div>
@@ -675,7 +699,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Projects Section -->
             <div id="projectsSection" class="hidden-section">
                 <div class="dashboard-card">
@@ -687,7 +711,7 @@
                             <i class="fas fa-plus mr-2"></i>Add Project
                         </button>
                     </div>
-                    
+
                     <div id="projectsListFull" class="space-y-4">
                         <div class="loading-indicator">
                             <div class="loading-spinner"></div>
@@ -696,7 +720,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Research Section -->
             <div id="researchSection" class="hidden-section">
                 <div class="dashboard-card">
@@ -708,7 +732,7 @@
                             <i class="fas fa-plus mr-2"></i>Add Research
                         </button>
                     </div>
-                    
+
                     <div id="researchListFull" class="space-y-4">
                         <div class="loading-indicator">
                             <div class="loading-spinner"></div>
@@ -717,18 +741,18 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Settings Section -->
             <div id="settingsSection" class="hidden-section">
                 <div class="dashboard-card">
                     <h1 class="text-3xl font-bold mb-6 text-accent">
                         <i class="fas fa-cog mr-2"></i>Settings
                     </h1>
-                    
+
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         <div class="lg:col-span-2">
                             <h2 class="text-2xl font-bold mb-4">Appearance</h2>
-                            
+
                             <div class="mb-8">
                                 <h3 class="text-lg font-bold mb-3">Theme</h3>
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -755,7 +779,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="mb-8">
                                 <h3 class="text-lg font-bold mb-3">Layout</h3>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -775,13 +799,14 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <h2 class="text-2xl font-bold mb-4">Account Settings</h2>
                             <div class="mb-8">
                                 <h3 class="text-lg font-bold mb-3">Privacy</h3>
                                 <div class="space-y-3">
                                     <div class="flex items-center">
-                                        <input type="checkbox" id="showProfile" class="mr-3 h-5 w-5 text-accent rounded">
+                                        <input type="checkbox" id="showProfile"
+                                            class="mr-3 h-5 w-5 text-accent rounded">
                                         <label for="showProfile">Make my profile public</label>
                                     </div>
                                     <div class="flex items-center">
@@ -791,17 +816,18 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div>
                             <h2 class="text-2xl font-bold mb-4">Danger Zone</h2>
                             <div class="bg-red-900/20 border border-red-700 rounded-lg p-6">
                                 <h3 class="text-lg font-bold mb-2">Delete Account</h3>
                                 <p class="text-sm mb-4">Permanently delete your account and all associated data.</p>
-                                <button id="deleteAccountBtn" class="btn-secondary w-full bg-red-900/30 border-red-700 text-red-400 hover:bg-red-900/50">
+                                <button id="deleteAccountBtn"
+                                    class="btn-secondary w-full bg-red-900/30 border-red-700 text-red-400 hover:bg-red-900/50">
                                     Delete My Account
                                 </button>
                             </div>
-                            
+
                             <div class="mt-6">
                                 <h3 class="text-lg font-bold mb-2">Export Data</h3>
                                 <p class="text-sm mb-4">Download all your data in a ZIP file.</p>
@@ -841,24 +867,24 @@
 
     <!-- Particles.js -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    
+    <script src="config.js"></script>
     <script>
         // Firebase configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyBmNvVdB_GeYrl1UNMkOGubuN_i6__jM-w",
-            authDomain: "casa-8f0ba.firebaseapp.com",
-            projectId: "casa-8f0ba",
-            storageBucket: "casa-8f0ba.appspot.com",
-            messagingSenderId: "637059274531",
-            appId: "1:637059274531:web:4cee4a8c6953b4497c9e96",
-            measurementId: "G-MZXKS10HWJ"
+            apiKey: window.env.FIREBASE_API_KEY,
+            authDomain: window.env.FIREBASE_AUTH_DOMAIN,
+            projectId: window.env.FIREBASE_PROJECT_ID,
+            storageBucket: window.env.FIREBASE_STORAGE_BUCKET,
+            messagingSenderId: window.env.FIREBASE_MESSAGING_SENDER_ID,
+            appId: window.env.FIREBASE_APP_ID,
+            measurementId: window.env.FIREBASE_MEASUREMENT_ID
         };
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-        
+
         // DOM elements
         const userDropdownBtn = document.getElementById('userDropdownBtn');
         const userName = document.getElementById('userName');
@@ -873,17 +899,17 @@
         const mainProfilePic = document.getElementById('mainProfilePic');
         const mainLoginBadge = document.getElementById('mainLoginBadge');
         const membershipType = document.getElementById('membershipType');
-        
+
         // User data
         let currentUser = null;
         let isGoogleUser = false;
-        
+
         // Global arrays for projects and research
         let currentProjects = [];
         let currentResearch = [];
-        
+
         // Initialize particles
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             particlesJS('particles-js', {
                 particles: {
                     number: { value: 80, density: { enable: true, value_area: 800 } },
@@ -917,19 +943,19 @@
                     }
                 }
             });
-            
+
             // Check authentication state
             auth.onAuthStateChanged(user => {
                 if (user) {
                     currentUser = user;
                     isGoogleUser = user.providerData.some(provider => provider.providerId === 'google.com');
-                    
+
                     // Update UI with user data
                     updateUserUI(user);
-                    
+
                     // Load user data from Firestore
                     loadUserData(user.uid);
-                    
+
                     // Load projects and research papers for this user
                     loadProjects();
                     loadResearchPapers();
@@ -938,17 +964,17 @@
                     window.location.href = '../member-login.html';
                 }
             });
-            
+
             // Event listeners
             setupEventListeners();
         });
-        
+
         // Update user UI with Firebase user data
         function updateUserUI(user) {
             const displayName = user.displayName || 'User';
             const email = user.email || 'user@example.com';
             const photoURL = user.photoURL || 'https://via.placeholder.com/40';
-            
+
             // Update elements
             userName.textContent = displayName;
             userEmail.textContent = email;
@@ -958,7 +984,7 @@
             mainUserName.textContent = displayName;
             mainUserEmail.textContent = email;
             mainProfilePic.src = photoURL;
-            
+
             // Show Google badge if Google user
             if (isGoogleUser) {
                 loginBadge.classList.remove('hidden');
@@ -968,28 +994,28 @@
                 mainLoginBadge.innerHTML = '<i class="fab fa-google"></i>';
             }
         }
-        
+
         // Load additional user data from Firestore
         function loadUserData(userId) {
             db.collection('users').doc(userId).get()
                 .then(doc => {
                     if (doc.exists) {
                         const userData = doc.data();
-                        
+
                         // Update membership type
                         if (userData.membershipType) {
-                            const membershipText = userData.membershipType.charAt(0).toUpperCase() + 
-                                                  userData.membershipType.slice(1) + ' Member';
+                            const membershipText = userData.membershipType.charAt(0).toUpperCase() +
+                                userData.membershipType.slice(1) + ' Member';
                             membershipType.innerHTML = `<i class="fas fa-user-graduate mr-2"></i>${membershipText}`;
                         }
-                        
+
                         // Update profile section
                         document.getElementById('profileUserName').textContent = userData.name || 'User';
                         document.getElementById('profileUserEmail').textContent = userData.email || 'user@example.com';
-                        document.getElementById('profileMembership').textContent = userData.membershipType ? 
-                            userData.membershipType.charAt(0).toUpperCase() + userData.membershipType.slice(1) + ' Member' : 
+                        document.getElementById('profileMembership').textContent = userData.membershipType ?
+                            userData.membershipType.charAt(0).toUpperCase() + userData.membershipType.slice(1) + ' Member' :
                             'Student Member';
-                            
+
                         document.getElementById('fullName').value = userData.name || '';
                         document.getElementById('profileEmail').value = userData.email || '';
                         document.getElementById('phoneNumber').value = userData.phone || '';
@@ -1001,59 +1027,59 @@
                     console.error("Error loading user data:", error);
                 });
         }
-        
+
         // Setup event listeners
         function setupEventListeners() {
             // Section navigation
             document.querySelectorAll('.section-link').forEach(link => {
-                link.addEventListener('click', function(e) {
+                link.addEventListener('click', function (e) {
                     e.preventDefault();
                     const section = this.getAttribute('data-section');
                     showSection(section);
                 });
             });
-            
+
             // Add project buttons
             document.getElementById('addProjectBtn').addEventListener('click', () => openProjectModal());
             document.getElementById('addProjectBtn2').addEventListener('click', () => openProjectModal());
-            
+
             // Add research buttons
             document.getElementById('addResearchBtn').addEventListener('click', () => openResearchModal());
             document.getElementById('addResearchBtn2').addEventListener('click', () => openResearchModal());
             document.getElementById('addResearchBtn3').addEventListener('click', () => openResearchModal());
-            
+
             // Modal close buttons
             document.getElementById('cancelProjectBtn').addEventListener('click', () => closeModal('projectModal'));
             document.getElementById('cancelResearchBtn').addEventListener('click', () => closeModal('researchModal'));
-            
+
             // Form submissions
             document.getElementById('projectForm').addEventListener('submit', handleProjectSubmit);
             document.getElementById('researchForm').addEventListener('submit', handleResearchSubmit);
             document.getElementById('profileForm').addEventListener('submit', handleProfileUpdate);
             document.getElementById('passwordForm').addEventListener('submit', handlePasswordChange);
-            
+
             // Logout
             document.getElementById('logoutBtn').addEventListener('click', () => {
                 auth.signOut().then(() => {
                     window.location.href = '../member-login.html';
                 });
             });
-            
+
             // Theme selection
             document.querySelectorAll('.theme-option[data-theme]').forEach(option => {
-                option.addEventListener('click', function() {
+                option.addEventListener('click', function () {
                     const theme = this.getAttribute('data-theme');
                     document.documentElement.className = theme;
                     saveSetting('theme', theme);
                 });
             });
-            
+
             // Back to dashboard button
             document.querySelectorAll('.back-to-dashboard').forEach(btn => {
                 btn.addEventListener('click', () => showSection('dashboard'));
             });
         }
-        
+
         // Show specific section
         function showSection(sectionId) {
             // Hide all sections
@@ -1061,13 +1087,13 @@
                 section.classList.remove('active-section');
                 section.classList.add('hidden-section');
             });
-            
+
             // Show requested section
             const section = document.getElementById(`${sectionId}Section`);
             if (section) {
                 section.classList.remove('hidden-section');
                 section.classList.add('active-section');
-                
+
                 // Show/hide back button
                 const backButton = document.getElementById('backButtonContainer');
                 if (sectionId === 'dashboard') {
@@ -1077,13 +1103,13 @@
                 }
             }
         }
-        
+
         // Open project modal
         function openProjectModal(project = null) {
             const modal = document.getElementById('projectModal');
             const title = document.getElementById('projectModalTitle');
             const form = document.getElementById('projectForm');
-            
+
             if (project) {
                 // Edit existing project
                 title.innerHTML = '<i class="fas fa-edit mr-2"></i>Edit Project';
@@ -1100,16 +1126,16 @@
                 form.reset();
                 document.getElementById('projectId').value = '';
             }
-            
+
             modal.style.display = 'flex';
         }
-        
+
         // Open research modal
         function openResearchModal(research = null) {
             const modal = document.getElementById('researchModal');
             const title = document.getElementById('researchModalTitle');
             const form = document.getElementById('researchForm');
-            
+
             if (research) {
                 // Edit existing research
                 title.innerHTML = '<i class="fas fa-edit mr-2"></i>Edit Research Paper';
@@ -1126,19 +1152,19 @@
                 document.getElementById('researchId').value = '';
                 document.getElementById('researchDate').value = new Date().toISOString().split('T')[0];
             }
-            
+
             modal.style.display = 'flex';
         }
-        
+
         // Close modal
         function closeModal(modalId) {
             document.getElementById(modalId).style.display = 'none';
         }
-        
+
         // Handle project form submission
         function handleProjectSubmit(e) {
             e.preventDefault();
-            
+
             const projectId = document.getElementById('projectId').value;
             const projectData = {
                 title: document.getElementById('projectTitle').value,
@@ -1151,7 +1177,7 @@
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             };
-            
+
             if (projectId) {
                 // Update existing project
                 db.collection('projects').doc(projectId).update(projectData)
@@ -1178,11 +1204,11 @@
                     });
             }
         }
-        
+
         // Handle research form submission
         function handleResearchSubmit(e) {
             e.preventDefault();
-            
+
             const researchId = document.getElementById('researchId').value;
             const researchData = {
                 title: document.getElementById('researchTitle').value,
@@ -1194,7 +1220,7 @@
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             };
-            
+
             if (researchId) {
                 // Update existing research
                 db.collection('research').doc(researchId).update(researchData)
@@ -1221,32 +1247,32 @@
                     });
             }
         }
-        
+
         // Load projects from Firestore for current user
         function loadProjects() {
             const projectsList = document.getElementById('projectsList');
             const projectsListFull = document.getElementById('projectsListFull');
-            
+
             // Show loading state
             projectsList.innerHTML = '<div class="loading-indicator"><div class="loading-spinner"></div><p>Loading projects...</p></div>';
             projectsListFull.innerHTML = '<div class="loading-indicator"><div class="loading-spinner"></div><p>Loading projects...</p></div>';
-            
+
             db.collection('projects')
                 .where('userId', '==', currentUser.uid)
                 .get()
                 .then(querySnapshot => {
                     projectsList.innerHTML = '';
                     projectsListFull.innerHTML = '';
-                    
+
                     currentProjects = []; // Reset global array
-                    
+
                     if (querySnapshot.empty) {
                         projectsList.innerHTML = '<p class="text-center py-4 text-text/70">No projects found</p>';
                         projectsListFull.innerHTML = '<p class="text-center py-8 text-text/70">No projects found</p>';
                         updateStats();
                         return;
                     }
-                    
+
                     // Convert to array and sort by createdAt manually
                     querySnapshot.forEach(doc => {
                         const projectData = doc.data();
@@ -1258,10 +1284,10 @@
                             updatedAt: projectData.updatedAt ? projectData.updatedAt.toDate() : new Date()
                         });
                     });
-                    
+
                     // Sort by creation date (newest first)
                     currentProjects.sort((a, b) => b.createdAt - a.createdAt);
-                    
+
                     currentProjects.forEach(project => {
                         const projectHTML = `
                             <div class="project-item">
@@ -1286,26 +1312,26 @@
                                 </div>
                             </div>
                         `;
-                        
+
                         projectsList.innerHTML += projectHTML;
                         projectsListFull.innerHTML += projectHTML;
                     });
-                    
+
                     // Add event listeners to buttons
                     document.querySelectorAll('.edit-btn').forEach(btn => {
-                        btn.addEventListener('click', function() {
+                        btn.addEventListener('click', function () {
                             const projectId = this.getAttribute('data-id');
                             db.collection('projects').doc(projectId).get()
                                 .then(doc => {
                                     if (doc.exists) {
-                                        openProjectModal({id: doc.id, ...doc.data()});
+                                        openProjectModal({ id: doc.id, ...doc.data() });
                                     }
                                 });
                         });
                     });
-                    
+
                     document.querySelectorAll('.delete-btn').forEach(btn => {
-                        btn.addEventListener('click', function() {
+                        btn.addEventListener('click', function () {
                             const projectId = this.getAttribute('data-id');
                             if (confirm('Are you sure you want to delete this project?')) {
                                 db.collection('projects').doc(projectId).delete()
@@ -1316,7 +1342,7 @@
                             }
                         });
                     });
-                    
+
                     // Update stats
                     updateStats();
                 })
@@ -1326,32 +1352,32 @@
                     projectsListFull.innerHTML = '<p class="text-center py-8 text-red-500">Error loading projects</p>';
                 });
         }
-        
+
         // Load research papers from Firestore for current user
         function loadResearchPapers() {
             const researchList = document.getElementById('researchList');
             const researchListFull = document.getElementById('researchListFull');
-            
+
             // Show loading state
             researchList.innerHTML = '<div class="loading-indicator"><div class="loading-spinner"></div><p>Loading research papers...</p></div>';
             researchListFull.innerHTML = '<div class="loading-indicator"><div class="loading-spinner"></div><p>Loading research papers...</p></div>';
-            
+
             db.collection('research')
                 .where('userId', '==', currentUser.uid)
                 .get()
                 .then(querySnapshot => {
                     researchList.innerHTML = '';
                     researchListFull.innerHTML = '';
-                    
+
                     currentResearch = []; // Reset global array
-                    
+
                     if (querySnapshot.empty) {
                         researchList.innerHTML = '<p class="text-center py-4 text-text/70">No research papers found</p>';
                         researchListFull.innerHTML = '<p class="text-center py-8 text-text/70">No research papers found</p>';
                         updateStats();
                         return;
                     }
-                    
+
                     // Convert to array and sort by createdAt manually
                     querySnapshot.forEach(doc => {
                         const researchData = doc.data();
@@ -1363,10 +1389,10 @@
                             updatedAt: researchData.updatedAt ? researchData.updatedAt.toDate() : new Date()
                         });
                     });
-                    
+
                     // Sort by creation date (newest first)
                     currentResearch.sort((a, b) => b.createdAt - a.createdAt);
-                    
+
                     currentResearch.forEach(research => {
                         const formattedDate = research.date ? new Date(research.date).toLocaleDateString() : 'Unknown date';
                         const researchHTML = `
@@ -1387,26 +1413,26 @@
                                 </div>
                             </div>
                         `;
-                        
+
                         researchList.innerHTML += researchHTML;
                         researchListFull.innerHTML += researchHTML;
                     });
-                    
+
                     // Add event listeners to buttons
                     document.querySelectorAll('.research-item .edit-btn').forEach(btn => {
-                        btn.addEventListener('click', function() {
+                        btn.addEventListener('click', function () {
                             const researchId = this.getAttribute('data-id');
                             db.collection('research').doc(researchId).get()
                                 .then(doc => {
                                     if (doc.exists) {
-                                        openResearchModal({id: doc.id, ...doc.data()});
+                                        openResearchModal({ id: doc.id, ...doc.data() });
                                     }
                                 });
                         });
                     });
-                    
+
                     document.querySelectorAll('.research-item .delete-btn').forEach(btn => {
-                        btn.addEventListener('click', function() {
+                        btn.addEventListener('click', function () {
                             const researchId = this.getAttribute('data-id');
                             if (confirm('Are you sure you want to delete this research paper?')) {
                                 db.collection('research').doc(researchId).delete()
@@ -1417,7 +1443,7 @@
                             }
                         });
                     });
-                    
+
                     // Update stats
                     updateStats();
                 })
@@ -1427,30 +1453,30 @@
                     researchListFull.innerHTML = '<p class="text-center py-8 text-red-500">Error loading research papers</p>';
                 });
         }
-        
+
         // Update dashboard stats
         function updateStats() {
             // Calculate pending/in-progress projects
             const pendingProjects = currentProjects.filter(
                 project => project.status === 'planned' || project.status === 'in_progress'
             ).length;
-            
+
             // Calculate total projects and research papers
             const totalProjects = currentProjects.length;
             const totalResearch = currentResearch.length;
-            
+
             // Pending tasks = pending/in-progress projects + all research papers
             const pendingTasks = pendingProjects + totalResearch;
-            
+
             document.getElementById('projectsCount').textContent = totalProjects;
             document.getElementById('researchCount').textContent = totalResearch;
             document.getElementById('tasksCount').textContent = pendingTasks;
         }
-        
+
         // Handle profile update
         function handleProfileUpdate(e) {
             e.preventDefault();
-            
+
             const userData = {
                 name: document.getElementById('fullName').value,
                 email: document.getElementById('profileEmail').value,
@@ -1459,7 +1485,7 @@
                 bio: document.getElementById('bio').value,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             };
-            
+
             db.collection('users').doc(currentUser.uid).set(userData, { merge: true })
                 .then(() => {
                     // Update UI
@@ -1467,12 +1493,12 @@
                     dropdownUserName.textContent = userData.name;
                     mainUserName.textContent = userData.name;
                     document.getElementById('profileUserName').textContent = userData.name;
-                    
-                    const membershipText = userData.membershipType.charAt(0).toUpperCase() + 
-                                          userData.membershipType.slice(1) + ' Member';
+
+                    const membershipText = userData.membershipType.charAt(0).toUpperCase() +
+                        userData.membershipType.slice(1) + ' Member';
                     membershipType.innerHTML = `<i class="fas fa-user-graduate mr-2"></i>${membershipText}`;
                     document.getElementById('profileMembership').textContent = membershipText;
-                    
+
                     addActivity('Updated profile information');
                     alert('Profile updated successfully!');
                 })
@@ -1481,39 +1507,39 @@
                     alert('Error updating profile. Please try again.');
                 });
         }
-        
+
         // Handle password change
         function handlePasswordChange(e) {
             e.preventDefault();
-            
+
             const currentPassword = document.getElementById('currentPassword').value;
             const newPassword = document.getElementById('newPassword').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
             const errorElement = document.getElementById('passwordError');
-            
+
             // Reset error
             errorElement.classList.add('hidden');
-            
+
             // Validate passwords match
             if (newPassword !== confirmPassword) {
                 errorElement.textContent = 'Passwords do not match';
                 errorElement.classList.remove('hidden');
                 return;
             }
-            
+
             // Validate password strength (optional)
             if (newPassword.length < 6) {
                 errorElement.textContent = 'Password must be at least 6 characters';
                 errorElement.classList.remove('hidden');
                 return;
             }
-            
+
             // Reauthenticate user
             const credential = firebase.auth.EmailAuthProvider.credential(
-                currentUser.email, 
+                currentUser.email,
                 currentPassword
             );
-            
+
             currentUser.reauthenticateWithCredential(credential)
                 .then(() => {
                     // Update password
@@ -1534,12 +1560,12 @@
                     errorElement.classList.remove('hidden');
                 });
         }
-        
+
         // Add activity to recent activity
         function addActivity(text) {
             const now = new Date();
-            const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            
+            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
             const activityHTML = `
                 <div class="bg-primary/30 p-4 rounded-lg border-l-4 border-accent">
                     <div class="flex justify-between items-center">
@@ -1549,11 +1575,11 @@
                     <p class="mt-2 text-sm text-text/80">Activity recorded</p>
                 </div>
             `;
-            
+
             // Prepend to recent activity
             document.getElementById('recentActivity').innerHTML = activityHTML + document.getElementById('recentActivity').innerHTML;
         }
-        
+
         // Save setting to Firestore
         function saveSetting(key, value) {
             db.collection('user_settings').doc(currentUser.uid).set({
@@ -1561,7 +1587,7 @@
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             }, { merge: true });
         }
-        
+
         // Get project icon based on type
         function getProjectIcon(type) {
             const icons = {
@@ -1573,15 +1599,16 @@
             };
             return icons[type] || 'project-diagram';
         }
-        
+
         // Close modals when clicking outside
         window.addEventListener('click', (e) => {
             const projectModal = document.getElementById('projectModal');
             const researchModal = document.getElementById('researchModal');
-            
+
             if (e.target === projectModal) projectModal.style.display = 'none';
             if (e.target === researchModal) researchModal.style.display = 'none';
         });
     </script>
 </body>
+
 </html>
