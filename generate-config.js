@@ -1,13 +1,14 @@
 import fs from "fs";
 import path from "path";
 
-// Ensure public folder exists
+console.log("Starting config generation...");
+
 const dir = "./public";
 if (!fs.existsSync(dir)) {
   fs.mkdirSync(dir, { recursive: true });
+  console.log("Created /public directory");
 }
 
-// Generate config.js from Netlify environment variables
 const configContent = `window.env = {
   FIREBASE_API_KEY: "${process.env.FIREBASE_API_KEY}",
   FIREBASE_AUTH_DOMAIN: "${process.env.FIREBASE_AUTH_DOMAIN}",
@@ -19,4 +20,4 @@ const configContent = `window.env = {
 };`;
 
 fs.writeFileSync(path.join(dir, "config.js"), configContent);
-console.log("config.js generated successfully");
+console.log("config.js generated successfully with API_KEY:", process.env.FIREBASE_API_KEY ? "SET" : "MISSING");

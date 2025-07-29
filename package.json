@@ -2,6 +2,7 @@
   "dependencies": {
     "firebase": "^11.9.1"
   },
+  "type": "module",
   "scripts": {
     "build": "node generate-config.js"
   }
