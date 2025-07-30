@@ -294,11 +294,11 @@
             opacity: 0;
             transform: translateY(10px);
         }
-        
+
         .password-container {
             position: relative;
         }
-        
+
         .toggle-password {
             position: absolute;
             right: 15px;
@@ -306,11 +306,11 @@
             cursor: pointer;
             color: #aaa;
         }
-        
+
         .toggle-password:hover {
             color: #00BFFF;
         }
-        
+
         /* Loading spinner */
         .spinner {
             border: 3px solid rgba(255, 255, 255, 0.3);
@@ -323,19 +323,24 @@
             margin-right: 10px;
             vertical-align: middle;
         }
-        
+
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
-        
+
         /* Improved form layout */
         .form-title {
             position: relative;
             padding-bottom: 15px;
             margin-bottom: 30px;
         }
-        
+
         .form-title::after {
             content: '';
             position: absolute;
@@ -376,7 +381,7 @@
                         <a href="#" class="text-2xl font-bold text-accent flex items-center">
                             CASA
                             <span
-                                class="ml-1 text-xs bg-highlight text-primary px-2 py-1 rounded-full animate-bounce-slow">AI</span>
+                                class="ml-1 text-xs bg-highlight text-primary px-2 py-1 rounded-full animate-bounce">AI</span>
                         </a>
                     </div>
 
@@ -513,7 +518,7 @@
                                 </button>
                             </div>
                         </div>
-                        
+
                         <!-- Back: Sign Up Form -->
                         <div class="back">
                             <button class="flip-btn" onclick="flipCard()">
@@ -529,14 +534,15 @@
 
                                 <div class="mb-5 form-group">
                                     <label class="block mb-2">Email Address</label>
-                                    <input type="email" name="email" id="signupEmail" class="w-full form-input" required>
+                                    <input type="email" name="email" id="signupEmail" class="w-full form-input"
+                                        required>
                                 </div>
 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
                                     <div class="form-group password-container">
                                         <label class="block mb-2">Password</label>
-                                        <input type="password" id="signupPassword" name="password" class="w-full form-input"
-                                            required>
+                                        <input type="password" id="signupPassword" name="password"
+                                            class="w-full form-input" required>
                                         <span class="toggle-password" onclick="togglePassword('signupPassword', this)">
                                             <i class="fas fa-eye"></i>
                                         </span>
@@ -548,7 +554,8 @@
                                         <span class="toggle-password" onclick="togglePassword('confirmPassword', this)">
                                             <i class="fas fa-eye"></i>
                                         </span>
-                                        <small id="passwordError" class="error-message" style="display:none;">Passwords do not match.</small>
+                                        <small id="passwordError" class="error-message" style="display:none;">Passwords
+                                            do not match.</small>
                                     </div>
                                 </div>
 
@@ -584,7 +591,7 @@
                 </div>
             </div>
         </main>
-        
+
         <!-- Footer -->
         <footer class="bg-secondary py-8 mt-20">
             <div class="container mx-auto px-4">
@@ -661,7 +668,7 @@
             const passwordField = document.getElementById(fieldId);
             const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordField.setAttribute('type', type);
-            
+
             // Toggle eye icon
             if (type === 'password') {
                 toggleElement.innerHTML = '<i class="fas fa-eye"></i>';
@@ -744,7 +751,7 @@
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
             const messageDiv = document.getElementById('loginMessage');
-            
+
             // Show loading state
             const loginButton = document.getElementById('loginButton');
             const loginButtonText = document.getElementById('loginButtonText');
@@ -752,7 +759,7 @@
             loginButton.disabled = true;
             loginButtonText.textContent = 'Signing in...';
             loginSpinner.classList.remove('hidden');
-            
+
             messageDiv.innerHTML = '<p class="success-message">Signing you in...</p>';
 
             try {
@@ -760,12 +767,12 @@
                 const user = userCredential.user;
 
                 messageDiv.innerHTML = `<p class="success-message">Login successful! Redirecting...</p>`;
-                
+
                 // Reset button state
                 loginButton.disabled = false;
                 loginButtonText.textContent = 'Sign In';
                 loginSpinner.classList.add('hidden');
-                
+
                 setTimeout(() => {
                     window.location.href = 'user/main.html';
                 }, 1500);
@@ -783,7 +790,7 @@
                         message = 'Login failed. Please try again later.';
                 }
                 messageDiv.innerHTML = `<p class="error-message">${message}</p>`;
-                
+
                 // Reset button state
                 loginButton.disabled = false;
                 loginButtonText.textContent = 'Sign In';
@@ -803,7 +810,7 @@
             const password = document.getElementById('signupPassword').value;
             const membership = document.getElementById('membershipType').value;
             const messageDiv = document.getElementById('signupMessage');
-            
+
             // Show loading state
             const signupButton = document.getElementById('signupButton');
             const signupButtonText = document.getElementById('signupButtonText');
@@ -862,7 +869,7 @@
                         message = 'Account creation failed. Please try again.';
                 }
                 messageDiv.innerHTML = `<p class="error-message">${message}</p>`;
-                
+
                 // Reset button state
                 signupButton.disabled = false;
                 signupButtonText.textContent = 'Create Account';
@@ -913,7 +920,7 @@
                 console.log('User is logged out');
             }
         });
-        
+
         // Initialize form animations
         animateFormElements();
     </script>

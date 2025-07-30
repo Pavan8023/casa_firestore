@@ -323,6 +323,92 @@
 </head>
 
 <body class="gradient-bg text-text font-body">
+    <nav class="fixed top-0 w-full bg-secondary/80 backdrop-blur-md z-50 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center animate-pulse-slow">
+                        <i class="fas fa-code text-primary text-xl"></i>
+                    </div>
+                    <a href="#" class="text-2xl font-bold text-accent flex items-center">
+                        CASA
+                        <span
+                            class="ml-1 text-xs bg-highlight text-primary px-2 py-1 rounded-full animate-bounce">AI</span>
+                    </a>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex space-x-1">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="about.html" class="nav-link text-accent">About</a>
+                    <a href="events.html" class="nav-link">Events</a>
+                    <a href="projects.html" class="nav-link">Projects</a>
+                    <a href="contact.html" class="nav-link">Contact</a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="p-2 rounded-lg hover:bg-primary/20 transition-colors">
+                        <div id="hamburger-icon" class="space-y-1.5">
+                            <span class="hamburger-line"></span>
+                            <span class="hamburger-line"></span>
+                            <span class="hamburger-line"></span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu">
+        <div class="h-full flex flex-col">
+            <div class="p-6 border-b border-gray-700 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center">
+                        <i class="fas fa-code text-primary text-xl"></i>
+                    </div>
+                    <span class="text-xl font-bold text-accent">CASA</span>
+                </div>
+                <button id="close-menu" class="p-2 rounded-lg hover:bg-primary/20">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
+
+            <div class="flex-1 p-6 flex flex-col space-y-4">
+                <a href="index.html" class="nav-link py-3 border-b border-gray-700">Home</a>
+                <a href="about.html" class="nav-link py-3 border-b border-gray-700 text-accent">About</a>
+                <a href="events.html" class="nav-link py-3 border-b border-gray-700">Events</a>
+                <a href="projects.html" class="nav-link py-3 border-b border-gray-700">Projects</a>
+                <a href="contact.html" class="nav-link py-3">Contact</a>
+            </div>
+
+            <div class="p-6 border-t border-gray-700">
+                <div class="flex space-x-4 justify-center">
+                    <a href="#"
+                        class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="#"
+                        class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#"
+                        class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#"
+                        class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                        <i class="fab fa-discord"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay for mobile menu -->
+    <div id="overlay" class="menu-overlay"></div>
     <!-- Admin Login -->
     <section id="admin-login" class="py-16 pt-16 md:pt-32">
         <div class="container mx-auto px-4">
@@ -577,168 +663,120 @@
     </div>
 
     <!-- Event Edit Modal (Dark Theme) -->
-<div
-  id="event-edit-modal"
-  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 overflow-auto p-4 hidden"
->
-  <div
-    class="relative bg-gray-900 rounded-2xl shadow-xl w-full max-w-3xl overflow-y-auto max-h-[90vh] p-6"
-  >
-    <!-- Close button -->
-    <button
-      class="absolute top-4 right-4 text-gray-400 hover:text-gray-200"
-      onclick="document.getElementById('event-edit-modal').classList.add('hidden')"
-    >
-      <svg xmlns="http://www.w3.org/2000/svg"
-           class="h-6 w-6"
-           fill="none"
-           viewBox="0 0 24 24"
-           stroke="currentColor"
-      >
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M6 18L18 6M6 6l12 12" />
-      </svg>
-    </button>
+    <div id="event-edit-modal"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 overflow-auto p-4 hidden">
+        <div class="relative bg-gray-900 rounded-2xl shadow-xl w-full max-w-3xl overflow-y-auto max-h-[90vh] p-6">
+            <!-- Close button -->
+            <button class="absolute top-4 right-4 text-gray-400 hover:text-gray-200"
+                onclick="document.getElementById('event-edit-modal').classList.add('hidden')">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
 
-    <!-- Modal header -->
-    <div class="mb-6">
-      <h3 class="text-xl font-headline font-semibold text-gray-100">Edit Event</h3>
+            <!-- Modal header -->
+            <div class="mb-6">
+                <h3 class="text-xl font-headline font-semibold text-gray-100">Edit Event</h3>
+            </div>
+
+            <!-- Form -->
+            <form id="event-edit-form" class="space-y-5">
+                <input type="hidden" id="edit-event-id">
+
+                <!-- Title -->
+                <div>
+                    <label class="block mb-2 text-gray-100">Event Title</label>
+                    <input type="text" id="edit-event-title"
+                        class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 placeholder-gray-400 focus:outline-none focus:border-teal-400"
+                        required>
+                </div>
+
+                <!-- Date + Time -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block mb-2 text-gray-100">Date</label>
+                        <input type="date" id="edit-event-date"
+                            class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 placeholder-gray-400 focus:outline-none focus:border-teal-400"
+                            required>
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-gray-100">Time</label>
+                        <input type="time" id="edit-event-time"
+                            class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 placeholder-gray-400 focus:outline-none focus:border-teal-400"
+                            required>
+                    </div>
+                </div>
+
+                <!-- Duration + Category -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block mb-2 text-gray-100">Duration (hours)</label>
+                        <input type="number" id="edit-event-duration" min="0.5" step="0.5" placeholder="e.g. 2.5"
+                            class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 placeholder-gray-400 focus:outline-none focus:border-teal-400"
+                            required>
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-gray-100">Category</label>
+                        <select id="edit-event-category"
+                            class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 focus:outline-none focus:border-teal-400"
+                            required>
+                            <option value="hackathon">Hackathon</option>
+                            <option value="event">Event</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Custom Category -->
+                <div id="edit-custom-category-container" class="hidden">
+                    <label class="block mb-2 text-gray-100">Custom Category Name</label>
+                    <input type="text" id="edit-event-custom-category"
+                        class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 placeholder-gray-400 focus:outline-none focus:border-teal-400"
+                        placeholder="Enter custom category">
+                </div>
+
+                <!-- Location -->
+                <div>
+                    <label class="block mb-2 text-gray-100">Location</label>
+                    <input type="text" id="edit-event-location"
+                        class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 placeholder-gray-400 focus:outline-none focus:border-teal-400"
+                        required>
+                </div>
+
+                <!-- Description -->
+                <div>
+                    <label class="block mb-2 text-gray-100">Description</label>
+                    <textarea id="edit-event-description" rows="4"
+                        class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 placeholder-gray-400 focus:outline-none focus:border-teal-400"
+                        required></textarea>
+                </div>
+
+                <!-- Image URL -->
+                <div>
+                    <label class="block mb-2 text-gray-100">Image URL</label>
+                    <input type="text" id="edit-event-image" placeholder="https://example.com/image.jpg"
+                        class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 placeholder-gray-400 focus:outline-none focus:border-teal-400"
+                        required>
+                </div>
+
+                <!-- Registration Link -->
+                <div>
+                    <label class="block mb-2 text-gray-100">Registration Link</label>
+                    <input type="url" id="edit-event-register_link" placeholder="https://forms.google.com/..."
+                        class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 placeholder-gray-400 focus:outline-none focus:border-teal-400"
+                        required>
+                </div>
+
+                <!-- Save Button -->
+                <button type="submit" class="w-full btn-primary transform hover:scale-[1.02]">
+                    Save Changes
+                </button>
+
+                <div id="event-edit-message" class="mt-4 text-gray-200"></div>
+            </form>
+        </div>
     </div>
-
-    <!-- Form -->
-    <form id="event-edit-form" class="space-y-5">
-      <input type="hidden" id="edit-event-id">
-
-      <!-- Title -->
-      <div>
-        <label class="block mb-2 text-gray-100">Event Title</label>
-        <input
-          type="text"
-          id="edit-event-title"
-          class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 placeholder-gray-400 focus:outline-none focus:border-teal-400"
-          required
-        >
-      </div>
-
-      <!-- Date + Time -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label class="block mb-2 text-gray-100">Date</label>
-          <input
-            type="date"
-            id="edit-event-date"
-            class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 placeholder-gray-400 focus:outline-none focus:border-teal-400"
-            required
-          >
-        </div>
-        <div>
-          <label class="block mb-2 text-gray-100">Time</label>
-          <input
-            type="time"
-            id="edit-event-time"
-            class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 placeholder-gray-400 focus:outline-none focus:border-teal-400"
-            required
-          >
-        </div>
-      </div>
-
-      <!-- Duration + Category -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label class="block mb-2 text-gray-100">Duration (hours)</label>
-          <input
-            type="number"
-            id="edit-event-duration"
-            min="0.5"
-            step="0.5"
-            placeholder="e.g. 2.5"
-            class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 placeholder-gray-400 focus:outline-none focus:border-teal-400"
-            required
-          >
-        </div>
-        <div>
-          <label class="block mb-2 text-gray-100">Category</label>
-          <select
-            id="edit-event-category"
-            class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 focus:outline-none focus:border-teal-400"
-            required
-          >
-            <option value="hackathon">Hackathon</option>
-            <option value="event">Event</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Custom Category -->
-      <div id="edit-custom-category-container" class="hidden">
-        <label class="block mb-2 text-gray-100">Custom Category Name</label>
-        <input
-          type="text"
-          id="edit-event-custom-category"
-          class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 placeholder-gray-400 focus:outline-none focus:border-teal-400"
-          placeholder="Enter custom category"
-        >
-      </div>
-
-      <!-- Location -->
-      <div>
-        <label class="block mb-2 text-gray-100">Location</label>
-        <input
-          type="text"
-          id="edit-event-location"
-          class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 placeholder-gray-400 focus:outline-none focus:border-teal-400"
-          required
-        >
-      </div>
-
-      <!-- Description -->
-      <div>
-        <label class="block mb-2 text-gray-100">Description</label>
-        <textarea
-          id="edit-event-description"
-          rows="4"
-          class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 placeholder-gray-400 focus:outline-none focus:border-teal-400"
-          required
-        ></textarea>
-      </div>
-
-      <!-- Image URL -->
-      <div>
-        <label class="block mb-2 text-gray-100">Image URL</label>
-        <input
-          type="text"
-          id="edit-event-image"
-          placeholder="https://example.com/image.jpg"
-          class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 placeholder-gray-400 focus:outline-none focus:border-teal-400"
-          required
-        >
-      </div>
-
-      <!-- Registration Link -->
-      <div>
-        <label class="block mb-2 text-gray-100">Registration Link</label>
-        <input
-          type="url"
-          id="edit-event-register_link"
-          placeholder="https://forms.google.com/..."
-          class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-200 placeholder-gray-400 focus:outline-none focus:border-teal-400"
-          required
-        >
-      </div>
-
-      <!-- Save Button -->
-      <button
-        type="submit"
-        class="w-full btn-primary transform hover:scale-[1.02]"
-      >
-        Save Changes
-      </button>
-
-      <div id="event-edit-message" class="mt-4 text-gray-200"></div>
-    </form>
-  </div>
-</div>
 
     <!-- Script -->
     <script>
