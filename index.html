@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CASA - Where Curiosity Meets Code</title>
 
+    <link rel="icon" href="/img/casa.jpg">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -55,11 +56,11 @@
             color: #E0E0E0;
             transition: color 0.3s;
         }
-        
+
         .nav-link:hover {
             color: #00BFFF;
         }
-        
+
         .nav-link::after {
             content: '';
             position: absolute;
@@ -70,12 +71,12 @@
             background-color: #00BFFF;
             transition: all 0.3s;
         }
-        
+
         .nav-link:hover::after {
             left: 0;
             width: 100%;
         }
-        
+
         .mobile-menu {
             position: fixed;
             top: 0;
@@ -87,11 +88,11 @@
             transform: translateX(100%);
             transition: transform 0.5s ease;
         }
-        
+
         .mobile-menu.open {
             transform: translateX(0);
         }
-        
+
         .menu-overlay {
             position: fixed;
             top: 0;
@@ -104,12 +105,12 @@
             pointer-events: none;
             transition: opacity 0.5s;
         }
-        
+
         .menu-overlay.active {
             opacity: 1;
             pointer-events: all;
         }
-        
+
         .hamburger-line {
             display: block;
             width: 24px;
@@ -118,19 +119,19 @@
             border-radius: 2px;
             transition: all 0.3s;
         }
-        
+
         .hamburger-icon.open .hamburger-line:nth-child(1) {
             transform: translateY(7px) rotate(45deg);
         }
-        
+
         .hamburger-icon.open .hamburger-line:nth-child(2) {
             opacity: 0;
         }
-        
+
         .hamburger-icon.open .hamburger-line:nth-child(3) {
             transform: translateY(-7px) rotate(-45deg);
         }
-    
+
         #particles-js {
             position: fixed;
             width: 100%;
@@ -140,12 +141,12 @@
             z-index: -1;
             background: linear-gradient(to bottom, #00081A, #0D1117);
         }
-        
+
         .content-container {
             position: relative;
             z-index: 1;
         }
-        
+
         .hero-section {
             min-height: 100vh;
             display: flex;
@@ -153,12 +154,12 @@
             justify-content: center;
             overflow: hidden;
         }
-        
+
         /* Brighter particles glow effect */
         .particles-js-canvas-el {
             filter: brightness(1.2) drop-shadow(0 0 2px rgba(0, 191, 255, 0.5));
         }
-        
+
         /* Floating planet animation */
         .floating-planet {
             position: absolute;
@@ -170,7 +171,7 @@
             animation: float 8s ease-in-out infinite;
             z-index: -1;
         }
-        
+
         .planet-ring {
             position: absolute;
             width: 600px;
@@ -182,7 +183,7 @@
             animation: rotate 20s linear infinite;
             z-index: -1;
         }
-        
+
         /* 3D Card effect */
         .feature-card {
             background: rgba(34, 40, 49, 0.7);
@@ -194,13 +195,13 @@
             border: 1px solid rgba(0, 191, 255, 0.1);
             overflow: hidden;
         }
-        
+
         .feature-card:hover {
             transform: perspective(1000px) translateY(-10px) rotateX(5deg);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
             border-color: rgba(0, 191, 255, 0.5);
         }
-        
+
         .feature-card::before {
             content: '';
             position: absolute;
@@ -211,24 +212,24 @@
             background: radial-gradient(circle at center, rgba(0, 191, 255, 0.1), transparent 70%);
             z-index: -1;
         }
-        
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .floating-planet {
                 width: 250px;
                 height: 250px;
             }
-            
+
             .planet-ring {
                 width: 350px;
                 height: 15px;
             }
-            
+
             .hero-buttons {
                 flex-direction: column;
                 gap: 15px;
             }
-            
+
             .feature-grid {
                 grid-template-columns: 1fr;
             }
@@ -236,7 +237,9 @@
     </style>
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Nunito:wght@400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Nunito:wght@400;500;600&display=swap"
+        rel="stylesheet">
 
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -245,7 +248,7 @@
 <body class="text-text font-body">
     <!-- Particles Background -->
     <div id="particles-js"></div>
-    
+
     <!-- Content Container -->
     <div class="content-container">
         <!-- Navigation Bar -->
@@ -254,21 +257,23 @@
                 <div class="flex items-center justify-between h-20">
                     <!-- Logo -->
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center animate-pulse-slow">
+                        <div
+                            class="w-10 h-10 rounded-full bg-accent flex items-center justify-center animate-pulse-slow">
                             <i class="fas fa-code text-primary text-xl"></i>
                         </div>
                         <a href="#" class="text-2xl font-bold text-accent flex items-center">
                             CASA
-                            <span class="ml-1 text-xs bg-highlight text-primary px-2 py-1 rounded-full animate-bounce">AI</span>
+                            <span
+                                class="ml-1 text-xs bg-highlight text-primary px-2 py-1 rounded-full animate-bounce">AI</span>
                         </a>
                     </div>
 
                     <!-- Desktop Navigation -->
                     <div class="hidden md:flex space-x-1">
-                        <a href="index.html" class="nav-link">Home</a>
+                        <a href="index.html" class="nav-link  text-accent">Home</a>
                         <a href="about.html" class="nav-link">About</a>
                         <a href="events.html" class="nav-link">Events</a>
-                        <a href="projects.html" class="nav-link text-accent">Projects</a>
+                        <a href="projects.html" class="nav-link">Projects</a>
                         <a href="contact.html" class="nav-link">Contact</a>
                     </div>
 
@@ -302,25 +307,29 @@
                 </div>
 
                 <div class="flex-1 p-6 flex flex-col space-y-4">
-                    <a href="index.html" class="nav-link py-3 border-b border-gray-700">Home</a>
+                    <a href="index.html" class="nav-link py-3 border-b border-gray-700  text-accent">Home</a>
                     <a href="about.html" class="nav-link py-3 border-b border-gray-700">About</a>
                     <a href="events.html" class="nav-link py-3 border-b border-gray-700">Events</a>
-                    <a href="projects.html" class="nav-link py-3 border-b border-gray-700 text-accent">Projects</a>
+                    <a href="projects.html" class="nav-link py-3 border-b border-gray-700">Projects</a>
                     <a href="contact.html" class="nav-link py-3">Contact</a>
                 </div>
 
                 <div class="p-6 border-t border-gray-700">
                     <div class="flex space-x-4 justify-center">
-                        <a href="#" class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
                             <i class="fab fa-github"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
                             <i class="fab fa-linkedin-in"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
                             <i class="fab fa-twitter"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
                             <i class="fab fa-discord"></i>
                         </a>
                     </div>
@@ -338,12 +347,12 @@
                     <span class="bg-gradient-to-r from-accent to-highlight bg-clip-text text-transparent">CASA</span>
                     <div class="text-2xl md:text-4xl mt-4 font-light">Where Curiosity Meets Code</div>
                 </h1>
-                
+
                 <p class="text-lg md:text-xl max-w-3xl mx-auto mb-10 opacity-90">
-                    The Computer Science & AI/ML Student Association at KLE BCA - 
+                    The Computer Science & AI/ML Student Association at KLE BCA -
                     Shaping the future of technology through innovation and collaboration
                 </p>
-                 
+
                 <div class="hero-buttons flex flex-wrap justify-center gap-4">
                     <button onclick="window.location.href='member-login.html'"
                         class="bg-accent text-primary px-8 py-3 rounded-lg font-medium hover:bg-accent/90 transition-all transform hover:-translate-y-1 shadow-lg shadow-accent/30">
@@ -358,7 +367,7 @@
                         Discover Our Story
                     </button>
                 </div>
-                
+
                 <!-- Floating elements -->
                 <div class="mt-20 flex justify-center gap-10">
                     <div class="floating-element animate-float">
@@ -394,7 +403,7 @@
                         Discover the innovative world of CASA through our core initiatives
                     </p>
                 </div>
-                
+
                 <div class="feature-grid grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
                     <!-- Feature Card 1 -->
                     <div class="feature-card p-8">
@@ -403,14 +412,15 @@
                         </div>
                         <h3 class="text-2xl font-headline font-semibold mb-4">Innovation Hub</h3>
                         <p class="mb-6">
-                            Our dedicated space for groundbreaking ideas where students collaborate on cutting-edge projects and research.
+                            Our dedicated space for groundbreaking ideas where students collaborate on cutting-edge
+                            projects and research.
                         </p>
                         <a href="#" class="text-accent hover:underline inline-flex items-center">
                             Discover Projects
                             <i class="fas fa-arrow-right ml-2 text-sm"></i>
                         </a>
                     </div>
-                    
+
                     <!-- Feature Card 2 -->
                     <div class="feature-card p-8">
                         <div class="w-16 h-16 rounded-full bg-highlight/20 flex items-center justify-center mb-6">
@@ -418,14 +428,15 @@
                         </div>
                         <h3 class="text-2xl font-headline font-semibold mb-4">Learning Galaxy</h3>
                         <p class="mb-6">
-                            Comprehensive workshops, mentorship programs, and resources to fuel your journey in computer science and AI.
+                            Comprehensive workshops, mentorship programs, and resources to fuel your journey in computer
+                            science and AI.
                         </p>
                         <a href="#" class="text-accent hover:underline inline-flex items-center">
                             Explore Resources
                             <i class="fas fa-arrow-right ml-2 text-sm"></i>
                         </a>
                     </div>
-                    
+
                     <!-- Feature Card 3 -->
                     <div class="feature-card p-8">
                         <div class="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center mb-6">
@@ -433,7 +444,8 @@
                         </div>
                         <h3 class="text-2xl font-headline font-semibold mb-4">Tech Community</h3>
                         <p class="mb-6">
-                            Join a vibrant network of tech enthusiasts, industry experts, and innovators shaping the future of technology.
+                            Join a vibrant network of tech enthusiasts, industry experts, and innovators shaping the
+                            future of technology.
                         </p>
                         <a href="#" class="text-accent hover:underline inline-flex items-center">
                             Join Community

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About CASA - Computer Science & AI/ML Student Association</title>
 
+    <link rel="icon" href="/img/casa.jpg">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -50,11 +51,11 @@
             color: #E0E0E0;
             transition: color 0.3s;
         }
-        
+
         .nav-link:hover {
             color: #00BFFF;
         }
-        
+
         .nav-link::after {
             content: '';
             position: absolute;
@@ -65,12 +66,12 @@
             background-color: #00BFFF;
             transition: all 0.3s;
         }
-        
+
         .nav-link:hover::after {
             left: 0;
             width: 100%;
         }
-        
+
         .mobile-menu {
             position: fixed;
             top: 0;
@@ -82,11 +83,11 @@
             transform: translateX(100%);
             transition: transform 0.5s ease;
         }
-        
+
         .mobile-menu.open {
             transform: translateX(0);
         }
-        
+
         .menu-overlay {
             position: fixed;
             top: 0;
@@ -99,12 +100,12 @@
             pointer-events: none;
             transition: opacity 0.5s;
         }
-        
+
         .menu-overlay.active {
             opacity: 1;
             pointer-events: all;
         }
-        
+
         .hamburger-line {
             display: block;
             width: 24px;
@@ -113,38 +114,38 @@
             border-radius: 2px;
             transition: all 0.3s;
         }
-        
+
         .hamburger-icon.open .hamburger-line:nth-child(1) {
             transform: translateY(7px) rotate(45deg);
         }
-        
+
         .hamburger-icon.open .hamburger-line:nth-child(2) {
             opacity: 0;
         }
-        
+
         .hamburger-icon.open .hamburger-line:nth-child(3) {
             transform: translateY(-7px) rotate(-45deg);
         }
-        
+
         /* Hero Section */
         .hero-section {
-            background: linear-gradient(to bottom, rgba(13, 17, 23, 0.9), rgba(34, 40, 49, 0.8)), 
-                         url('https://lh3.googleusercontent.com/p/AF1QipMsdJ5_6z-X2-vTcZkB9BSVw9A8lC0p27UQRbSp=s1360-w1360-h1020-rw');
+            background: linear-gradient(to bottom, rgba(13, 17, 23, 0.9), rgba(34, 40, 49, 0.8)),
+                url('https://lh3.googleusercontent.com/p/AF1QipMsdJ5_6z-X2-vTcZkB9BSVw9A8lC0p27UQRbSp=s1360-w1360-h1020-rw');
             background-size: cover;
             background-position: center;
             min-height: 70vh;
         }
-        
+
         /* Floating Elements */
         .floating-element {
             animation: float 6s ease-in-out infinite;
         }
-        
+
         /* Gallery Styles */
         .gallery-container {
             perspective: 1000px;
         }
-        
+
         .gallery-slide {
             background-size: cover;
             background-position: center;
@@ -153,11 +154,11 @@
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             transition: transform 0.5s ease;
         }
-        
+
         .gallery-slide:hover {
             transform: translateZ(20px);
         }
-        
+
         /* Feature Card */
         .feature-card {
             background: rgba(34, 40, 49, 0.7);
@@ -166,13 +167,13 @@
             transition: all 0.3s ease;
             border: 1px solid rgba(0, 191, 255, 0.1);
         }
-        
+
         .feature-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
             border-color: rgba(0, 191, 255, 0.3);
         }
-        
+
         /* Stats Counter */
         .counter-number {
             font-size: 3.5rem;
@@ -182,12 +183,12 @@
             background-clip: text;
             color: transparent;
         }
-        
+
         /* Timeline */
         .timeline {
             position: relative;
         }
-        
+
         .timeline::before {
             content: '';
             position: absolute;
@@ -198,18 +199,18 @@
             left: 50%;
             margin-left: -2px;
         }
-        
+
         @media (max-width: 768px) {
             .timeline::before {
                 left: 30px;
             }
         }
-        
+
         .timeline-item {
             position: relative;
             margin-bottom: 40px;
         }
-        
+
         .timeline-item::before {
             content: '';
             position: absolute;
@@ -220,7 +221,7 @@
             top: 15px;
             border: 4px solid #0D1117;
         }
-        
+
         /* Team Card */
         .team-card {
             background: rgba(34, 40, 49, 0.7);
@@ -230,18 +231,18 @@
             transition: all 0.3s ease;
             border: 1px solid rgba(0, 191, 255, 0.1);
         }
-        
+
         .team-card:hover {
             transform: translateY(-10px);
             border-color: rgba(0, 191, 255, 0.3);
         }
-        
+
         /* Responsive Adjustments */
         @media (max-width: 768px) {
             .hero-section {
                 min-height: 60vh;
             }
-            
+
             .timeline-item::before {
                 left: 20px;
             }
@@ -253,7 +254,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Nunito:wght@400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Nunito:wght@400;500;600&display=swap"
+        rel="stylesheet">
 
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -271,7 +274,8 @@
                     </div>
                     <a href="#" class="text-2xl font-bold text-accent flex items-center">
                         CASA
-                            <span class="ml-1 text-xs bg-highlight text-primary px-2 py-1 rounded-full animate-bounce">AI</span>
+                        <span
+                            class="ml-1 text-xs bg-highlight text-primary px-2 py-1 rounded-full animate-bounce">AI</span>
                     </a>
                 </div>
 
@@ -323,23 +327,27 @@
 
             <div class="p-6 border-t border-gray-700">
                 <div class="flex space-x-4 justify-center">
-                    <a href="#" class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                    <a href="#"
+                        class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
                         <i class="fab fa-github"></i>
                     </a>
-                    <a href="#" class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                    <a href="#"
+                        class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
                         <i class="fab fa-linkedin-in"></i>
                     </a>
-                    <a href="#" class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                    <a href="#"
+                        class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
                         <i class="fab fa-twitter"></i>
                     </a>
-                    <a href="#" class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
+                    <a href="#"
+                        class="w-10 h-10 rounded-full bg-primary/50 flex items-center justify-center hover:bg-accent transition-colors">
                         <i class="fab fa-discord"></i>
                     </a>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <!-- Overlay for mobile menu -->
     <div id="overlay" class="menu-overlay"></div>
 
@@ -348,7 +356,8 @@
         <div class="container mx-auto px-4 py-16">
             <div class="max-w-4xl mx-auto text-center">
                 <h1 class="text-4xl md:text-6xl font-headline font-bold mb-6">
-                    <span class="bg-gradient-to-r from-accent to-highlight bg-clip-text text-transparent">About CASA</span>
+                    <span class="bg-gradient-to-r from-accent to-highlight bg-clip-text text-transparent">About
+                        CASA</span>
                 </h1>
                 <p class="text-xl md:text-2xl font-light mb-8 max-w-3xl mx-auto">
                     Empowering the next generation of computer scientists and AI/ML innovators at KLE BCA Nipani
@@ -374,15 +383,20 @@
                     A visual story of our growth, events, and community impact
                 </p>
             </div>
-            
+
             <div class="gallery-container">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <!-- Gallery Slides -->
-                    <div class="gallery-slide" style="background-image: url('/img/IMG-20250701-WA0001.jpg'); min-height: 300px;"></div>
-                    <div class="gallery-slide" style="background-image: url('/img/IMG-20250701-WA0004.jpg'); min-height: 300px;"></div>
-                    <div class="gallery-slide" style="background-image: url('/img/IMG-20250701-WA0006.jpg'); min-height: 300px;"></div>
-                    <div class="gallery-slide md:col-span-2" style="background-image: url('/img/IMG-20250701-WA0003.jpg'); min-height: 300px;"></div>
-                    <div class="gallery-slide" style="background-image: url('/img/IMG-20250701-WA0005.jpg'); min-height: 300px;"></div>
+                    <div class="gallery-slide"
+                        style="background-image: url('/img/IMG-20250701-WA0001.jpg'); min-height: 300px;"></div>
+                    <div class="gallery-slide"
+                        style="background-image: url('/img/IMG-20250701-WA0004.jpg'); min-height: 300px;"></div>
+                    <div class="gallery-slide"
+                        style="background-image: url('/img/IMG-20250701-WA0006.jpg'); min-height: 300px;"></div>
+                    <div class="gallery-slide md:col-span-2"
+                        style="background-image: url('/img/IMG-20250701-WA0003.jpg'); min-height: 300px;"></div>
+                    <div class="gallery-slide"
+                        style="background-image: url('/img/IMG-20250701-WA0005.jpg'); min-height: 300px;"></div>
                 </div>
             </div>
         </section>
@@ -396,7 +410,8 @@
                     </div>
                     <h3 class="text-2xl font-headline font-semibold mb-4">Our Mission</h3>
                     <p class="mb-6 text-lg">
-                        To create an ecosystem where students can innovate, collaborate, and develop cutting-edge solutions in computer science and AI/ML.
+                        To create an ecosystem where students can innovate, collaborate, and develop cutting-edge
+                        solutions in computer science and AI/ML.
                     </p>
                     <ul class="space-y-4">
                         <li class="flex items-start">
@@ -413,18 +428,20 @@
                         </li>
                     </ul>
                 </div>
-                
+
                 <div class="feature-card p-8">
                     <div class="w-16 h-16 rounded-full bg-highlight flex items-center justify-center mb-6">
                         <i class="fas fa-eye text-primary text-2xl"></i>
                     </div>
                     <h3 class="text-2xl font-headline font-semibold mb-4">Our Vision</h3>
                     <p class="mb-6 text-lg">
-                        To become a leading student association that shapes the future of technology by developing skilled professionals and innovative thinkers.
+                        To become a leading student association that shapes the future of technology by developing
+                        skilled professionals and innovative thinkers.
                     </p>
                     <div class="bg-gradient-to-r from-accent/20 to-highlight/20 p-6 rounded-lg">
                         <p class="italic">
-                            "Empowering students to become technology leaders who drive innovation and create positive impact in society."
+                            "Empowering students to become technology leaders who drive innovation and create positive
+                            impact in society."
                         </p>
                     </div>
                 </div>
@@ -439,7 +456,7 @@
                     Real-time statistics reflecting our community's growth and achievements
                 </p>
             </div>
-            
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="text-center">
                     <div class="counter-number mb-2" id="members-count">0</div>
@@ -454,7 +471,7 @@
                     <div class="text-lg">Research Papers</div>
                 </div>
             </div>
-            
+
             <div class="mt-16 text-center">
                 <div class="inline-flex items-center space-x-2 bg-secondary/50 px-6 py-3 rounded-full">
                     <i class="fas fa-sync-alt text-accent animate-spin"></i>
@@ -465,27 +482,27 @@
     </main>
 
     <!-- Footer -->
-        <footer class="bg-secondary py-8">
-            <div class="container mx-auto px-4">
-                <div class="flex flex-col md:flex-row justify-between items-center">
-                    <div class="mb-4 md:mb-0">
-                        <p class="text-accent font-headline text-xl">CASA</p>
-                        <p class="text-sm">© 2024 Computer and AI/ML Student Association</p>
-                    </div>
-                    <div class="flex space-x-4">
-                        <a href="#" class="hover:text-accent transition-colors">
-                            <i class="fab fa-github"></i>
-                        </a>
-                        <a href="#" class="hover:text-accent transition-colors">
-                            <i class="fab fa-linkedin"></i>
-                        </a>
-                        <a href="#" class="hover:text-accent transition-colors">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                    </div>
+    <footer class="bg-secondary py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <p class="text-accent font-headline text-xl">CASA</p>
+                    <p class="text-sm">© 2024 Computer and AI/ML Student Association</p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="#" class="hover:text-accent transition-colors">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="#" class="hover:text-accent transition-colors">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="#" class="hover:text-accent transition-colors">
+                        <i class="fab fa-twitter"></i>
+                    </a>
                 </div>
             </div>
-        </footer>
+        </div>
+    </footer>
 
     <!-- Scripts -->
     <script>
@@ -540,12 +557,12 @@
             db.collection("users").get().then((querySnapshot) => {
                 document.getElementById('members-count').textContent = querySnapshot.size + '+';
             });
-            
+
             // Get projects count from 'projects' collection
             db.collection("projects").get().then((querySnapshot) => {
                 document.getElementById('projects-count').textContent = querySnapshot.size + '+';
             });
-            
+
             // Get research papers count from 'research' collection
             db.collection("research").get().then((querySnapshot) => {
                 document.getElementById('research-count').textContent = querySnapshot.size + '+';
@@ -555,7 +572,7 @@
         // Initialize stats when page loads
         document.addEventListener('DOMContentLoaded', () => {
             fetchStats();
-            
+
             // Fetch updated stats every minute
             setInterval(fetchStats, 60000);
         });
